@@ -1,0 +1,152 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table User {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  email String [unique, not null]
+  username String [unique]
+  name String
+  password String [not null]
+  imageUrl String [not null]
+  role Role [not null, default: 'USER']
+  nudgesSent Nudge [not null]
+  nudgesReceived Nudge [not null]
+  notifications Notification [not null]
+  tasks Task [not null]
+  circles UserCircle [not null]
+}
+
+Table AccountabilityCircle {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  name String [not null]
+  members UserCircle [not null]
+  tasks Task [not null]
+}
+
+Table UserCircle {
+  id Int [pk, increment]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  user User [not null]
+  userId String [not null]
+  circle AccountabilityCircle [not null]
+  circleId String [not null]
+  role CircleRole [not null, default: 'MEMBER']
+}
+
+Table Task {
+  id Int [pk, increment]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  title String [not null]
+  description String
+  dueDate DateTime
+  status TaskStatus [not null, default: 'PENDING']
+  privacy TaskPrivacy [not null, default: 'PRIVATE']
+  consequence String
+  nudges Nudge [not null]
+  tags TaskTag [not null]
+  user User [not null]
+  userId String [not null]
+  circle AccountabilityCircle
+  circleId String
+}
+
+Table Tag {
+  id Int [pk, increment]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  name String [not null]
+  tags TaskTag [not null]
+}
+
+Table TaskTag {
+  taskId Int [not null]
+  tagId Int [not null]
+  task Task [not null]
+  tag Tag [not null]
+
+  indexes {
+    (taskId, tagId) [pk]
+  }
+}
+
+Table Nudge {
+  id Int [pk, increment]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  message String
+  sender User [not null]
+  receiver User [not null]
+  task Task [not null]
+  senderId String [not null]
+  receiverId String [not null]
+  taskId Int [not null]
+}
+
+Table Notification {
+  id Int [pk, increment]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  user User [not null]
+  userId String [not null]
+  content String [not null]
+  type NotificationType [not null]
+  status NotificationStatus [not null, default: 'UNREAD']
+}
+
+Enum Role {
+  USER
+  ADMIN
+}
+
+Enum CircleRole {
+  MEMBER
+  ADMIN
+}
+
+Enum TaskStatus {
+  PENDING
+  COMPLETED
+}
+
+Enum TaskPrivacy {
+  PRIVATE
+  PUBLIC
+  CIRCLE
+}
+
+Enum NotificationStatus {
+  READ
+  UNREAD
+}
+
+Enum NotificationType {
+  TASK_DEADLINE
+  NEW_NUDGE
+}
+
+Ref: UserCircle.userId > User.id
+
+Ref: UserCircle.circleId > AccountabilityCircle.id
+
+Ref: Task.userId > User.id
+
+Ref: Task.circleId > AccountabilityCircle.id
+
+Ref: TaskTag.taskId > Task.id
+
+Ref: TaskTag.tagId > Tag.id
+
+Ref: Nudge.senderId > User.id
+
+Ref: Nudge.receiverId > User.id
+
+Ref: Nudge.taskId > Task.id
+
+Ref: Notification.userId > User.id

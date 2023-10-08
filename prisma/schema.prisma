@@ -87,9 +87,9 @@ model UserCircle {
   id        Int                  @id @default(autoincrement())
   createdAt DateTime             @default(now())
   updatedAt DateTime             @updatedAt
-  user      User                 @relation(fields: [userId], references: [id])
+  user      User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
-  circle    AccountabilityCircle @relation(fields: [circleId], references: [id])
+  circle    AccountabilityCircle @relation(fields: [circleId], references: [id], onDelete: Cascade)
   circleId  String
   role      CircleRole           @default(MEMBER)
 }
@@ -111,9 +111,9 @@ model Task {
   consequence String?
   nudges      Nudge[]
   tags        TaskTag[]
-  user        User                  @relation(fields: [userId], references: [id])
+  user        User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String
-  circle      AccountabilityCircle? @relation(fields: [circleId], references: [id])
+  circle      AccountabilityCircle? @relation(fields: [circleId], references: [id], onDelete: SetNull)
   circleId    String?
 }
 
@@ -139,8 +139,8 @@ model Tag {
 model TaskTag {
   taskId Int
   tagId  Int
-  task   Task @relation(fields: [taskId], references: [id])
-  tag    Tag  @relation(fields: [tagId], references: [id])
+  task   Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  tag    Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
 
   @@id([taskId, tagId])
 }
@@ -150,9 +150,9 @@ model Nudge {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   message    String?
-  sender     User     @relation("NudgesSent", fields: [senderId], references: [id])
-  receiver   User     @relation("NudgesReceived", fields: [receiverId], references: [id])
-  task       Task     @relation(fields: [taskId], references: [id])
+  sender     User     @relation("NudgesSent", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver   User     @relation("NudgesReceived", fields: [receiverId], references: [id], onDelete: Cascade)
+  task       Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
   senderId   String
   receiverId String
   taskId     Int
@@ -162,7 +162,7 @@ model Notification {
   id        Int                @id @default(autoincrement())
   createdAt DateTime           @default(now())
   updatedAt DateTime           @updatedAt
-  user      User               @relation(fields: [userId], references: [id])
+  user      User               @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   content   String
   type      NotificationType

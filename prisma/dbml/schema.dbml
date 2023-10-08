@@ -175,22 +175,22 @@ Ref: Account.userId > User.id [delete: Cascade]
 
 Ref: Session.userId > User.id [delete: Cascade]
 
-Ref: UserCircle.userId > User.id
+Ref: UserCircle.userId > User.id [delete: Cascade]
 
-Ref: UserCircle.circleId > AccountabilityCircle.id
+Ref: UserCircle.circleId > AccountabilityCircle.id [delete: Cascade]
 
-Ref: Task.userId > User.id
+Ref: Task.userId > User.id [delete: Cascade]
 
-Ref: Task.circleId > AccountabilityCircle.id
+Ref: Task.circleId > AccountabilityCircle.id [delete: Set Null]
 
-Ref: TaskTag.taskId > Task.id
+Ref: TaskTag.taskId > Task.id [delete: Cascade]
 
-Ref: TaskTag.tagId > Tag.id
+Ref: TaskTag.tagId > Tag.id [delete: Cascade]
 
-Ref: Nudge.senderId > User.id
+Ref: Nudge.senderId > User.id [delete: Cascade]
 
-Ref: Nudge.receiverId > User.id
+Ref: Nudge.receiverId > User.id [delete: Cascade]
 
-Ref: Nudge.taskId > Task.id
+Ref: Nudge.taskId > Task.id [delete: Cascade]
 
-Ref: Notification.userId > User.id
+Ref: Notification.userId > User.id [delete: Cascade]

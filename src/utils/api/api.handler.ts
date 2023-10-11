@@ -4,10 +4,10 @@ import * as Boom from "@hapi/boom";
 import { errorHandler } from "./error.handler";
 
 type ApiMethodHandlers = {
-  [key in Uppercase<Method>]: NextApiHandler;
+  [key in Uppercase<Method>]?: NextApiHandler;
 };
 const apiHandler = (handler: ApiMethodHandlers) => {
-  return async (req: NextApiRequest, res: NextApiResponse<ErrorResponse>) => {
+  return async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       const method = req?.method?.toUpperCase() as keyof ApiMethodHandlers;
       if (!method) {
@@ -16,10 +16,13 @@ const apiHandler = (handler: ApiMethodHandlers) => {
       const methodHandler = handler[method];
       if (!methodHandler) {
         Boom.methodNotAllowed(`Method not allowed on path ${req.url}`);
+      } else {
+        await methodHandler(req, res);
       }
-      await methodHandler(req, res);
     } catch (err) {
       errorHandler(err, res);
     }
   };
 };
+
+export default apiHandler;

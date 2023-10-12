@@ -5,7 +5,7 @@ export function errorHandler(
   err: unknown,
   res: NextApiResponse<ErrorResponse>
 ) {
-  console.error(err);
+  console.error(`Error: ${err}`);
   if (Boom.isBoom(err)) {
     return res
       .status(err.output.statusCode)

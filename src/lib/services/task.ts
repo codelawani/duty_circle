@@ -10,14 +10,13 @@ class TaskService {
     this.delete = withErrorHandling(this.delete, `Error deleting task`);
   }
   async get(taskId?: string) {
-    let res;
     if (taskId) {
-      const id = parseInt(taskId, 10);
-      res = await prisma.task.findUnique({ where: { id } });
+      const id = parseInt(taskId);
+      if (isNaN(id)) return null;
+      return await prisma.task.findUnique({ where: { id } });
     } else {
-      res = await prisma.task.findMany();
+      return await prisma.task.findMany();
     }
-    return res;
   }
   async create(data: Task, id?: number) {
     const task = await TaskSchema.validate(data);

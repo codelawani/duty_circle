@@ -6,7 +6,7 @@ import { withErrorHandling } from "./errors";
 import { userService } from "./user";
 class TaskService {
   constructor() {
-    this.get = withErrorHandling(this.get, "Error creating task");
+    this.getById = withErrorHandling(this.getById, "Error creating task");
     this.create = withErrorHandling(this.create, `Error creating task`);
     this.update = withErrorHandling(this.update, `Error updating task`);
     this.delete = withErrorHandling(this.delete, `Error deleting task`);
@@ -29,7 +29,7 @@ class TaskService {
     }
   }
 
-  async get(id?: number) {
+  async getById(id?: number) {
     if (id) {
       return await prisma.task.findUnique({ where: { id } });
     } else {
@@ -45,7 +45,7 @@ class TaskService {
   }
 
   async update(id: number, data: Task) {
-    const task = await taskService.get(id);
+    const task = await taskService.getById(id);
     let updatedTask = { ...task, ...data };
     console.log(updatedTask);
     updatedTask = await TaskSchema.validate(updatedTask);
@@ -55,8 +55,10 @@ class TaskService {
   }
 
   async delete(id: number) {
-    const res = await prisma.task.delete({ where: { id } });
-    return res;
+    const task = await taskService.getById(id);
+    if (!task) throw new ValidationError("Task not found");
+    await prisma.task.delete({ where: { id } });
+    return { message: "Task deleted successfully" };
   }
 }
 export const taskService = new TaskService();

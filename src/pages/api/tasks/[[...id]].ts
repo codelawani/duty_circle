@@ -4,6 +4,8 @@ import { taskService } from "@/src/lib/services/task";
 import apiHandler from "@/src/utils/api/api.handler";
 import { butler } from "@/src/lib/services/butler";
 
+const T_NOT_FOUND = { error: "Task not found" };
+const T_INVALID = { message: "Invalid task ID" };
 export const createTask: NextApiHandler = async (
   req: NextApiRequest,
   res: NextApiResponse
@@ -22,11 +24,11 @@ export const getTask: NextApiHandler = async (req, res) => {
   // Handler for GET method
   const taskId = butler.getIdFromReq(req);
   if (taskId) {
-    const result = await taskService.get(taskId);
-    if (!result) res.status(404).json({ error: "Task doesn't exist" });
+    const result = await taskService.getById(taskId);
+    if (!result) res.status(404).json(T_NOT_FOUND);
     res.status(200).json(result);
   } else {
-    const tasks = await taskService.get();
+    const tasks = await taskService.getById();
     res.status(200).json(tasks);
   }
 };
@@ -41,15 +43,20 @@ export const updateTask: NextApiHandler = async (req, res) => {
     console.log("taskId", taskId, result);
     res.status(201).json({ msg: "Task updated successfully" });
   } else {
-    res.status(404).json({ error: "task not found" });
+    res.status(404).json(T_NOT_FOUND);
   }
 };
 
 export const deleteTask: NextApiHandler = async (req, res) => {
   // Handler for DELETE method
-  // const res = awa
+  const taskId = butler.getIdFromReq(req);
+  if (taskId) {
+    const response = await taskService.delete(taskId);
+    res.status(200).json(response);
+  } else {
+    res.status(400).json(T_INVALID);
+  }
 };
-
 export default apiHandler({
   GET: getTask,
   POST: createTask,

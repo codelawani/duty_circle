@@ -2,29 +2,25 @@ import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
 import { userService } from "@/src/lib/services/user";
 import { taskService } from "@/src/lib/services/task";
 import apiHandler from "@/src/utils/api/api.handler";
-import { getServerSession } from "next-auth";
-import authOptions from "@/src/lib/auth";
-import { Task } from "@/src/lib/types/task.schema";
+import { butler } from "@/src/lib/services/butler";
 
 export const createTask: NextApiHandler = async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
-  const session = await getServerSession(req, res, authOptions);
-  const userMail = session?.user?.email;
-  const payload = req.body;
-  if (userMail) {
-    const user = await userService.getByEmail(userMail);
-    const result = await taskService.create({ ...payload, userId: user?.id });
+  const userId = await userService.getId(req, res);
+  if (userId) {
+    const payload = req.body;
+    const result = await taskService.create({ ...payload, userId });
     if (result) res.status(201).json({ msg: "Task created successfully" });
   } else {
     res.status(401).send({ error: "No be you get this task" });
   }
 };
+
 export const getTask: NextApiHandler = async (req, res) => {
   // Handler for GET method
-  const { id } = req.query;
-  const taskId = Array.isArray(id) ? id[0] : undefined;
+  const taskId = butler.getIdFromReq(req);
   if (taskId) {
     const result = await taskService.get(taskId);
     if (!result) res.status(404).json({ error: "Task doesn't exist" });
@@ -37,10 +33,21 @@ export const getTask: NextApiHandler = async (req, res) => {
 
 export const updateTask: NextApiHandler = async (req, res) => {
   // Handler for PUT method
+  const taskId = butler.getIdFromReq(req);
+  const userId = await userService.getId(req, res);
+  const data = { ...req?.body, userId };
+  if (taskId) {
+    const result = await taskService.update(taskId, data);
+    console.log("taskId", taskId, result);
+    res.status(201).json({ msg: "Task updated successfully" });
+  } else {
+    res.status(404).json({ error: "task not found" });
+  }
 };
 
 export const deleteTask: NextApiHandler = async (req, res) => {
   // Handler for DELETE method
+  // const res = awa
 };
 
 export default apiHandler({

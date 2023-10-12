@@ -8,7 +8,7 @@ const validatePrivacy = (value: string | undefined, context: any) => {
   }
   return true;
 };
-const validateCircleId = (value: string | undefined, context: any) => {
+const validateCircleId = (value: string | undefined | null, context: any) => {
   const { privacy } = context.parent;
   if (privacy !== "CIRCLE" && value) {
     return false;
@@ -20,10 +20,10 @@ export const TaskSchema = yup
   .noUnknown()
   .shape({
     title: yup.string().required(),
-    description: yup.string(),
-    dueDate: yup.date(),
+    description: yup.string().nullable(),
+    dueDate: yup.date().nullable(),
     status: yup.string().oneOf(["PENDING", "COMPLETED"]).required(),
-    consequence: yup.string(),
+    consequence: yup.string().nullable(),
     userId: yup.string().required(),
     privacy: yup
       .string()
@@ -35,6 +35,7 @@ export const TaskSchema = yup
       ),
     circleId: yup
       .string()
+      .nullable()
       .test(
         "validateCircleId",
         "Pls set privacy to CIRCLE if you want to include in a circle",

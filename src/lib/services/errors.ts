@@ -6,11 +6,14 @@ function handleError(error: unknown, errorMsg: string): never {
   // }
   throw error;
 }
+interface Method<T> {
+  (...args: any[]): Promise<T>;
+}
 
 export function withErrorHandling<T>(
-  method: (...args: any[]) => Promise<T>,
+  method: Method<T>,
   errorMsg: string
-): (...args: any[]) => Promise<T> {
+): Method<T> {
   return async (...args: any[]): Promise<T> => {
     try {
       const result = await method(...args);

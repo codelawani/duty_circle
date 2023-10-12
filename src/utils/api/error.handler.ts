@@ -1,6 +1,7 @@
 import * as Boom from "@hapi/boom";
 import { NextApiResponse } from "next";
 import { ValidationError } from "yup";
+
 export function errorHandler(
   err: unknown,
   res: NextApiResponse<ErrorResponse>
@@ -12,7 +13,7 @@ export function errorHandler(
       .json({ error: { message: err.message } });
   } else if (err instanceof ValidationError) {
     return res.status(400).json({
-      error: { message: "Validations failed", err: err.errors.join(", ") },
+      error: { message: "Action failed", err: err.errors.join(", ") },
     });
   } else {
     return res.status(500).json({

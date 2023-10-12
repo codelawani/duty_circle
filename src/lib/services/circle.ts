@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth";
 import prisma from "../db";
 
 class CircleService {
-  async circleExists(circleId?: string) {
+  async circleExists(circleId?: string | null) {
     if (circleId) {
       const res = await prisma.accountabilityCircle.findUnique({
         where: { id: circleId },
@@ -11,7 +11,7 @@ class CircleService {
     }
     return false;
   }
-  async userInCircle(userId: string, circleId?: string) {
+  async userInCircle(userId: string, circleId?: string | null) {
     if (circleId) {
       const res = await prisma.userCircle.findFirst({
         where: { circleId: circleId, userId },

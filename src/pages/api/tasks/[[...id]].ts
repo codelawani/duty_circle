@@ -3,9 +3,11 @@ import { userService } from "@/src/lib/services/user";
 import { taskService } from "@/src/lib/services/task";
 import apiHandler from "@/src/utils/api/api.handler";
 import { butler } from "@/src/lib/services/butler";
+import * as Boom from "@hapi/boom";
 
-const T_NOT_FOUND = { error: "Task not found" };
-const T_INVALID = { message: "Invalid task ID" };
+const T_NOT_FOUND = "Task not found";
+const T_INVALID = "Invalid task ID";
+
 export const createTask: NextApiHandler = async (
   req: NextApiRequest,
   res: NextApiResponse
@@ -16,7 +18,7 @@ export const createTask: NextApiHandler = async (
     const result = await taskService.create({ ...payload, userId });
     if (result) res.status(201).json({ msg: "Task created successfully" });
   } else {
-    res.status(401).send({ error: "No be you get this task" });
+    throw Boom.unauthorized("You are not allowed to access this task");
   }
 };
 
@@ -25,7 +27,7 @@ export const getTask: NextApiHandler = async (req, res) => {
   const taskId = butler.getIdFromReq(req);
   if (taskId) {
     const result = await taskService.getById(taskId);
-    if (!result) res.status(404).json(T_NOT_FOUND);
+    if (!result) throw Boom.notFound(T_NOT_FOUND);
     res.status(200).json(result);
   } else {
     const tasks = await taskService.getById();
@@ -43,7 +45,7 @@ export const updateTask: NextApiHandler = async (req, res) => {
     console.log("taskId", taskId, result);
     res.status(201).json({ msg: "Task updated successfully" });
   } else {
-    res.status(404).json(T_NOT_FOUND);
+    throw Boom.notFound(T_NOT_FOUND);
   }
 };
 
@@ -54,7 +56,7 @@ export const deleteTask: NextApiHandler = async (req, res) => {
     const response = await taskService.delete(taskId);
     res.status(200).json(response);
   } else {
-    res.status(400).json(T_INVALID);
+    throw Boom.notAcceptable(T_INVALID);
   }
 };
 export default apiHandler({

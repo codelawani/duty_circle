@@ -30,7 +30,7 @@ export default async function Dev() {
         <br />
         <a
           className="text-blue-700 hover:underline"
-          href="https://github.com/codelawani/codelawani"
+          href="https://github.com/codelawani"
         >
           GitHub
         </a>

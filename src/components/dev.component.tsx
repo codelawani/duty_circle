@@ -9,7 +9,9 @@ export default async function Dev() {
       <h1 className="text-4xl mt-10 font-bold text-center">
         This project is under development
       </h1>
-      <p className="mb-6 mt-10">You&apos;re welcome, {user ? user : "Anon"}</p>
+      <p className="mb-6 mt-10">
+        You&apos;re welcome, {user ? user : "Captain"}
+      </p>
       <p>Once upon a time... </p>
       <Image
         src="https://media.tenor.com/O_JAIoDznkoAAAAM/developer-recruiters.gif"

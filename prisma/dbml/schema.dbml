@@ -45,38 +45,38 @@ Table User {
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
   email String [unique, not null]
-  emailVerified DateTime
   username String [unique]
   name String
+  role Role [not null, default: 'USER']
+  emailVerified DateTime
   image String
   accounts Account [not null]
-  sessions Session [not null]
-  role Role [not null, default: 'USER']
-  nudgesSent Nudge [not null]
-  nudgesReceived Nudge [not null]
   notifications Notification [not null]
+  nudgesReceived Nudge [not null]
+  nudgesSent Nudge [not null]
+  sessions Session [not null]
   tasks Task [not null]
   circles UserCircle [not null]
 }
 
-Table AccountabilityCircle {
+Table Circle {
   id String [pk]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
   name String [not null]
-  members UserCircle [not null]
   tasks Task [not null]
+  members UserCircle [not null]
 }
 
 Table UserCircle {
   id Int [pk, increment]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
-  user User [not null]
   userId String [not null]
-  circle AccountabilityCircle [not null]
   circleId String [not null]
   role CircleRole [not null, default: 'MEMBER']
+  circle Circle [not null]
+  user User [not null]
 }
 
 Table Task {
@@ -89,12 +89,12 @@ Table Task {
   status TaskStatus [not null, default: 'PENDING']
   privacy TaskPrivacy [not null, default: 'PRIVATE']
   consequence String
-  nudges Nudge [not null]
-  tags TaskTag [not null]
-  user User [not null]
   userId String [not null]
-  circle AccountabilityCircle
   circleId String
+  nudges Nudge [not null]
+  circle Circle
+  user User [not null]
+  tags TaskTag [not null]
 }
 
 Table Tag {
@@ -108,8 +108,8 @@ Table Tag {
 Table TaskTag {
   taskId Int [not null]
   tagId Int [not null]
-  task Task [not null]
   tag Tag [not null]
+  task Task [not null]
 
   indexes {
     (taskId, tagId) [pk]
@@ -121,23 +121,23 @@ Table Nudge {
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
   message String
-  sender User [not null]
-  receiver User [not null]
-  task Task [not null]
   senderId String [not null]
   receiverId String [not null]
   taskId Int [not null]
+  receiver User [not null]
+  sender User [not null]
+  task Task [not null]
 }
 
 Table Notification {
   id Int [pk, increment]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
-  user User [not null]
   userId String [not null]
   content String [not null]
   type NotificationType [not null]
   status NotificationStatus [not null, default: 'UNREAD']
+  user User [not null]
 }
 
 Enum Role {
@@ -175,21 +175,21 @@ Ref: Account.userId > User.id [delete: Cascade]
 
 Ref: Session.userId > User.id [delete: Cascade]
 
+Ref: UserCircle.circleId > Circle.id [delete: Cascade]
+
 Ref: UserCircle.userId > User.id [delete: Cascade]
 
-Ref: UserCircle.circleId > AccountabilityCircle.id [delete: Cascade]
+Ref: Task.circleId > Circle.id
 
 Ref: Task.userId > User.id [delete: Cascade]
 
-Ref: Task.circleId > AccountabilityCircle.id [delete: Set Null]
+Ref: TaskTag.tagId > Tag.id [delete: Cascade]
 
 Ref: TaskTag.taskId > Task.id [delete: Cascade]
 
-Ref: TaskTag.tagId > Tag.id [delete: Cascade]
+Ref: Nudge.receiverId > User.id [delete: Cascade]
 
 Ref: Nudge.senderId > User.id [delete: Cascade]
-
-Ref: Nudge.receiverId > User.id [delete: Cascade]
 
 Ref: Nudge.taskId > Task.id [delete: Cascade]
 

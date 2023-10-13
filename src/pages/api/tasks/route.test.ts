@@ -1,4 +1,4 @@
-import { createTask } from "./";
+import { createTask } from "./[[...id]]"
 import { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth";
 import { userService } from "@/src/lib/services/user";

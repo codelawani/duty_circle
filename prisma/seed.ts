@@ -2,20 +2,35 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 async function main() {
-  const user1 = await prisma.user.create({
+  const jack = await prisma.user.create({
     data: {
-      email: "example@example.com",
-      name: "Example User",
-      username: "exampleuser",
-      password: "securepassword",
-      imageUrl: "link-to-image.jpg",
+      email: "jack@sparrow.com",
+      name: "Jack Sparrow",
+      username: "jacksparrow",
+      image: "https://i.pinimg.com/550x/3e/1c/82/3e1c82385d98040224f65175d2e5f75c.jpg",
     },
   });
-  const circle1 = await prisma.accountabilityCircle.create({
+  const rum = await prisma.circle.create({
     data: {
-      name: "Circle 1",
+      name: "Rum",
     },
   });
+  const jackCircleData = {
+    data: {
+      userId: jack.id,
+      circleId: rum.id,
+      role: "ADMIN"
+    }
+  }
+  const jackCircle = await prisma.userCircle.create(jackCircleData)
+  const jackTask = await prisma.task.create({
+    data: {
+      title: "Steal a jar of dirt",
+      privacy: "CIRCLE",
+      userId: jack.id,
+      circleId: rum.id
+    }
+  })
 }
 
 main()

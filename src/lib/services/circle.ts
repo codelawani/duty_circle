@@ -1,6 +1,6 @@
 import prisma from "../db";
 import { withErrorHandling } from "./errors";
-
+import * as Boom from "@hapi/boom"
 class CircleService {
 
   constructor() {
@@ -16,9 +16,10 @@ class CircleService {
       circle = await prisma.circle.findUnique({
         where: {id: circleId}
       });
-    }
+    } if (!circle) throw Boom.notFound("Circle not found")
     return circle
   }
+
   async getAll() {
     const circle = await prisma.circle.findMany()
     return circle

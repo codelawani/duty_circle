@@ -24,7 +24,7 @@ export const createTask: NextApiHandler = async (
 
 export const getTask: NextApiHandler = async (req, res) => {
   // Handler for GET method
-  const taskId = butler.getIdFromReq(req, 0);
+  const taskId = butler.getIdFromReq(req);
   if (taskId) {
     const result = await taskService.getById(taskId);
     if (!result) throw Boom.notFound(T_NOT_FOUND);

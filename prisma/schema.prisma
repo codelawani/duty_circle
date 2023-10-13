@@ -177,4 +177,6 @@ enum NotificationStatus {
 enum NotificationType {
   TASK_DEADLINE
   NEW_NUDGE
+  CIRCLE_INVITE
+  TASK_ASSIGNED
 }

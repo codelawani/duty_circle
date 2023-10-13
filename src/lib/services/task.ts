@@ -30,7 +30,7 @@ class TaskService {
     return verifiedTask;
   }
 
-  async getById(id?: number) {
+  async getById(id?: string) {
     if (id) {
       return await prisma.task.findUnique({ where: { id } });
     } else {
@@ -38,14 +38,14 @@ class TaskService {
     }
   }
 
-  async create(data: Task, id?: number) {
+  async create(data: Task, id?: string) {
     const task = await TaskSchema.validate(data);
     await taskService.verifyTaskCircle(task);
     const res = await prisma.task.create({ data: task });
     return res;
   }
 
-  async update(id: number, data: Task) {
+  async update(id: string, data: Task) {
     const task = await taskService.getById(id);
     if (!task) throw Boom.notFound("Task not found");
 
@@ -55,7 +55,7 @@ class TaskService {
     return await prisma.task.update({ where: { id }, data: verifiedTask });
   }
 
-  async delete(id: number) {
+  async delete(id: string) {
     const task = await taskService.getById(id);
     if (!task) throw Boom.notFound("Task not found");
 

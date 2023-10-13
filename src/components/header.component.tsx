@@ -3,9 +3,8 @@ import Link from "next/link";
 import { LoginButton, LogoutButton } from "./buttons.component";
 export default function Header() {
   return (
-    <div>
-      <LoginButton />
-      <LogoutButton />
+    <div className="mt-4 ml-4">
+      <LoginButton /> <LogoutButton />
     </div>
   );
 }

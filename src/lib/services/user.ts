@@ -14,7 +14,7 @@ class UserService {
   }
   async getId(req: NextApiRequest, res: NextApiResponse) {
     const session = await getServerSession(req, res, authOptions);
-    const userMail = session?.user?.email ?? "lawani.gk@gmail.com";
+    const userMail = session?.user?.email ?? "jack@sparrow.com";
     const user = await this.getByEmail(userMail);
     return user?.id;
   }

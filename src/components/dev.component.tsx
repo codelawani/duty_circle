@@ -9,7 +9,16 @@ export default async function Dev() {
       <h1 className="text-4xl mt-10 font-bold text-center">
         This project is under development
       </h1>
-      <p className="mb-6 mt-10">You&apos;re welcome, {user ? user : "Anon"}</p>
+      <Image
+        src="https://media.tenor.com/XasjKGMk_wAAAAAM/load-loading.gif"
+        alt="Dev Gif"
+        width={100}
+        height={100}
+        className="mt-4"
+      ></Image>
+      <p className="mb-10 mt-5">
+        You&apos;re welcome, {user ? user : "Captain"}
+      </p>
       <p>Once upon a time... </p>
       <Image
         src="https://media.tenor.com/O_JAIoDznkoAAAAM/developer-recruiters.gif"
@@ -28,7 +37,7 @@ export default async function Dev() {
         <br />
         <a
           className="text-blue-700 hover:underline"
-          href="https://github.com/codelawani/codelawani"
+          href="https://github.com/codelawani"
         >
           GitHub
         </a>

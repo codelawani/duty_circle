@@ -4,7 +4,7 @@ import { userCircleSchema, UserCircle } from "../types/circle.schema";
 import * as Boom from "@hapi/boom";
 
 const DEFAULT_USER_ROLE = "ADMIN";
-const CIRCLE_LIMIT = 3;
+const CIRCLE_LIMIT = 1;
 
 class CircleService {
   async get(circleId?: string, userId?: string) {
@@ -12,7 +12,7 @@ class CircleService {
     if (circleId) {
       circle = await prisma.circle.findUnique({
         where: { id: circleId },
-        select: { members: { select: { userId: true } } },
+        select: { members: { select: { userId: true } }, adminId: true },
       });
     }
     if (!circle) throw Boom.notFound("Circle not found");
@@ -99,19 +99,43 @@ class CircleService {
         where: { circleId: circleId, userId },
       });
       if (res) return true;
+      else throw Boom.unauthorized("User does not exist in this circle");
     }
-    return false;
+    throw Boom.notFound("Circle doesn't exist");
   }
+
   async update(circleId: string, payload: Circle) {
     const data = await circleSchema.validate(payload);
+    const circle = await prisma.circle.findFirst({
+      where: { id: circleId },
+    });
+    // await circleService.userInCircle(data.adminId, circleId);
+    const updatedCircle = { ...circle, ...data };
     const res = await prisma.circle.update({
       where: { id: circleId },
-      data,
+      data: updatedCircle,
     });
 
     if (!res) throw new Error("Something went wrong");
 
     return res;
+  }
+  async verifyCircleAdmin(circleId: string, userId: string) {
+    const circle = await circleService.get(circleId, userId);
+    if (circle.adminId !== userId) {
+      throw Boom.unauthorized("You are not allowed to access this resource");
+    }
+    return userId;
+  }
+  async delete(circleId: string, userId: string) {
+    await circleService.verifyCircleAdmin(circleId, userId);
+    const res = prisma.circle.findFirst({
+      where: { id: circleId },
+    });
+    if (!res) throw Boom.notFound("Circle doesn't exist");
+    return await prisma.circle.delete({
+      where: { id: circleId },
+    });
   }
 }
 

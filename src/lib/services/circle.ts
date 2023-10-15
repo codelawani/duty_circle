@@ -1,48 +1,88 @@
 import prisma from "../db";
-import { circleSchema, UserWithCircle } from "../types/circle.schema";
-import { withErrorHandling } from "./errors";
+import { Circle, circleSchema, UserWithCircle } from "../types/circle.schema";
+import { userCircleSchema, UserCircle } from "../types/circle.schema";
 import * as Boom from "@hapi/boom";
-import { userCircleService } from "./userCircle";
-class CircleService {
-  constructor() {
-    this.get = withErrorHandling(this.get, "Failed to get circle");
-    this.getAll = withErrorHandling(this.getAll, "Failed to get all circles");
-    this.circleExists = withErrorHandling(
-      this.circleExists,
-      "Failed to get circle"
-    );
-    this.userInCircle = withErrorHandling(this.userInCircle, "Action Failed");
-  }
 
-  async get(circleId?: string) {
+const DEFAULT_USER_ROLE = "ADMIN";
+const CIRCLE_LIMIT = 3;
+
+class CircleService {
+  async get(circleId?: string, userId?: string) {
     let circle;
     if (circleId) {
       circle = await prisma.circle.findUnique({
         where: { id: circleId },
+        select: { members: { select: { userId: true } } },
       });
     }
     if (!circle) throw Boom.notFound("Circle not found");
+
+    const isMember = circle.members.some((member) => member.userId === userId);
+
+    if (!isMember) throw Boom.unauthorized("You can't access this circle");
     return circle;
   }
 
+  async validateCircleName(name: string, userId: string) {
+    const res = await prisma.userCircle.findFirst({
+      where: {
+        userId,
+        circle: {
+          name,
+        },
+      },
+    });
+    return res;
+  }
+
   async create(payload: UserWithCircle) {
-    const { name, ...userCircleData } = payload;
-    const circleData = await circleSchema.validate({ name });
+    const { name, userId, ...userCircleData } = payload;
+    const circleData = await circleSchema.validate({ name, adminId: userId });
 
-    const userInCircle = await circleService.userInCircle(
-      userCircleData.userId,
-      userCircleData.circleId
-    );
+    const userInCircle = await circleService.validateCircleName(name, userId);
+    if (userInCircle) {
+      throw Boom.conflict("You already created a Circle with that name");
+    }
 
-    const { id: circleId } = await prisma.circle.create({ data: circleData });
+    const { id: circleId } = await prisma.circle.create({
+      data: circleData,
+    });
 
-    return await userCircleService.create({ ...userCircleData, circleId });
+    return await circleService.addAdminToCircle({
+      ...userCircleData,
+      circleId,
+      userId,
+    });
+  }
+
+  async limitUserCircle(userId: string) {
+    const circleCount = await prisma.userCircle.count({
+      where: { userId },
+    });
+
+    if (circleCount >= CIRCLE_LIMIT) {
+      const suffix = CIRCLE_LIMIT > 1 ? "s" : "";
+      throw Boom.forbidden(
+        `You can only belong to ${CIRCLE_LIMIT} circle${suffix}`
+      );
+    }
+  }
+
+  async addAdminToCircle(payload: UserCircle) {
+    const data = await userCircleSchema.validate(payload);
+
+    // User creating circle is admin by default
+    data.role = DEFAULT_USER_ROLE;
+
+    const res = await prisma.userCircle.create({ data });
+    return res;
   }
 
   async getAll() {
     const circle = await prisma.circle.findMany();
     return circle;
   }
+
   async circleExists(circleId?: string | null) {
     if (circleId) {
       const res = await prisma.circle.findUnique({
@@ -52,6 +92,7 @@ class CircleService {
     }
     return false;
   }
+
   async userInCircle(userId: string, circleId?: string | null) {
     if (circleId) {
       const res = await prisma.userCircle.findFirst({
@@ -60,6 +101,17 @@ class CircleService {
       if (res) return true;
     }
     return false;
+  }
+  async update(circleId: string, payload: Circle) {
+    const data = await circleSchema.validate(payload);
+    const res = await prisma.circle.update({
+      where: { id: circleId },
+      data,
+    });
+
+    if (!res) throw new Error("Something went wrong");
+
+    return res;
   }
 }
 

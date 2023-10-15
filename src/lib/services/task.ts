@@ -2,14 +2,14 @@ import { ValidationError } from "yup";
 import prisma from "../db";
 import { TaskSchema, Task } from "../types/task.schema";
 import { circleService } from "./circle";
-import { withErrorHandling } from "./errors";
+// import { withErrorHandling } from "./errors";
 import * as Boom from "@hapi/boom";
 class TaskService {
   constructor() {
-    this.getById = withErrorHandling(this.getById, "Error creating task");
-    this.create = withErrorHandling(this.create, `Error creating task`);
-    this.update = withErrorHandling(this.update, `Error updating task`);
-    this.delete = withErrorHandling(this.delete, `Error deleting task`);
+    // this.getById = withErrorHandling(this.getById, "Error creating task");
+    // this.create = withErrorHandling(this.create, `Error creating task`);
+    // this.update = withErrorHandling(this.update, `Error updating task`);
+    // this.delete = withErrorHandling(this.delete, `Error deleting task`);
   }
 
   async verifyTaskCircle(task: Task) {

@@ -5,7 +5,16 @@ function handleError(error: unknown, errorMsg: string): never {
   //   // console.log(errMsg);
   // }
   throw error;
-}
+// constructor() {
+//   this.get = withErrorHandling(this.get, "Failed to get circle");
+//   this.getAll = withErrorHandling(this.getAll, "Failed to get all circles");
+//   this.circleExists = withErrorHandling(
+//     this.circleExists,
+//     "Failed to get circle"
+//   );
+//   this.userInCircle = withErrorHandling(this.userInCircle, "Action Failed");
+// }
+
 interface Method<T> {
   (...args: any[]): Promise<T>;
 }

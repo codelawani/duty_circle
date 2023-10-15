@@ -12,19 +12,17 @@ export const createTask: NextApiHandler = async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
-  const userId = await userService.getId(req, res);
-  if (userId) {
-    const payload = req.body;
-    const result = await taskService.create({ ...payload, userId });
-    if (result) res.status(201).json({ msg: "Task created successfully" });
-  } else {
-    throw Boom.unauthorized("You are not allowed to access this task");
-  }
+  const userId = await userService.validate(req, res);
+
+  const payload = req.body;
+  const result = await taskService.create({ ...payload, userId });
+
+  if (result) res.status(201).json({ msg: "Task created successfully" });
 };
 
 export const getTask: NextApiHandler = async (req, res) => {
   // Handler for GET method
-  const taskId = butler.getIdFromReq(req);
+  const taskId = req.query?.id?.[0];
   if (taskId) {
     const result = await taskService.getById(taskId);
     if (!result) throw Boom.notFound(T_NOT_FOUND);
@@ -38,26 +36,19 @@ export const getTask: NextApiHandler = async (req, res) => {
 export const updateTask: NextApiHandler = async (req, res) => {
   // Handler for PUT method
   const taskId = butler.getIdFromReq(req);
-  const userId = await userService.getId(req, res);
+  const userId = await userService.validate(req, res);
   const data = { ...req?.body, userId };
-  if (taskId) {
-    const result = await taskService.update(taskId, data);
-    console.log("taskId", taskId, result);
-    res.status(201).json({ msg: "Task updated successfully" });
-  } else {
-    throw Boom.notFound(T_NOT_FOUND);
-  }
+
+  const result = await taskService.update(taskId, data);
+  console.log("taskId", taskId, result);
+  res.status(201).json({ msg: "Task updated successfully" });
 };
 
 export const deleteTask: NextApiHandler = async (req, res) => {
   // Handler for DELETE method
   const taskId = butler.getIdFromReq(req);
-  if (taskId) {
-    const response = await taskService.delete(taskId);
-    res.status(200).json(response);
-  } else {
-    throw Boom.notAcceptable(T_INVALID);
-  }
+  const response = await taskService.delete(taskId);
+  res.status(200).json(response);
 };
 export default apiHandler({
   GET: getTask,

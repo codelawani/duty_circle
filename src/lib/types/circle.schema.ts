@@ -1,7 +1,9 @@
 import * as yup from "yup";
 import { CircleRole } from "@prisma/client";
+
 export const circleSchema = yup.object().noUnknown().shape({
   name: yup.string().required(),
+  adminId: yup.string().required(),
 });
 
 export const userCircleSchema = yup

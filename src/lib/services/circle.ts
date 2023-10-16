@@ -1,3 +1,4 @@
+import { NextApiRequest } from "next";
 import prisma from "../db";
 import { Circle, circleSchema, UserWithCircle } from "../types/circle.schema";
 import { userCircleSchema, UserCircle } from "../types/circle.schema";
@@ -7,6 +8,12 @@ const DEFAULT_USER_ROLE = "ADMIN";
 const CIRCLE_LIMIT = 1;
 
 class CircleService {
+  getIdFromReq(req: NextApiRequest) {
+    console.log(req.query);
+    const { circleId: id } = req.query;
+    if (!id) throw Boom.badRequest("Circle Id is required");
+    return id as string;
+  }
   async get(circleId?: string, userId?: string) {
     let circle;
     if (circleId) {

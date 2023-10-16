@@ -62,5 +62,14 @@ class TaskService {
 
     return { message: "Task deleted successfully" };
   }
+
+  async getTasksInCircle(circleId: string) {
+    const circle = await prisma.circle.findUnique({
+      where: { id: circleId },
+      select: { tasks: true },
+    });
+    if (!circle) throw Boom.notFound("Circle not found");
+    return circle.tasks;
+  }
 }
 export const taskService = new TaskService();

@@ -7,6 +7,7 @@ class Butler {
    * @returns The extracted ID as a string or undefined if it doesn't exist.
    */
   getIdFromReq(req: NextApiRequest) {
+    console.log(req.query);
     const id = req.query?.id?.[0];
     if (!id) throw Boom.badRequest("ID is required");
     return id;

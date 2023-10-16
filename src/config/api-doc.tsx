@@ -9,7 +9,7 @@ const SwaggerUI = dynamic<{
 
 function ApiDoc({ spec }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
-    <div className="bg-dark">
+    <div style={{ backgroundColor: "green" }}>
       <SwaggerUI spec={spec} />
     </div>
   );

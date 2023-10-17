@@ -13,7 +13,7 @@ function handleError(error: unknown, errorMsg: string): never {
 //     "Failed to get circle"
 //   );
 //   this.userInCircle = withErrorHandling(this.userInCircle, "Action Failed");
-// }
+}
 
 interface Method<T> {
   (...args: any[]): Promise<T>;

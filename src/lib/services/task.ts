@@ -1,4 +1,3 @@
-import { ValidationError } from "yup";
 import prisma from "../db";
 import { TaskSchema, Task } from "../types/task.schema";
 import { circleService } from "./circle";
@@ -63,13 +62,27 @@ class TaskService {
     return { message: "Task deleted successfully" };
   }
 
-  async getTasksInCircle(circleId: string) {
-    const circle = await prisma.circle.findUnique({
-      where: { id: circleId },
-      select: { tasks: true },
+  async getTasksInCircle(userId: string) {
+    const circle = await circleService.get(userId);
+    return await prisma.task.findMany({
+      where: { circleId: circle.id },
     });
-    if (!circle) throw Boom.notFound("Circle not found");
-    return circle.tasks;
+  }
+  async getAllTasks() {
+    return await prisma.task.findMany();
+  }
+  async getTasksByTags(tags: string[]) {
+    return await prisma.task.findMany({
+      where: {
+        tags: {
+          every: {
+            tag: {
+              name: { in: tags },
+            },
+          },
+        },
+      },
+    });
   }
 }
 export const taskService = new TaskService();

@@ -33,7 +33,7 @@ export const updateTask: NextApiHandler = async (req, res) => {
 export const deleteTask: NextApiHandler = async (req, res) => {
   const taskId = butler.getIdFromReq(req);
   const response = await taskService.delete(taskId);
-  res.status(200).json(response);
+  res.status(204).json(response);
 };
 
 export default apiHandler({
@@ -41,3 +41,100 @@ export default apiHandler({
   PUT: updateTask,
   DELETE: deleteTask,
 });
+
+/**
+ * @swagger
+ * /api/tasks/{id}:
+ *   get:
+ *     summary: Get a task by ID
+ *     tags: [Task]
+ *     description: Retrieve a task by its ID.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The ID of the task to retrieve.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: The task was retrieved successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Task'
+ *       400:
+ *         description: The specified task ID is invalid.
+ *       404:
+ *         description: The specified task was not found.
+ */
+/**
+ * @swagger
+ * /api/tasks/{id}:
+ *   put:
+ *     summary: Update a task by ID
+ *     tags: [Task]
+ *     description: Update a task by its ID.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The ID of the task to update.
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Task'
+ *     responses:
+ *       201:
+ *         description: The task was updated successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: A message indicating that the task was updated successfully.
+ *       400:
+ *         description: The specified task ID is invalid.
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       404:
+ *         description: The specified task was not found.
+ */
+/**
+ * @swagger
+ * /api/tasks/{id}:
+ *   delete:
+ *     summary: Delete a task by ID
+ *     tags: [Task]
+ *     description: Delete a task by its ID.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The ID of the task to delete.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       204:
+ *         description: The task was deleted successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: A message indicating that the task was deleted successfully.
+ *       400:
+ *         description: The specified task ID is invalid.
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       404:
+ *         description: The specified task was not found.
+ */

@@ -130,16 +130,16 @@ enum TaskPrivacy {
 }
 
 model Tag {
-  id        String    @id @default(uuid())
+  id        Int       @id @default(autoincrement())
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  name      String
+  name      String    @unique
   tasks     TaskTag[]
 }
 
 model TaskTag {
   taskId String
-  tagId  String
+  tagId  Int
   task   Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
   tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
 

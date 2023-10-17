@@ -3,6 +3,7 @@
  * /api/tasks/{id}:
  *   get:
  *     summary: Get a task by ID
+ *     tags: [Task]
  *     description: Retrieve a task by its ID.
  *     parameters:
  *       - in: path
@@ -28,6 +29,7 @@
  * /api/tasks/{id}:
  *   put:
  *     summary: Update a task by ID
+ *     tags: [Task]
  *     description: Update a task by its ID.
  *     parameters:
  *       - in: path
@@ -65,6 +67,7 @@
  * /api/tasks/{id}:
  *   delete:
  *     summary: Delete a task by ID
+ *     tags: [Task]
  *     description: Delete a task by its ID.
  *     parameters:
  *       - in: path

@@ -55,6 +55,7 @@
  * /api/tasks:
  *   post:
  *     summary: Create a task
+ *     tags: [Task]
  *     description: Create a new task.
  *     requestBody:
  *       required: true
@@ -81,6 +82,7 @@
  * /api/tasks:
  *   get:
  *     summary: Get tasks
+ *     tags: [Task]
  *     description: Retrieve a list of tasks.
  *     responses:
  *       200:

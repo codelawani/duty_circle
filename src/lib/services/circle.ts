@@ -14,7 +14,15 @@ class CircleService {
     if (!id) throw Boom.badRequest("Circle Id is required");
     return id as string;
   }
-  async get(circleId?: string, userId?: string) {
+  async get(userId: string) {
+    const res = await prisma.userCircle.findFirst({
+      where: { userId },
+      select: { circle: true },
+    });
+    if (!res?.circle) throw Boom.forbidden("User doesn't belong to a circle");
+    return res.circle;
+  }
+  async getById(circleId?: string, userId?: string) {
     let circle;
     if (circleId) {
       circle = await prisma.circle.findUnique({
@@ -111,15 +119,13 @@ class CircleService {
     throw Boom.notFound("Circle doesn't exist");
   }
 
-  async update(circleId: string, payload: Circle) {
+  async update(payload: Circle, userId: string) {
     const data = await circleSchema.validate(payload);
-    const circle = await prisma.circle.findFirst({
-      where: { id: circleId },
-    });
-    // await circleService.userInCircle(data.adminId, circleId);
+    const circle = await circleService.get(userId);
     const updatedCircle = { ...circle, ...data };
+
     const res = await prisma.circle.update({
-      where: { id: circleId },
+      where: { id: circle.id },
       data: updatedCircle,
     });
 
@@ -127,21 +133,19 @@ class CircleService {
 
     return res;
   }
-  async verifyCircleAdmin(circleId: string, userId: string) {
-    const circle = await circleService.get(circleId, userId);
+
+  async verifyCircleAdmin(userId: string) {
+    const circle = await circleService.get(userId);
     if (circle.adminId !== userId) {
       throw Boom.unauthorized("You are not allowed to access this resource");
     }
     return userId;
   }
-  async delete(circleId: string, userId: string) {
-    await circleService.verifyCircleAdmin(circleId, userId);
-    const res = prisma.circle.findFirst({
-      where: { id: circleId },
-    });
-    if (!res) throw Boom.notFound("Circle doesn't exist");
+  async delete(userId: string) {
+    await circleService.verifyCircleAdmin(userId);
+    const circle = await circleService.get(userId);
     return await prisma.circle.delete({
-      where: { id: circleId },
+      where: { id: circle.id },
     });
   }
 }

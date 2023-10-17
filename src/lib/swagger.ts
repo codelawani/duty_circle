@@ -6,17 +6,17 @@ export const getApiDocs = async () => {
     definition: {
       openapi: "3.0.0",
       info: {
-        title: "Next Swagger API Example",
+        title: "Duty Circle API",
         version: "1.0",
       },
       components: {
-        securitySchemes: {
-          BearerAuth: {
-            type: "http",
-            scheme: "bearer",
-            bearerFormat: "JWT",
-          },
-        },
+        // securitySchemes: {
+        //   BearerAuth: {
+        //     type: "http",
+        //     scheme: "bearer",
+        //     bearerFormat: "JWT",
+        //   },
+        // },
       },
       security: [],
     },

@@ -1,5 +1,5 @@
 import { createSwaggerSpec } from "next-swagger-doc";
-
+process.traceDeprecation = false;
 export const getApiDocs = async () => {
   const spec = createSwaggerSpec({
     apiFolder: "src/pages/api", // define api folder under app folder

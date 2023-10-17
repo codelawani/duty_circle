@@ -26,6 +26,7 @@
     "nodemailer": "^6.9.5",
     "react": "^18",
     "react-dom": "^18",
+    "swagger-jsdoc": "^6.2.8",
     "swagger-ui-react": "^5.9.0",
     "tailwind-merge": "^1.14.0",
     "tailwindcss-animate": "^1.0.7",

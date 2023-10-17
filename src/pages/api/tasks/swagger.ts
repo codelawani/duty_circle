@@ -1,5 +1,57 @@
 /**
  * @swagger
+ * components:
+ *   responses:
+ *     Unauthorized:
+ *       type: object
+ *       properties:
+ *         error:
+ *           type: string
+ *           description: A short error code.
+ *         message:
+ *           type: string
+ *           description: A human-readable error message.
+ *       required:
+ *         - error
+ *         - message
+ *   schemas:
+ *     Task:
+ *       type: object
+ *       properties:
+ *         title:
+ *           type: string
+ *           description: The title of the task.
+ *         description:
+ *           type: string
+ *           nullable: true
+ *           description: A description of the task.
+ *         dueDate:
+ *           type: string
+ *           format: date-time
+ *           nullable: true
+ *           description: The due date of the task.
+ *         status:
+ *           type: string
+ *           enum: [PENDING, COMPLETED]
+ *           description: The status of the task.
+ *         consequence:
+ *           type: string
+ *           nullable: true
+ *           description: The consequence of the task.
+ *         privacy:
+ *           type: string
+ *           enum: [PRIVATE, PUBLIC, CIRCLE]
+ *           description: The privacy setting of the task.
+ *         circleId:
+ *           type: string
+ *           nullable: true
+ *           description: The ID of the circle that the task belongs to.
+ *       required:
+ *         - title
+ *         - privacy
+ */
+/**
+ * @swagger
  * /api/tasks:
  *   post:
  *     summary: Create a task
@@ -9,6 +61,7 @@
  *       content:
  *         application/json:
  *           schema:
+ *             $ref: '#/components/schemas/Task'
  *     responses:
  *       201:
  *         description: The task was created successfully.
@@ -21,21 +74,14 @@
  *                   type: string
  *                   description: A message indicating that the task was created successfully.
  *       401:
+ *         $ref: '#/components/responses/Unauthorized'
  */
-
 /**
  * @swagger
  * /api/tasks:
  *   get:
  *     summary: Get tasks
  *     description: Retrieve a list of tasks.
- *     parameters:
- *       - in: query
- *         name: id
- *         required: false
- *         description: The ID of the task to retrieve.
- *         schema:
- *           type: string
  *     responses:
  *       200:
  *         description: A list of tasks.
@@ -44,56 +90,7 @@
  *             schema:
  *               type: array
  *               items:
- *       404:
- *         description: The specified task was not found.
- */
-
-/**
- * @swagger
- * /api/tasks:
- *   put:
- *     summary: Update a task
- *     description: Update an existing task.
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *     responses:
- *       201:
- *         description: The task was updated successfully.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 msg:
- *                   type: string
- *                   description: A message indicating that the task was updated successfully.
- *       401:
- *       404:
- *         description: The specified task was not found.
- */
-
-/**
- * @swagger
- * /api/tasks:
- *   delete:
- *     summary: Delete a task
- *     description: Delete an existing task.
- *     responses:
- *       200:
- *         description: The task was deleted successfully.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 msg:
- *                   type: string
- *                   description: A message indicating that the task was deleted successfully.
- *       401:
- *
+ *                 $ref: '#/components/schemas/Task'
  *       404:
  *         description: The specified task was not found.
  */

@@ -12,7 +12,7 @@ const getPublicFeed = async (req: Request) => {
 export const GET = apiHandler({ GET: getPublicFeed });
 /**
  * @swagger
- * /api/feed/public:
+ * /api/feed/:
  *   get:
  *     summary: Retrieves all tasks for the public feed.
  *     tags: [Feed]

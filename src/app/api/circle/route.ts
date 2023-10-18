@@ -1,3 +1,8 @@
+/**
+ * Defines the routes for circle API.
+ * @module circleRoute
+ */
+
 import { apiHandle } from "@/src/utils/api/api.handler";
 import { circleService } from "@/src/lib/services/circle";
 import { userService } from "@/src/lib/services/user";
@@ -65,6 +70,22 @@ export const DELETE = apiHandle({ DELETE: deleteCircle });
 /**
  * @swagger
  * /api/circle:
+ *   get:
+ *     summary: Retrieves the circle for the authenticated user.
+ *     tags: [Circle]
+ *     responses:
+ *       200:
+ *         description: The circle object for the authenticated user.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Circle'
+ *       401:
+ *         $ref: '#/components/responses/Unauthorized'
+ *       429:
+ *         $ref: '#/components/responses/TooManyRequestsError'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
  *   post:
  *     summary: Creates a new circle.
  *     tags: [Circle]

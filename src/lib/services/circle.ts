@@ -3,6 +3,7 @@ import prisma from "../db";
 import { Circle, circleSchema, UserWithCircle } from "../types/circle.schema";
 import { userCircleSchema, UserCircle } from "../types/circle.schema";
 import * as Boom from "@hapi/boom";
+import { taskService } from "./task";
 
 const DEFAULT_USER_ROLE = "ADMIN";
 const CIRCLE_LIMIT = 1;
@@ -146,7 +147,7 @@ class CircleService {
   async delete(userId: string) {
     await circleService.verifyCircleAdmin(userId);
     const circle = await circleService.get(userId);
-    return await prisma.circle.delete({
+    const res = await prisma.circle.delete({
       where: { id: circle.id },
     });
   }

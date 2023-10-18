@@ -22,7 +22,7 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/pages/api/circle/[circleId]/tasks/index.ts", "src/pages/api/tasks/[id]"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/pages/api/circle/[circleId]/tasks/index.ts", "src/app/api/tasks/[id]"],
   "exclude": ["node_modules"],
   "ts-node": {
     "compilerOptions": {

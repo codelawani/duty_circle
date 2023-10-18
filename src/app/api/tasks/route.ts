@@ -1,37 +1,38 @@
 import { userService } from "@/src/lib/services/user";
 import { taskService } from "@/src/lib/services/task";
 import apiHandler from "@/src/utils/api/api.handler";
-import { NextApiHandler } from "next";
+import { NextResponse as res } from "next/server";
+import { butler } from "@/src/lib/services/butler";
 
 /**
  * Creates a new task for a user.
  * @param req - The HTTP request object.
- * @param res - The HTTP response object.
  * @returns A JSON response indicating whether the task was created successfully.
  */
-export const createTask: NextApiHandler = async (req, res) => {
-  const { id: userId } = await userService.validate(req, res);
-  const payload = req.body;
-  const result = await taskService.create({ ...payload, userId });
+export const createTask = async (req: Request) => {
+  const { id: userId } = await userService.validate();
+  const payload = await butler.parseJson(req);
+  await taskService.create({ ...payload, userId });
 
-  if (result) res.status(201).json({ msg: "Task created successfully" });
+  return res.json({ msg: "Task created successfully" }, { status: 201 });
 };
 
 /**
  * Retrieves all tasks from the database.
  * @function
  * @async
- * @param {NextApiRequest} req - The Next.js API request object.
- * @param {NextApiResponse} res - The Next.js API response object.
+ * @param {Request} req - The HTTP request object.
  * @returns {Promise<void>} - A Promise that resolves with the retrieved tasks.
  */
-export const getAllTasks: NextApiHandler = async (req, res) => {
+export const getAllTasks = async () => {
   const tasks = await taskService.getById();
-  res.status(200).json(tasks);
+  return res.json(tasks);
 };
 
-export default apiHandler({
+export const GET = apiHandler({
   GET: getAllTasks,
+});
+export const POST = apiHandler({
   POST: createTask,
 });
 

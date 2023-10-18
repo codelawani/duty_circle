@@ -40,6 +40,7 @@ class TaskService {
     const task = await TaskSchema.validate(data);
     await taskService.verifyTaskCircle(task);
     const res = await prisma.task.create({ data: task });
+    if (!res) throw Boom.internal("Task creation failed");
     return res;
   }
 

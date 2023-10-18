@@ -1,15 +1,20 @@
-import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
 import { Method } from "axios";
 import * as Boom from "@hapi/boom";
 import { errorHandler } from "./error.handler";
 import { NextRequest } from "next/server";
+import { Params } from "@/src/lib/types/server";
 
-type NextHandle = (req: NextRequest | Request) => unknown | Promise<unknown>;
+type NextHandle = (
+  req: NextRequest | Request,
+  params: Params
+) => unknown | Promise<unknown>;
+
 type ApiMethodHandles = {
   [key in Uppercase<Method>]?: NextHandle;
 };
+
 export const apiHandle = (handler: ApiMethodHandles) => {
-  return async (req: NextRequest | Request) => {
+  return async (req: NextRequest | Request, params: Params) => {
     try {
       const method = req?.method?.toUpperCase() as keyof ApiMethodHandles;
       if (!method) {
@@ -19,7 +24,7 @@ export const apiHandle = (handler: ApiMethodHandles) => {
       if (!methodHandler) {
         Boom.methodNotAllowed(`Method not allowed on path ${req.url}`);
       } else {
-        return await methodHandler(req);
+        return await methodHandler(req, params);
       }
     } catch (err) {
       return errorHandler(err);

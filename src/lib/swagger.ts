@@ -1,5 +1,4 @@
 import { createSwaggerSpec } from "next-swagger-doc";
-process.traceDeprecation = false;
 export const getApiDocs = async () => {
   const spec = createSwaggerSpec({
     apiFolder: "src/app/api", // define api folder under app folder
@@ -10,13 +9,13 @@ export const getApiDocs = async () => {
         version: "1.0",
       },
       components: {
-        // securitySchemes: {
-        //   BearerAuth: {
-        //     type: "http",
-        //     scheme: "bearer",
-        //     bearerFormat: "JWT",
-        //   },
-        // },
+        securitySchemes: {
+          BearerAuth: {
+            type: "http",
+            scheme: "bearer",
+            bearerFormat: "JWT",
+          },
+        },
       },
       security: [],
     },

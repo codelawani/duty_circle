@@ -5,6 +5,7 @@ import { getServerSession } from "next-auth";
 import authOptions from "../auth";
 import * as Boom from "@hapi/boom";
 import { User } from ".prisma/client";
+import { NextResponse } from "next/server";
 class UserService {
   async getByEmail(email?: string) {
     return await prisma.user.findUnique({
@@ -14,8 +15,8 @@ class UserService {
   async getAll() {
     return await prisma.user.findMany();
   }
-  async validate(req: NextApiRequest, res: NextApiResponse) {
-    const session = await getServerSession(req, res, authOptions);
+  async validate() {
+    const session = await getServerSession(authOptions);
     const userMail = session?.user?.email ?? "jack@sparrow.com";
     const user = await this.getByEmail(userMail);
 

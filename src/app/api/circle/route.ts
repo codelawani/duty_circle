@@ -1,32 +1,32 @@
-import apiHandler from "@/src/utils/api/api.handler";
+import { apiHandle } from "@/src/utils/api/api.handler";
 import { circleService } from "@/src/lib/services/circle";
-import { NextApiHandler } from "next";
+import { NextApiHandler, NextApiRequest } from "next";
 import { userService } from "@/src/lib/services/user";
-
+import { NextResponse as res } from "next/server";
 /**
  * Creates a new circle.
  * @param req - The incoming request object.
  * @param res - The outgoing response object.
  * @returns A JSON object with a success message if the circle was created successfully.
  */
-export const createCircle: NextApiHandler = async (req, res) => {
-  const { id: userId } = await userService.validate(req, res);
-  await circleService.limitUserCircle(userId);
+export const createCircle = async (req: Request) => {
+  console.log(await req.json());
+  const { id: userId } = await userService.validate(req);
+  // await circleService.limitUserCircle(userId);
   const result = await circleService.create({ ...req.body, userId });
-  if (result) res.status(201).json({ msg: "Circle created successfully" });
+  if (result) res.json({ msg: "Circle created successfully" }, { status: 201 });
 };
 
 /**
  * Retrieves the circle for the authenticated user.
  * @param req - The incoming request object.
- * @param res - The outgoing response object.
  * @returns The circle object for the authenticated user.
  */
-export const getCircle: NextApiHandler = async (req, res) => {
-  const { id: userId } = await userService.validate(req, res);
+export const getCircle = async (req: NextApiRequest) => {
+  const { id: userId } = await userService.validate(req);
   const circle = await circleService.get(userId);
   console.log(circle);
-  res.status(200).json(circle);
+  return res.json(circle, { status: 200 });
 };
 
 /**
@@ -57,6 +57,15 @@ export const deleteCircle: NextApiHandler = async (req, res) => {
   await circleService.delete(userId);
   res.status(204).json({ msg: "Circle deleted successfully" });
 };
+
+export const GET = apiHandle({ GET: getCircle });
+export const POST = apiHandle({ POST: createCircle });
+// export default apiHandler({
+//   POST: createCircle,
+//   GET: getCircle,
+//   PUT: updateCircle,
+//   DELETE: deleteCircle,
+// });
 
 /**
  * @swagger
@@ -144,10 +153,3 @@ export const deleteCircle: NextApiHandler = async (req, res) => {
  *       500:
  *         description: An error occurred while deleting the circle.
  */
-
-export default apiHandler({
-  POST: createCircle,
-  GET: getCircle,
-  PUT: updateCircle,
-  DELETE: deleteCircle,
-});

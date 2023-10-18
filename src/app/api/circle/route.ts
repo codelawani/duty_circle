@@ -1,20 +1,20 @@
 import { apiHandle } from "@/src/utils/api/api.handler";
 import { circleService } from "@/src/lib/services/circle";
-import { NextApiHandler, NextApiRequest } from "next";
 import { userService } from "@/src/lib/services/user";
 import { NextResponse as res } from "next/server";
+import { butler } from "@/src/lib/services/butler";
+
 /**
  * Creates a new circle.
  * @param req - The incoming request object.
- * @param res - The outgoing response object.
  * @returns A JSON object with a success message if the circle was created successfully.
  */
 export const createCircle = async (req: Request) => {
-  console.log(await req.json());
-  const { id: userId } = await userService.validate(req);
-  // await circleService.limitUserCircle(userId);
-  const result = await circleService.create({ ...req.body, userId });
-  if (result) res.json({ msg: "Circle created successfully" }, { status: 201 });
+  const data = await butler.parseJson(req);
+  const { id: userId } = await userService.validate();
+  await circleService.limitUserCircle(userId);
+  await circleService.create({ ...data, userId });
+  return res.json({ msg: "Circle created successfully" }, { status: 201 });
 };
 
 /**
@@ -22,8 +22,8 @@ export const createCircle = async (req: Request) => {
  * @param req - The incoming request object.
  * @returns The circle object for the authenticated user.
  */
-export const getCircle = async (req: NextApiRequest) => {
-  const { id: userId } = await userService.validate(req);
+export const getCircle = async () => {
+  const { id: userId } = await userService.validate();
   const circle = await circleService.get(userId);
   console.log(circle);
   return res.json(circle, { status: 200 });
@@ -32,40 +32,35 @@ export const getCircle = async (req: NextApiRequest) => {
 /**
  * Updates the circle for the authenticated user.
  * @param req - The incoming request object.
- * @param res - The outgoing response object.
  * @returns A JSON object with a success message if the circle was updated successfully.
  */
-export const updateCircle: NextApiHandler = async (req, res) => {
-  const { id: userId } = await userService.validate(req, res);
+export const updateCircle = async (req: Request) => {
+  const { id: userId } = await userService.validate();
   await circleService.verifyCircleAdmin(userId);
 
+  const data = await butler.parseJson(req);
   // Admin must be current user sending request for now.
-  req.body.adminId = userId;
+  data.adminId = userId;
 
-  await circleService.update(req.body, userId);
-  res.status(201).json({ msg: "Circle updated Successfully" });
+  await circleService.update(data, userId);
+  return res.json({ msg: "Circle updated Successfully" }, { status: 201 });
 };
 
 /**
  * Deletes the circle for the authenticated user.
- * @param req - The incoming request object.
- * @param res - The outgoing response object.
- * @returns A JSON object with a success message if the circle was deleted successfully.
+ * @returns A JSON object with a success message
+ * if the circle was deleted successfully.
  */
-export const deleteCircle: NextApiHandler = async (req, res) => {
-  const { id: userId } = await userService.validate(req, res);
+export const deleteCircle = async () => {
+  const { id: userId } = await userService.validate();
   await circleService.delete(userId);
-  res.status(204).json({ msg: "Circle deleted successfully" });
+  return res.json({ msg: "Circle deleted successfully" }, { status: 200 });
 };
 
 export const GET = apiHandle({ GET: getCircle });
 export const POST = apiHandle({ POST: createCircle });
-// export default apiHandler({
-//   POST: createCircle,
-//   GET: getCircle,
-//   PUT: updateCircle,
-//   DELETE: deleteCircle,
-// });
+export const PUT = apiHandle({ PUT: updateCircle });
+export const DELETE = apiHandle({ DELETE: deleteCircle });
 
 /**
  * @swagger

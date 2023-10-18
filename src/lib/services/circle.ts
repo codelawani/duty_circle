@@ -63,11 +63,13 @@ class CircleService {
       data: circleData,
     });
 
-    return await circleService.addAdminToCircle({
+    const res = await circleService.addAdminToCircle({
       ...userCircleData,
       circleId,
       userId,
     });
+    if (!res) throw Boom.internal("Error creating circle");
+    return res;
   }
 
   async limitUserCircle(userId: string) {

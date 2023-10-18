@@ -1,8 +1,8 @@
 import { taskService } from "@/src/lib/services/task";
 import { userService } from "@/src/lib/services/user";
 import apiHandler from "@/src/utils/api/api.handler";
-import { NextApiHandler } from "next";
 import { Task } from "@/src/lib/types/task.schema";
+import { NextResponse as res } from "next/server";
 
 /**
  * Retrieves the tasks in the user's circle feed.
@@ -11,11 +11,15 @@ import { Task } from "@/src/lib/types/task.schema";
  * @returns An array of tasks in the user's circle feed.
  */
 
-export const getCircleFeed: NextApiHandler = async (req, res) => {
-  const { id: userId } = await userService.validate(req, res);
+const getCircleFeed = async (req: Request) => {
+  const { id: userId } = await userService.validate();
   const tasks: Task[] = await taskService.getTasksInCircle(userId);
-  return tasks;
+  return res.json(tasks);
 };
+
+export const GET = apiHandler({
+  GET: getCircleFeed,
+});
 
 /**
  * Swagger JSDoc annotations:
@@ -36,7 +40,3 @@ export const getCircleFeed: NextApiHandler = async (req, res) => {
  *       401:
  *         $ref: '#/components/responses/Unauthorized'
  */
-
-export default apiHandler({
-  GET: getCircleFeed,
-});

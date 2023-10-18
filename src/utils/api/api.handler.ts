@@ -1,13 +1,13 @@
 import { Method } from "axios";
 import * as Boom from "@hapi/boom";
 import { errorHandler } from "./error.handler";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { Params } from "@/src/lib/types/server";
 
 type NextHandle = (
   req: NextRequest | Request,
   params: Params
-) => unknown | Promise<unknown>;
+) => void | Response | Promise<void | NextResponse>;
 
 type ApiMethodHandles = {
   [key in Uppercase<Method>]?: NextHandle;

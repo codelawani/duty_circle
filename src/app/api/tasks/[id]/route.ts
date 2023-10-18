@@ -6,7 +6,7 @@ import apiHandler from "@/src/utils/api/api.handler";
 import { Params } from "@/src/lib/types/server";
 const T_NOT_FOUND = "Task not found";
 
-export const getTask = async (req: Request, { params }: Params) => {
+const getTask = async (req: Request, { params }: Params) => {
   const taskId = params.id;
   if (taskId) {
     const result = await taskService.getById(taskId);
@@ -17,7 +17,7 @@ export const getTask = async (req: Request, { params }: Params) => {
   }
 };
 
-export const updateTask = async (req: Request, { params }: Params) => {
+const updateTask = async (req: Request, { params }: Params) => {
   const taskId = params.id;
   const { id: userId } = await userService.validate();
   const data = await req.json();
@@ -27,7 +27,7 @@ export const updateTask = async (req: Request, { params }: Params) => {
   return res.json({ msg: "Task updated successfully" }, { status: 201 });
 };
 
-export const deleteTask = async (req: Request, { params }: Params) => {
+const deleteTask = async (req: Request, { params }: Params) => {
   const taskId = params.id;
   const response = await taskService.delete(taskId);
   return res.json(response);

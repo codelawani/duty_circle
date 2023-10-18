@@ -9,7 +9,7 @@ import { butler } from "@/src/lib/services/butler";
  * @param req - The HTTP request object.
  * @returns A JSON response indicating whether the task was created successfully.
  */
-export const createTask = async (req: Request) => {
+const createTask = async (req: Request) => {
   const { id: userId } = await userService.validate();
   const payload = await butler.parseJson(req);
   await taskService.create({ ...payload, userId });
@@ -24,7 +24,7 @@ export const createTask = async (req: Request) => {
  * @param {Request} req - The HTTP request object.
  * @returns {Promise<void>} - A Promise that resolves with the retrieved tasks.
  */
-export const getAllTasks = async () => {
+const getAllTasks = async () => {
   const tasks = await taskService.getById();
   return res.json(tasks);
 };

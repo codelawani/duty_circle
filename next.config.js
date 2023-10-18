@@ -10,6 +10,9 @@ const nextConfig = {
       },
     ],
   },
+  experimental: {
+    serverComponentsExternalPackages: ["swagger-jsdoc"],
+  },
 };
 
 module.exports = nextConfig;

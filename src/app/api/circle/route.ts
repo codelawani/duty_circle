@@ -9,7 +9,7 @@ import { butler } from "@/src/lib/services/butler";
  * @param req - The incoming request object.
  * @returns A JSON object with a success message if the circle was created successfully.
  */
-export const createCircle = async (req: Request) => {
+const createCircle = async (req: Request) => {
   const data = await butler.parseJson(req);
   const { id: userId } = await userService.validate();
   await circleService.limitUserCircle(userId);
@@ -22,7 +22,7 @@ export const createCircle = async (req: Request) => {
  * @param req - The incoming request object.
  * @returns The circle object for the authenticated user.
  */
-export const getCircle = async () => {
+const getCircle = async () => {
   const { id: userId } = await userService.validate();
   const circle = await circleService.get(userId);
   console.log(circle);
@@ -34,7 +34,7 @@ export const getCircle = async () => {
  * @param req - The incoming request object.
  * @returns A JSON object with a success message if the circle was updated successfully.
  */
-export const updateCircle = async (req: Request) => {
+const updateCircle = async (req: Request) => {
   const { id: userId } = await userService.validate();
   await circleService.verifyCircleAdmin(userId);
 
@@ -51,7 +51,7 @@ export const updateCircle = async (req: Request) => {
  * @returns A JSON object with a success message
  * if the circle was deleted successfully.
  */
-export const deleteCircle = async () => {
+const deleteCircle = async () => {
   const { id: userId } = await userService.validate();
   await circleService.delete(userId);
   return res.json({ msg: "Circle deleted successfully" }, { status: 200 });

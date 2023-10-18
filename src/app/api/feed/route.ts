@@ -5,7 +5,7 @@ import { NextResponse as res } from "next/server";
  * Retrieves all tasks from the public feed.
  * @returns {Promise<Task[]>} A promise that resolves to an array of Task objects.
  */
-export const getPublicFeed = async (req: Request) => {
+const getPublicFeed = async (req: Request) => {
   const tasks = await taskService.getAllTasks();
   return res.json(tasks);
 };

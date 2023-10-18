@@ -1,15 +1,22 @@
-import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
 import { Method } from "axios";
 import * as Boom from "@hapi/boom";
 import { errorHandler } from "./error.handler";
+import { NextRequest, NextResponse } from "next/server";
+import { Params } from "@/src/lib/types/server";
 
-type ApiMethodHandlers = {
-  [key in Uppercase<Method>]?: NextApiHandler;
+type NextHandle = (
+  req: NextRequest | Request,
+  params: Params
+) => void | Response | Promise<void | NextResponse>;
+
+type ApiMethodHandles = {
+  [key in Uppercase<Method>]?: NextHandle;
 };
-const apiHandler = (handler: ApiMethodHandlers) => {
-  return async (req: NextApiRequest, res: NextApiResponse) => {
+
+export const apiHandle = (handler: ApiMethodHandles) => {
+  return async (req: NextRequest | Request, params: Params) => {
     try {
-      const method = req?.method?.toUpperCase() as keyof ApiMethodHandlers;
+      const method = req?.method?.toUpperCase() as keyof ApiMethodHandles;
       if (!method) {
         Boom.methodNotAllowed(`No method specified for ${req.url}!`);
       }
@@ -17,12 +24,12 @@ const apiHandler = (handler: ApiMethodHandlers) => {
       if (!methodHandler) {
         Boom.methodNotAllowed(`Method not allowed on path ${req.url}`);
       } else {
-        await methodHandler(req, res);
+        return await methodHandler(req, params);
       }
     } catch (err) {
-      errorHandler(err, res);
+      return errorHandler(err);
     }
   };
 };
 
-export default apiHandler;
+export default apiHandle;

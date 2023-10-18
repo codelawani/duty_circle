@@ -1,15 +1,14 @@
-import { ValidationError } from "yup";
 import prisma from "../db";
 import { TaskSchema, Task } from "../types/task.schema";
 import { circleService } from "./circle";
-import { withErrorHandling } from "./errors";
+// import { withErrorHandling } from "./errors";
 import * as Boom from "@hapi/boom";
 class TaskService {
   constructor() {
-    this.getById = withErrorHandling(this.getById, "Error creating task");
-    this.create = withErrorHandling(this.create, `Error creating task`);
-    this.update = withErrorHandling(this.update, `Error updating task`);
-    this.delete = withErrorHandling(this.delete, `Error deleting task`);
+    // this.getById = withErrorHandling(this.getById, "Error creating task");
+    // this.create = withErrorHandling(this.create, `Error creating task`);
+    // this.update = withErrorHandling(this.update, `Error updating task`);
+    // this.delete = withErrorHandling(this.delete, `Error deleting task`);
   }
 
   async verifyTaskCircle(task: Task) {
@@ -20,10 +19,9 @@ class TaskService {
       const circleExists = await circleService.circleExists(circleId);
 
       if (!circleExists) throw Boom.notFound("Circle not found");
-      const userInCircle = await circleService.userInCircle(userId, circleId);
 
-      if (!userInCircle)
-        throw new ValidationError("User doesn't belong to this circle");
+      // Throw error if user not in circle
+      await circleService.userInCircle(userId, circleId);
     } else {
       verifiedTask.circleId = null;
     }
@@ -42,6 +40,7 @@ class TaskService {
     const task = await TaskSchema.validate(data);
     await taskService.verifyTaskCircle(task);
     const res = await prisma.task.create({ data: task });
+    if (!res) throw Boom.internal("Task creation failed");
     return res;
   }
 
@@ -62,6 +61,29 @@ class TaskService {
     await prisma.task.delete({ where: { id } });
 
     return { message: "Task deleted successfully" };
+  }
+
+  async getTasksInCircle(userId: string) {
+    const circle = await circleService.get(userId);
+    return await prisma.task.findMany({
+      where: { circleId: circle.id },
+    });
+  }
+  async getAllTasks() {
+    return await prisma.task.findMany();
+  }
+  async getTasksByTags(tags: string[]) {
+    return await prisma.task.findMany({
+      where: {
+        tags: {
+          every: {
+            tag: {
+              name: { in: tags },
+            },
+          },
+        },
+      },
+    });
   }
 }
 export const taskService = new TaskService();

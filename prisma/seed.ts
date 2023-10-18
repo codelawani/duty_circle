@@ -4,16 +4,37 @@ const prisma = new PrismaClient();
 async function main() {
   enum CircleRole {
     MEMBER = "MEMBER",
-    ADMIN = "ADMIN"
+    ADMIN = "ADMIN",
   }
+  const deleteAll = async () => {
+    const tablenames = await prisma.$queryRaw<
+      Array<{ tablename: string }>
+    >`SELECT tablename FROM pg_tables WHERE schemaname='public'`;
 
+    const tables = tablenames
+      .map(({ tablename }: { tablename: string }) => tablename)
+      .filter((name: string) => name !== "_prisma_migrations")
+      .map((name: string) => `"public"."${name}"`)
+      .join(", ");
+
+    try {
+      return await prisma.$executeRawUnsafe(
+        `TRUNCATE TABLE ${tables} CASCADE;`
+      );
+    } catch (error) {
+      console.log({ error });
+    }
+  };
+
+  console.log(await deleteAll());
   // Create Jack Sparrow user
   const jack = await prisma.user.create({
     data: {
       email: "jack@sparrow.com",
       name: "Jack Sparrow",
       username: "jacksparrow",
-      image: "https://i.pinimg.com/550x/3e/1c/82/3e1c82385d98040224f65175d2e5f75c.jpg",
+      image:
+        "https://i.pinimg.com/550x/3e/1c/82/3e1c82385d98040224f65175d2e5f75c.jpg",
     },
   });
 
@@ -21,6 +42,7 @@ async function main() {
   const rum = await prisma.circle.create({
     data: {
       name: "Rum",
+      adminId: jack.id,
     },
   });
 

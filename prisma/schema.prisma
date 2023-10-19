@@ -81,7 +81,6 @@ model Circle {
   name      String
   adminId   String
   members   UserCircle[]
-  tasks     Task[]
 }
 
 model UserCircle {
@@ -93,6 +92,7 @@ model UserCircle {
   circle    Circle     @relation(fields: [circleId], references: [id], onDelete: Cascade)
   circleId  String
   role      CircleRole @default(MEMBER)
+  tasks     Task[]
 }
 
 enum CircleRole {
@@ -101,21 +101,20 @@ enum CircleRole {
 }
 
 model Task {
-  id          String      @id @default(uuid())
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  id          String       @id @default(uuid())
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
   title       String
   description String?
   dueDate     DateTime?
-  status      TaskStatus  @default(PENDING)
-  privacy     TaskPrivacy @default(PRIVATE)
+  status      TaskStatus   @default(PENDING)
+  privacy     TaskPrivacy  @default(PRIVATE)
   consequence String?
   nudges      Nudge[]
   tags        TaskTag[]
-  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String
-  circle      Circle?     @relation(fields: [circleId], references: [id], onDelete: SetNull)
-  circleId    String?
+  userCircles UserCircle[]
 }
 
 enum TaskStatus {
@@ -126,7 +125,6 @@ enum TaskStatus {
 enum TaskPrivacy {
   PRIVATE
   PUBLIC
-  CIRCLE
 }
 
 model Tag {

@@ -27,7 +27,7 @@
  *           description: The consequence of the task.
  *         privacy:
  *           type: string
- *           enum: [PRIVATE, PUBLIC, CIRCLE]
+ *           enum: [PRIVATE, PUBLIC]
  *           description: The privacy setting of the task.
  *         circleId:
  *           type: string

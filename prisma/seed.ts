@@ -54,15 +54,15 @@ async function main() {
       role: CircleRole.ADMIN,
     },
   };
-  await prisma.userCircle.create(jackCircleData);
+  const jackCircle = await prisma.userCircle.create(jackCircleData);
 
   // Create a task for Jack to steal a jar of dirt
   const jackTaskData = {
     data: {
       title: "Steal a jar of dirt",
-      privacy: "CIRCLE",
+      privacy: "PUBLIC",
       userId: jack.id,
-      circleId: rum.id,
+      // userCircles: jackCircle,
     },
   };
   const jackTask = await prisma.task.create(jackTaskData);
@@ -73,6 +73,9 @@ async function main() {
       title: "Find the Black Pearl",
       privacy: "PRIVATE",
       userId: jack.id,
+      userCircles: {
+        connect: [{ id: jackCircle.id }],
+      },
     },
   };
   const blackPearlTask = await prisma.task.create(blackPearlTaskData);

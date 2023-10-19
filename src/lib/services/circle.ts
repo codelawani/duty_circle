@@ -1,7 +1,7 @@
 import { NextApiRequest } from "next";
 import prisma from "../db";
-import { Circle, circleSchema, UserWithCircle } from "../types/circle.schema";
-import { userCircleSchema, UserCircle } from "../types/circle.schema";
+import { Circle, circleSchema, UserWithCircle } from "../types/circle.schema.d";
+import { userCircleSchema, UserCircle } from "../types/circle.schema.d";
 import * as Boom from "@hapi/boom";
 import { taskService } from "./task";
 

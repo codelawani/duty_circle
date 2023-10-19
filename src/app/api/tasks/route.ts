@@ -19,13 +19,11 @@ const createTask = async (req: Request) => {
 
 /**
  * Retrieves all tasks from the database.
- * @function
- * @async
  * @param {Request} req - The HTTP request object.
  * @returns {Promise<void>} - A Promise that resolves with the retrieved tasks.
  */
 const getAllTasks = async () => {
-  const tasks = await taskService.getById();
+  const tasks = await taskService.getAllTasks();
   return res.json(tasks);
 };
 

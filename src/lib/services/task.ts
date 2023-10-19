@@ -1,26 +1,18 @@
 import prisma from "../db";
-import { TaskSchema, Task } from "../types/task.schema";
+import { TaskSchema, Task } from "../types/task.schema.d";
 import { circleService } from "./circle";
-// import { withErrorHandling } from "./errors";
 import * as Boom from "@hapi/boom";
 class TaskService {
-  constructor() {
-    // this.getById = withErrorHandling(this.getById, "Error creating task");
-    // this.create = withErrorHandling(this.create, `Error creating task`);
-    // this.update = withErrorHandling(this.update, `Error updating task`);
-    // this.delete = withErrorHandling(this.delete, `Error deleting task`);
-  }
-
   async verifyTaskCircle(task: Task) {
     const verifiedTask = await TaskSchema.validate(task);
-    let { circleId, privacy, userId } = verifiedTask;
+    let { circleId, userId } = verifiedTask;
 
-    if (privacy === "CIRCLE") {
+    if (circleId) {
       const circleExists = await circleService.circleExists(circleId);
 
       if (!circleExists) throw Boom.notFound("Circle not found");
 
-      // Throw error if user not in circle
+      // Will Throw error if user not in circle
       await circleService.userInCircle(userId, circleId);
     } else {
       verifiedTask.circleId = null;
@@ -64,10 +56,11 @@ class TaskService {
   }
 
   async getTasksInCircle(userId: string) {
-    const circle = await circleService.get(userId);
-    return await prisma.task.findMany({
-      where: { circleId: circle.id },
+    const tasks = await prisma.userCircle.findFirst({
+      where: { userId },
+      select: { tasks: true },
     });
+    return tasks;
   }
   async getAllTasks() {
     return await prisma.task.findMany();

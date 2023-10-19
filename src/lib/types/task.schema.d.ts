@@ -25,22 +25,20 @@ export const TaskSchema = yup
     status: yup.string().oneOf(["PENDING", "COMPLETED"]).required(),
     consequence: yup.string().nullable(),
     userId: yup.string().required(),
-    privacy: yup
-      .string()
-      .oneOf(["PRIVATE", "PUBLIC", "CIRCLE"])
-      .test(
-        "validatePrivacy",
-        "Pls provide a valid circle or set privacy to PUBLIC or PRIVATE",
-        validatePrivacy
-      ),
-    circleId: yup
-      .string()
-      .nullable()
-      .test(
-        "validateCircleId",
-        "Pls set privacy to CIRCLE if you want to include in a circle",
-        validateCircleId
-      ),
+    privacy: yup.string().oneOf(["PRIVATE", "PUBLIC"]),
+    // .test(
+    //   "validatePrivacy",
+    //   "Pls provide a valid circle or set privacy to PUBLIC or PRIVATE",
+    //   validatePrivacy
+    // ),
+    // circleId: yup
+    //   .string()
+    //   .nullable()
+    //   .test(
+    //     "validateCircleId",
+    //     "Pls set privacy to CIRCLE if you want to include in a circle",
+    //     validateCircleId
+    //   ),
   });
 
 export type Task = yup.InferType<typeof TaskSchema>;

@@ -19,8 +19,6 @@ const createTask = async (req: Request) => {
 
 /**
  * Retrieves all tasks from the database.
- * @function
- * @async
  * @param {Request} req - The HTTP request object.
  * @returns {Promise<void>} - A Promise that resolves with the retrieved tasks.
  */

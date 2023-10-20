@@ -27,7 +27,7 @@ export const TaskSchema = yup
     userId: yup.string().required(),
     privacy: yup
       .string()
-      .oneOf(["PRIVATE", "PUBLIC", "CIRCLE"])
+      .oneOf(["PRIVATE", "PUBLIC"])
       .test(
         "validatePrivacy",
         "Pls provide a valid circle or set privacy to PUBLIC or PRIVATE",

@@ -2,6 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 // Visit https://dbdiagram.io/d/652043ccffbf5169f031f23c for the db Diagram
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -51,22 +52,24 @@ model VerificationToken {
 }
 
 model User {
-  id             String         @id @default(uuid())
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
-  email          String         @unique
-  emailVerified  DateTime?
-  username       String?        @unique
-  name           String?
-  image          String?
-  accounts       Account[]
-  sessions       Session[]
-  role           Role           @default(USER)
-  nudgesSent     Nudge[]        @relation("NudgesSent")
-  nudgesReceived Nudge[]        @relation("NudgesReceived")
-  notifications  Notification[]
-  tasks          Task[]
-  circles        UserCircle[]
+  id                    String         @id @default(uuid())
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime       @updatedAt
+  email                 String         @unique
+  emailVerified         DateTime?
+  username              String?        @unique
+  name                  String?
+  image                 String?
+  accounts              Account[]
+  sessions              Session[]
+  role                  Role           @default(USER)
+  nudgesSent            Nudge[]        @relation("NudgesSent")
+  nudgesReceived        Nudge[]        @relation("NudgesReceived")
+  circleInvitesReceived CircleInvite[] @relation("CircleInvitesReceived")
+  circleInvitesSent     CircleInvite[] @relation("CircleInvitesSent")
+  notifications         Notification[]
+  tasks                 Task[]
+  circles               UserCircle[]
 }
 
 enum Role {
@@ -75,13 +78,13 @@ enum Role {
 }
 
 model Circle {
-  id        String       @id @default(uuid())
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
+  id        String         @id @default(uuid())
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
   name      String
   adminId   String
   members   UserCircle[]
-  tasks     Task[]
+  invites   CircleInvite[]
 }
 
 model UserCircle {
@@ -93,6 +96,7 @@ model UserCircle {
   circle    Circle     @relation(fields: [circleId], references: [id], onDelete: Cascade)
   circleId  String
   role      CircleRole @default(MEMBER)
+  tasks     Task[]
 }
 
 enum CircleRole {
@@ -100,33 +104,41 @@ enum CircleRole {
   ADMIN
 }
 
+model CircleInvite {
+  id          String       @id @default(uuid())
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  sender      User         @relation("CircleInvitesSent", fields: [senderId], references: [id])
+  senderId    String
+  recipient   User         @relation("CircleInvitesReceived", fields: [recipientId], references: [id])
+  recipientId String
+  circle      Circle       @relation(fields: [circleId], references: [id])
+  circleId    String
+  status      InviteStatus
+}
+
+enum InviteStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+}
+
 model Task {
-  id          String      @id @default(uuid())
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  id          String       @id @default(uuid())
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
   title       String
   description String?
   dueDate     DateTime?
-  status      TaskStatus  @default(PENDING)
-  privacy     TaskPrivacy @default(PRIVATE)
+  completed   Boolean      @default(false)
+  public      Boolean      @default(false)
   consequence String?
+  nudgeCount  Int          @default(0)
   nudges      Nudge[]
   tags        TaskTag[]
-  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String
-  circle      Circle?     @relation(fields: [circleId], references: [id], onDelete: SetNull)
-  circleId    String?
-}
-
-enum TaskStatus {
-  PENDING
-  COMPLETED
-}
-
-enum TaskPrivacy {
-  PRIVATE
-  PUBLIC
-  CIRCLE
+  circles     UserCircle[]
 }
 
 model Tag {
@@ -150,7 +162,7 @@ model Nudge {
   id         String   @id @default(uuid())
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
-  message    String?
+  message    String   @default("You can do it ✔")
   sender     User     @relation("NudgesSent", fields: [senderId], references: [id], onDelete: Cascade)
   receiver   User     @relation("NudgesReceived", fields: [receiverId], references: [id], onDelete: Cascade)
   task       Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
@@ -160,24 +172,19 @@ model Nudge {
 }
 
 model Notification {
-  id        String             @id @default(uuid())
-  createdAt DateTime           @default(now())
-  updatedAt DateTime           @updatedAt
-  user      User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id        String           @id @default(uuid())
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   content   String
   type      NotificationType
-  status    NotificationStatus @default(UNREAD)
-}
-
-enum NotificationStatus {
-  READ
-  UNREAD
+  seen      Boolean          @default(false)
 }
 
 enum NotificationType {
   TASK_DEADLINE
   NEW_NUDGE
   CIRCLE_INVITE
-  TASK_ASSIGNED
+  FRIEND_REQUEST
 }

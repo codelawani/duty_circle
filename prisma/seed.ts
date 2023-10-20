@@ -60,7 +60,7 @@ async function main() {
   const jackTaskData = {
     data: {
       title: "Steal a jar of dirt",
-      privacy: "CIRCLE",
+      privacy: "PRIVATE",
       userId: jack.id,
       circleId: rum.id,
     },

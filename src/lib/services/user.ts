@@ -16,7 +16,7 @@ class UserService {
     const session = await getServerSession(authOptions);
     const userMail = session?.user?.email ?? "jack@sparrow.com";
     const user = await this.getByEmail(userMail);
-
+    console.log(user);
     if (!user?.id) {
       throw Boom.unauthorized("You are not allowed to access this resouce");
     }

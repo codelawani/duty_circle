@@ -87,6 +87,11 @@ model Circle {
   invites   CircleInvite[]
 }
 
+enum CircleRole {
+  MEMBER
+  ADMIN
+}
+
 model UserCircle {
   id        String     @id @default(uuid())
   createdAt DateTime   @default(now())
@@ -97,11 +102,6 @@ model UserCircle {
   circleId  String
   role      CircleRole @default(MEMBER)
   tasks     Task[]
-}
-
-enum CircleRole {
-  MEMBER
-  ADMIN
 }
 
 model CircleInvite {
@@ -135,27 +135,18 @@ model Task {
   consequence String?
   nudgeCount  Int          @default(0)
   nudges      Nudge[]
-  tags        TaskTag[]
+  tags        Tag[]
   user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String
   circles     UserCircle[]
 }
 
 model Tag {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  name      String    @unique
-  tasks     TaskTag[]
-}
-
-model TaskTag {
-  taskId String
-  tagId  Int
-  task   Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
-  tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
-
-  @@id([taskId, tagId])
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String   @unique
+  tasks     Task[]
 }
 
 model Nudge {

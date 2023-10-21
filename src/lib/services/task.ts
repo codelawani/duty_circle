@@ -1,33 +1,9 @@
 import prisma from "../db";
 import { TaskSchema, Task } from "../types/task.schema";
 import { circleService } from "./circle";
-// import { withErrorHandling } from "./errors";
 import * as Boom from "@hapi/boom";
+import { tagService } from "./tags";
 class TaskService {
-  constructor() {
-    // this.getById = withErrorHandling(this.getById, "Error creating task");
-    // this.create = withErrorHandling(this.create, `Error creating task`);
-    // this.update = withErrorHandling(this.update, `Error updating task`);
-    // this.delete = withErrorHandling(this.delete, `Error deleting task`);
-  }
-
-  async verifyTaskCircle(task: Task) {
-    const verifiedTask = await TaskSchema.validate(task);
-    let { circleId, privacy, userId } = verifiedTask;
-
-    if (privacy === "CIRCLE") {
-      const circleExists = await circleService.circleExists(circleId);
-
-      if (!circleExists) throw Boom.notFound("Circle not found");
-
-      // Throw error if user not in circle
-      await circleService.userInCircle(userId, circleId);
-    } else {
-      verifiedTask.circleId = null;
-    }
-    return verifiedTask;
-  }
-
   async getById(id?: string) {
     if (id) {
       return await prisma.task.findUnique({ where: { id } });
@@ -37,9 +13,18 @@ class TaskService {
   }
 
   async create(data: Task, id?: string) {
-    const task = await TaskSchema.validate(data);
-    await taskService.verifyTaskCircle(task);
-    const res = await prisma.task.create({ data: task });
+    const { tags: tagNames, ...task } = await TaskSchema.validate(data);
+    const tags = await tagService.createorFindMulti(tagNames);
+    const res = await prisma.task.create({
+      data: {
+        ...task,
+        tags: {
+          connect: tags
+            .filter((tag) => tag?.id)
+            .map((tag) => ({ id: tag!.id })),
+        },
+      },
+    });
     if (!res) throw Boom.internal("Task creation failed");
     return res;
   }

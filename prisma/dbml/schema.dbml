@@ -54,6 +54,8 @@ Table User {
   role Role [not null, default: 'USER']
   nudgesSent Nudge [not null]
   nudgesReceived Nudge [not null]
+  circleInvitesReceived CircleInvite [not null]
+  circleInvitesSent CircleInvite [not null]
   notifications Notification [not null]
   tasks Task [not null]
   circles UserCircle [not null]
@@ -66,7 +68,7 @@ Table Circle {
   name String [not null]
   adminId String [not null]
   members UserCircle [not null]
-  tasks Task [not null]
+  invites CircleInvite [not null]
 }
 
 Table UserCircle {
@@ -78,6 +80,20 @@ Table UserCircle {
   circle Circle [not null]
   circleId String [not null]
   role CircleRole [not null, default: 'MEMBER']
+  tasks Task [not null]
+}
+
+Table CircleInvite {
+  id String [pk]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  sender User [not null]
+  senderId String [not null]
+  recipient User [not null]
+  recipientId String [not null]
+  circle Circle [not null]
+  circleId String [not null]
+  status InviteStatus [not null]
 }
 
 Table Task {
@@ -87,15 +103,15 @@ Table Task {
   title String [not null]
   description String
   dueDate DateTime
-  status TaskStatus [not null, default: 'PENDING']
-  privacy TaskPrivacy [not null, default: 'PRIVATE']
+  completed Boolean [not null, default: false]
+  public Boolean [not null, default: false]
   consequence String
+  nudgeCount Int [not null, default: 0]
   nudges Nudge [not null]
-  tags TaskTag [not null]
+  tags Tag [not null]
   user User [not null]
   userId String [not null]
-  circle Circle
-  circleId String
+  circles UserCircle [not null]
 }
 
 Table Tag {
@@ -103,25 +119,14 @@ Table Tag {
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
   name String [unique, not null]
-  tasks TaskTag [not null]
-}
-
-Table TaskTag {
-  taskId String [not null]
-  tagId Int [not null]
-  task Task [not null]
-  tag Tag [not null]
-
-  indexes {
-    (taskId, tagId) [pk]
-  }
+  tasks Task [not null]
 }
 
 Table Nudge {
   id String [pk]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
-  message String
+  message String [not null, default: 'You can do it ✔']
   sender User [not null]
   receiver User [not null]
   task Task [not null]
@@ -138,7 +143,7 @@ Table Notification {
   userId String [not null]
   content String [not null]
   type NotificationType [not null]
-  status NotificationStatus [not null, default: 'UNREAD']
+  seen Boolean [not null, default: false]
 }
 
 Enum Role {
@@ -151,26 +156,17 @@ Enum CircleRole {
   ADMIN
 }
 
-Enum TaskStatus {
+Enum InviteStatus {
   PENDING
-  COMPLETED
-}
-
-Enum TaskPrivacy {
-  PRIVATE
-  PUBLIC
-}
-
-Enum NotificationStatus {
-  READ
-  UNREAD
+  ACCEPTED
+  DECLINED
 }
 
 Enum NotificationType {
   TASK_DEADLINE
   NEW_NUDGE
   CIRCLE_INVITE
-  TASK_ASSIGNED
+  FRIEND_REQUEST
 }
 
 Ref: Account.userId > User.id [delete: Cascade]
@@ -181,13 +177,13 @@ Ref: UserCircle.userId > User.id [delete: Cascade]
 
 Ref: UserCircle.circleId > Circle.id [delete: Cascade]
 
+Ref: CircleInvite.senderId > User.id
+
+Ref: CircleInvite.recipientId > User.id
+
+Ref: CircleInvite.circleId > Circle.id
+
 Ref: Task.userId > User.id [delete: Cascade]
-
-Ref: Task.circleId > Circle.id [delete: Set Null]
-
-Ref: TaskTag.taskId > Task.id [delete: Cascade]
-
-Ref: TaskTag.tagId > Tag.id [delete: Cascade]
 
 Ref: Nudge.senderId > User.id [delete: Cascade]
 

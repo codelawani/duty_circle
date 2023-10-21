@@ -1,6 +1,5 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-
 async function main() {
   enum CircleRole {
     MEMBER = "MEMBER",
@@ -80,12 +79,20 @@ async function main() {
     title: "Finish hoisting the sails",
     description:
       "Make sure all the sails are properly hoisted so we can set sail.",
-    tags: ["sailing", "ship"],
     dueDate: "2024-01-22T12:00:00.000Z",
     consequence: "We'll lose 2 bags of gold",
     public: true,
+    userId: jack.id,
   };
-  const sailTask = await prisma.task.create(sailTaskData);
+  const tags = await createTags(["sailing", "ship"]);
+  const sailTask = await prisma.task.create({
+    data: {
+      ...sailTaskData,
+      tags: {
+        connect: tags.map((tag) => ({ id: tag.id })),
+      },
+    },
+  });
   // Create a nudge notification for Jack
   const rumNotificationData = {
     data: {
@@ -106,7 +113,26 @@ async function main() {
   };
   await prisma.notification.create(stealDirtNotificationData);
 }
-
+async function createTags(tagNames: Array<string>) {
+  tagNames = tagNames?.filter((name) => !!name);
+  const tags = tagNames
+    ? await Promise.all(
+        tagNames.map(async (name) => {
+          let tag;
+          tag = await prisma.tag.findUnique({
+            where: { name },
+          });
+          if (!tag) {
+            tag = await prisma.tag.create({
+              data: { name },
+            });
+          }
+          return tag;
+        })
+      )
+    : [];
+  return tags;
+}
 main()
   .catch((e) => {
     console.error(e);

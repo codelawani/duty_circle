@@ -17,25 +17,30 @@
  *           format: date-time
  *           nullable: true
  *           description: The due date of the task.
- *         status:
- *           type: string
- *           enum: [PENDING, COMPLETED]
- *           description: The status of the task.
+ *         completed:
+ *           type: boolean
+ *           description: The completion status of the task.
  *         consequence:
  *           type: string
  *           nullable: true
  *           description: The consequence of the task.
- *         privacy:
- *           type: string
- *           enum: [PRIVATE, PUBLIC, CIRCLE]
+ *         public:
+ *           type: boolean
  *           description: The privacy setting of the task.
- *         circleId:
- *           type: string
- *           nullable: true
- *           description: The ID of the circle that the task belongs to.
+ *         tags:
+ *           type: array
+ *           items:
+ *             type: string
+ *           description: The tags associated with the task.
  *       required:
  *         - title
- *         - privacy
+ *       example:
+ *         title: "Complete project proposal"
+ *         description: "Write a proposal for the new project."
+ *         dueDate: "2024-01-31T12:00:00Z"
+ *         consequence: "Donate 50$ to Open Source Project"
+ *         public: true
+ *         tags: ["project", "proposal"]
  *     Circle:
  *       type: object
  *       properties:

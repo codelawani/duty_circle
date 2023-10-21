@@ -13,13 +13,16 @@ export function errorHandler(
       res
         // .status(err.output.statusCode)
         .json(
-          { error: { message: err.message } },
+          { error: { message: err.message.replace('"', "'") } },
           { status: err.output.statusCode }
         )
     );
   } else if (err instanceof ValidationError) {
     return res.json({
-      error: { message: "Action failed", err: err.errors.join(", ") },
+      error: {
+        message: "Action failed",
+        err: err.errors.join(", ").replaceAll('"', "'"),
+      },
     });
   } else {
     return res.json({

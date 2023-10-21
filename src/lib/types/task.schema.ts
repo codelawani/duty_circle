@@ -12,7 +12,7 @@ export const TaskSchema = yup
     consequence: yup.string().nullable(),
     userId: yup.string().required(),
     public: yup.boolean(),
-    tags: yup.array().of(yup.string().default("")),
+    tags: yup.array().of(yup.string().default("")).default([]),
   });
 
 export type Task = yup.InferType<typeof TaskSchema>;

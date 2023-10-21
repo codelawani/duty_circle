@@ -1,6 +1,5 @@
 import prisma from "../db";
 import { TaskSchema, Task } from "../types/task.schema";
-import { circleService } from "./circle";
 import * as Boom from "@hapi/boom";
 import { tagService } from "./tags";
 class TaskService {
@@ -19,9 +18,7 @@ class TaskService {
       data: {
         ...task,
         tags: {
-          connect: tags
-            .filter((tag) => tag?.id)
-            .map((tag) => ({ id: tag!.id })),
+          connect: tags.map((tag) => ({ id: tag.id })),
         },
       },
     });
@@ -30,17 +27,25 @@ class TaskService {
   }
 
   async update(id: string, data: Task) {
-    const task = await taskService.getById(id);
+    const task = await this.getById(id);
     if (!task) throw Boom.notFound("Task not found");
+    const { tags: tagNames, ...newData } = await TaskSchema.validate(data);
+    const tags = await tagService.createorFindMulti(tagNames);
+    const updatedTask = { ...task, ...newData };
 
-    const updatedTask = { ...task, ...data };
-    const verifiedTask = await taskService.verifyTaskCircle(updatedTask);
-
-    return await prisma.task.update({ where: { id }, data: verifiedTask });
+    return await prisma.task.update({
+      where: { id },
+      data: {
+        ...updatedTask,
+        tags: {
+          set: tags.map((tag) => ({ id: tag.id })),
+        },
+      },
+    });
   }
 
   async delete(id: string) {
-    const task = await taskService.getById(id);
+    const task = await this.getById(id);
     if (!task) throw Boom.notFound("Task not found");
 
     await prisma.task.delete({ where: { id } });
@@ -48,23 +53,30 @@ class TaskService {
     return { message: "Task deleted successfully" };
   }
 
-  async getTasksInCircle(userId: string) {
-    const circle = await circleService.get(userId);
-    return await prisma.task.findMany({
-      where: { circleId: circle.id },
-    });
-  }
   async getAllTasks() {
     return await prisma.task.findMany();
   }
-  async getTasksByTags(tags: string[]) {
+  async getPublicFeed() {
+    return await prisma.task.findMany({
+      include: {
+        tags: { select: { name: true } },
+        user: {
+          select: {
+            username: true,
+            image: true,
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+  }
+  async getTasksByTags(tagNames: string[]) {
     return await prisma.task.findMany({
       where: {
         tags: {
           every: {
-            tag: {
-              name: { in: tags },
-            },
+            name: { in: tagNames },
           },
         },
       },

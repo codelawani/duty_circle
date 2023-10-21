@@ -1,3 +1,4 @@
+import { Tag } from "@prisma/client";
 import prisma from "../db";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
@@ -11,8 +12,8 @@ class TagService {
    * @returns Promise that resolves to an array of tags.
    */
   async createorFindMulti(tagNames?: Array<string>) {
-    tagNames = tagNames?.filter((name) => name);
-    return tagNames
+    tagNames = tagNames?.filter((name) => !!name);
+    const tags = tagNames
       ? await Promise.all(
           tagNames.map(async (name) => {
             let tag;
@@ -37,6 +38,7 @@ class TagService {
           })
         )
       : [];
+    return tags.filter((tag) => tag?.id) as Tag[];
   }
 
   /**

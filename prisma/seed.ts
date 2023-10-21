@@ -31,7 +31,7 @@ async function main() {
   const jack = await prisma.user.create({
     data: {
       email: "jack@sparrow.com",
-      name: "Jack Sparrow",
+      name: "Captain Jack Sparrow",
       username: "jacksparrow",
       image:
         "https://i.pinimg.com/550x/3e/1c/82/3e1c82385d98040224f65175d2e5f75c.jpg",
@@ -76,7 +76,16 @@ async function main() {
     },
   };
   const blackPearlTask = await prisma.task.create(blackPearlTaskData);
-
+  const sailTaskData = {
+    title: "Finish hoisting the sails",
+    description:
+      "Make sure all the sails are properly hoisted so we can set sail.",
+    tags: ["sailing", "ship"],
+    dueDate: "2024-01-22T12:00:00.000Z",
+    consequence: "We'll lose 2 bags of gold",
+    public: true,
+  };
+  const sailTask = await prisma.task.create(sailTaskData);
   // Create a nudge notification for Jack
   const rumNotificationData = {
     data: {

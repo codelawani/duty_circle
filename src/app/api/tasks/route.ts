@@ -23,7 +23,7 @@ const createTask = async (req: Request) => {
  * @returns {Promise<void>} - A Promise that resolves with the retrieved tasks.
  */
 const getAllTasks = async () => {
-  const tasks = await taskService.getById();
+  const tasks = await taskService.getAllTasks();
   return res.json(tasks);
 };
 

@@ -2,10 +2,11 @@ import prisma from "../db";
 import * as Boom from "@hapi/boom";
 import { userService } from "./user";
 import { NotificationType, User } from "@prisma/client";
+import { NotifSchema } from "../types/notif.schema.d";
 interface INotifInfo {
-  senderId: string;
+  senderId?: string;
   userId: string;
-  type: NotificationType;
+  type?: NotificationType;
 }
 export class NotifService {
   constructor(
@@ -15,9 +16,12 @@ export class NotifService {
   async create() {
     const { sender } = await this.validateUsers();
     const { userId, type } = this.setContent(sender);
-    const notif = await prisma.notification.create({
-      data: { userId, content: this.content, type },
+    const data = await NotifSchema.validate({
+      userId,
+      content: this.content,
+      type,
     });
+    const notif = await prisma.notification.create({ data });
     if (!notif) throw Boom.internal("Error creating notification");
     console.log(notif);
     return notif;

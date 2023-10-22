@@ -3,12 +3,10 @@ import { TaskSchema, Task } from "../types/task.schema";
 import * as Boom from "@hapi/boom";
 import { tagService } from "./tags";
 class TaskService {
-  async getById(id?: string) {
-    if (id) {
-      return await prisma.task.findUnique({ where: { id } });
-    } else {
-      return await prisma.task.findMany();
-    }
+  async getById(id: string) {
+    const task = await prisma.task.findUnique({ where: { id } });
+    if (!task) throw Boom.notFound("Task not found");
+    return task;
   }
 
   async create(data: Task, id?: string) {

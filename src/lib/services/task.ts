@@ -8,6 +8,7 @@ class TaskService {
     const task = await prisma.task.findUnique({ where: { id } });
     if (!task) throw Boom.notFound("Task not found");
     return task;
+
   }
 
   async create(data: Task, id?: string) {
@@ -85,6 +86,7 @@ class TaskService {
       },
     });
   }
+
   async getTasksByTags(tagNames: string[]) {
     return await prisma.task.findMany({
       where: {

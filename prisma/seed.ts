@@ -227,26 +227,7 @@ async function createTags(tagNames: Array<string>) {
     : [];
   return tags;
 }
-async function createTags(tagNames: Array<string>) {
-  tagNames = tagNames?.filter((name) => !!name);
-  const tags = tagNames
-    ? await Promise.all(
-        tagNames.map(async (name) => {
-          let tag;
-          tag = await prisma.tag.findUnique({
-            where: { name },
-          });
-          if (!tag) {
-            tag = await prisma.tag.create({
-              data: { name },
-            });
-          }
-          return tag;
-        })
-      )
-    : [];
-  return tags;
-}
+
 main()
   .catch((e) => {
     console.error(e);

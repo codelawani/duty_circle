@@ -33,7 +33,7 @@ async function main() {
       name: "Captain Jack Sparrow",
       username: "jacksparrow",
       image:
-        "https://i.pinimg.com/550x/3e/1c/82/3e1c82385d98040224f65175d2e5f75c.jpg",
+        "https://media.discordapp.net/attachments/1134839709248536638/1166041745839104051/jack-sparrow-150-150-835656.jpeg?ex=65490c00&is=65369700&hm=ba3b6d59a8ea2f8c6d827b21b30fc125ef4b440d1e744ed0e7905266cba36899&=",
     },
   });
 
@@ -112,6 +112,100 @@ async function main() {
     },
   };
   await prisma.notification.create(stealDirtNotificationData);
+
+  async function initblackbeard() {
+    const blackbeardImage =
+      "https://media.discordapp.net/attachments/1134839709248536638/1166041778164613211/blackbeard-150-150-794105.jpeg?ex=65490c07&is=65369707&hm=7004ee64e2446f4d223a75fb8f9f7a94f910e53999bc6084202f689673f7a4e8&=";
+
+    const blackbeard = await prisma.user.create({
+      data: {
+        email: "blackbeard@queenannesrevenge.com",
+        name: "Captain Blackbeard",
+        username: "blackbeard",
+        image: blackbeardImage,
+      },
+    });
+
+    // Create a task for Blackbeard to find the Fountain of Youth
+    const fountainTaskData = {
+      data: {
+        title: "Find the Fountain of Youth",
+        public: false,
+        userId: blackbeard.id,
+        tags: {
+          connect: [
+            {
+              id: (await prisma.tag.create({ data: { name: "adventure" } })).id,
+            },
+            {
+              id: (await prisma.tag.create({ data: { name: "exploration" } }))
+                .id,
+            },
+          ],
+        },
+      },
+    };
+    const fountainTask = await prisma.task.create(fountainTaskData);
+
+    // Create a task for Blackbeard to plunder a Spanish galleon
+    const plunderTaskData = {
+      data: {
+        title: "Plunder a Spanish galleon",
+        public: true,
+        dueDate: "2024-01-15T12:00:00.000Z",
+        consequence: "We'll lose 10 bags of gold",
+        userId: blackbeard.id,
+        tags: {
+          connect: [
+            { id: (await prisma.tag.create({ data: { name: "combat" } })).id },
+            {
+              id: (await prisma.tag.create({ data: { name: "treasure" } })).id,
+            },
+          ],
+        },
+      },
+    };
+    const plunderTask = await prisma.task.create(plunderTaskData);
+
+    // Create a task for Blackbeard to get his beard braided
+    const beardTaskData = {
+      data: {
+        title: "Get beard braided",
+        public: false,
+        userId: blackbeard.id,
+        tags: {
+          connect: [
+            {
+              id: (await prisma.tag.create({ data: { name: "grooming" } })).id,
+            },
+            { id: (await prisma.tag.create({ data: { name: "style" } })).id },
+          ],
+        },
+      },
+    };
+    const beardTask = await prisma.task.create(beardTaskData);
+
+    const sailTaskData = {
+      title: "Finish hoisting the sails",
+      description:
+        "Make sure all the sails are properly hoisted so we can set sail.",
+      dueDate: "2024-01-22T12:00:00.000Z",
+      consequence: "We'll lose 2 bags of gold",
+      public: true,
+      userId: blackbeard.id,
+      tags: {
+        connect: [
+          {
+            id: (await prisma.tag.findUnique({ where: { name: "sailing" } }))
+              .id,
+          },
+          { id: (await prisma.tag.findUnique({ where: { name: "ship" } })).id },
+        ],
+      },
+    };
+    const sailTask = await prisma.task.create({ data: sailTaskData });
+  }
+  await initblackbeard();
 }
 async function createTags(tagNames: Array<string>) {
   tagNames = tagNames?.filter((name) => !!name);
@@ -133,6 +227,7 @@ async function createTags(tagNames: Array<string>) {
     : [];
   return tags;
 }
+
 main()
   .catch((e) => {
     console.error(e);

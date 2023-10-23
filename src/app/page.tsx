@@ -23,9 +23,9 @@ export default async function Home() {
         public feed
       </h2>
       <div className='first-of-type:border-t grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2'>
-        {feed.map((task) => (
-          <FeedItem key={task.id} {...task} username='john smith' />
-        ))}
+        {feed.length > 0
+          ? feed.map((task) => <FeedItem key={task.id} {...task} />)
+          : null}
       </div>
     </>
   );

@@ -14,12 +14,8 @@ import {
   calculatePriority,
 } from '@/src/utils/task/helpers';
 
-type Props = {
-  title: string;
+type Props = Task & {
   className?: string;
-  id: string;
-  due: string;
-  status: Status;
 };
 
 const taskVariants = cva('py-2 px-7 relative border-b hover:shadow-ml', {
@@ -48,15 +44,14 @@ const taskVariants = cva('py-2 px-7 relative border-b hover:shadow-ml', {
 });
 
 export default function TaskItem(props: Props) {
-  const { title, className, id, due, status } = props;
-  const [checked, setChecked] = useState(status === 'PENDING' ? false : true);
+  const { title, className, id, dueDate, completed } = props;
+  const [checked, setChecked] = useState(completed);
   const [deleteOpen, setDeleteOpen] = useState(false);
 
-  const timeLeft = getDueDate(new Date(due));
+  const timeLeft = getDueDate(new Date(dueDate));
   const dueDateDisplay = dateString(timeLeft);
-  const currentStatus = status === 'PENDING' ? dueDateDisplay : null;
-  const priority =
-    status === 'COMPLETED' ? 'none' : calculatePriority(timeLeft);
+  const currentStatus = completed ? dueDateDisplay : null;
+  const priority = completed ? 'none' : calculatePriority(timeLeft);
   const { updateTaskStatus, deleteTask } = useTask();
 
   const handleChecked = () => {

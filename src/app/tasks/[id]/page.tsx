@@ -20,10 +20,10 @@ export default async function page(props: Props) {
   const {
     title,
     description,
-    status,
+    completed,
     dueDate,
     createdAt,
-    username = 'john smith',
+    user: { username },
   } = await taskData;
   const date = new Date(createdAt);
   const dateString = date.toLocaleDateString('en-US', {
@@ -46,9 +46,7 @@ export default async function page(props: Props) {
       <p>{description}</p>
       <div className='flex gap-3 py-2'>
         <h4>status: </h4>
-        <p className=''>
-          {status === 'COMPLETED' ? 'completed' : dueDateDisplay}
-        </p>
+        <p className=''>{completed ? 'completed' : dueDateDisplay}</p>
       </div>
 
       <p className='py-3'>{dateString}</p>
@@ -67,12 +65,11 @@ export default async function page(props: Props) {
 }
 
 const fetchTask = async (id: string) => {
-  try {
-    const res = await axios.get(`${process.env.NEXTAUTH_URL}/api/tasks/${id}`);
-    return res.data;
-  } catch (error) {
-    console.log(error);
+  const res = await fetch(`${process.env.NEXTAUTH_URL}/api/tasks/${id}`);
+  if (!res.ok) {
+    throw new Error('Error fetching feed!');
   }
+  return res.json();
 };
 
 const Card = ({ heading, content }: { heading: string; content: string }) => {

@@ -10,14 +10,13 @@ import SimpleLoaader from '@/src/components/loaders/SimpleLoaader';
 import { useRouter } from 'next/navigation';
 import { useTask } from '@/src/components/context/TasksContext';
 import CreatableSelect from 'react-select/creatable';
-import ControlledInput from '@/src/components/common/controlled-input';
 
 const schema = yup
   .object({
     title: yup.string().required('please provide title'),
     description: yup.string().optional(),
     dueDate: yup.string().required('please provide due date'),
-    status: yup.string().required(),
+    completed: yup.boolean().required(),
     consequence: yup.string().optional(),
     public: yup.boolean().required(),
     tag: yup.array().of(
@@ -42,7 +41,7 @@ export default function NewTaskForm() {
     defaultValues: {
       title: '',
       description: '',
-      status: 'PENDING',
+      completed: false,
       consequence: '',
       public: false,
       dueDate: '',

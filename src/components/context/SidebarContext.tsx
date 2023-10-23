@@ -1,5 +1,6 @@
 'use client';
 import { createContext, useEffect, useState, useContext } from 'react';
+import useClient from '../hooks/useClient';
 
 type SideBarContextType = {
   showSidebar: boolean;
@@ -8,15 +9,11 @@ type SideBarContextType = {
 
 const SidebarContext = createContext<SideBarContextType | null>(null);
 const SidebarProvider = ({ children }: { children: React.ReactNode }) => {
-  const [isClient, setIsClient] = useState(false);
-
+  const isClient = useClient();
   const initialState: boolean =
     isClient && (JSON.parse(localStorage.getItem('sidebar')!) ?? false);
 
   const [showSidebar, setShowSidebar] = useState<boolean>(initialState);
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   useEffect(() => {
     if (isClient) {

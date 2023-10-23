@@ -41,11 +41,11 @@ const TaskContextProvider = ({ children }: { children: React.ReactNode }) => {
   // update status of a task
   const updateTaskStatus = async (id: string) => {
     const task = tasks.find((task) => task.id === id);
-    const status = task?.status === 'PENDING' ? 'COMPLETED' : 'PENDING';
+    const completed = task?.completed ? false : true;
     try {
       const res = await axios.put(
         `${process.env.NEXT_PUBLIC_URL}/api/tasks/${id}`,
-        { status }
+        { completed }
       );
       if (res.status !== 201) {
         toast.error(res.data.error.err);
@@ -53,7 +53,7 @@ const TaskContextProvider = ({ children }: { children: React.ReactNode }) => {
         toast.success(res.data.msg);
         const updatedTasks = tasks.map((task) => {
           if (task.id === id) {
-            task.status = status;
+            task.completed = completed;
           }
           return task;
         });

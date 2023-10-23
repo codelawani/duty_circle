@@ -1,7 +1,3 @@
-type Privacy = 'PUBLIC' | 'PRIVATE';
-
-type Status = 'PENDING' | 'COMPLETED';
-
 type Task = {
   id: string;
   createdAt: string;
@@ -9,18 +5,23 @@ type Task = {
   title: string;
   description: string;
   dueDate: string;
-  status: Status;
-  privacy: Privacy;
+  completed: boolean;
+  public: boolean;
   consequence: string;
-  userId: string;
+  user: {
+    username: string;
+    image: string;
+    id: string;
+    name: string;
+  };
   circleId: string;
-  username: string;
+  tags: string[];
 };
 
 type NewTask = {
   title: string;
   description?: string;
-  status: string;
+  completed: boolean;
   consequence?: string;
   public: boolean;
   dueDate: string;

@@ -17,12 +17,18 @@ import {
 import Image from 'next/image';
 
 export default function FeedItem(props: Task) {
-  const { title, id, username, dueDate, status } = props;
+  const {
+    title,
+    id,
+    user: { username },
+    dueDate,
+    completed,
+  } = props;
 
   const timeLeft = getDueDate(new Date(dueDate));
   const dueDateDisplay = dateString(timeLeft);
-  const currentStatus = status === 'PENDING' ? dueDateDisplay : null;
-  const priority = calculatePriority(timeLeft);
+  const currentStatus = completed ? dueDateDisplay : null;
+  // const priority = calculatePriority(timeLeft);
   const maxLength = 100;
 
   const displayedTitle =
@@ -31,7 +37,6 @@ export default function FeedItem(props: Task) {
     <Link href={`/tasks/${id}`}>
       <article
         className={cn(
-          priority,
           'py-2 px-7 relative border-b min-h-[12rem] border-r flex flex-col gap-3 hover:shadow-ml'
         )}
       >
@@ -54,7 +59,7 @@ export default function FeedItem(props: Task) {
           </Button> */}
         </div>
         <div className='flex items-center gap-3'>
-          {status === 'COMPLETED' && (
+          {completed && (
             <div className=''>
               <CheckCircle2
                 color='#1cdf3d'

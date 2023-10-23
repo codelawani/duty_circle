@@ -8,8 +8,8 @@ import Link from 'next/link';
 
 export default function TasksList() {
   const { tasks, isLoading } = useTask();
-  const pending = tasks.filter((task) => task.status === 'PENDING');
-  const completed = tasks.filter((task) => task.status === 'COMPLETED');
+  const pending = tasks.filter((task) => !task.completed);
+  const completed = tasks.filter((task) => task.completed);
   if (isLoading) return <TasksSkeleton />;
 
   return (
@@ -29,17 +29,8 @@ export default function TasksList() {
         <div>
           {' '}
           {pending.length > 0 ? (
-            pending.map(({ title, id, dueDate, status }) => {
-              return (
-                <TaskItem
-                  key={id}
-                  className=''
-                  title={title}
-                  id={id}
-                  due={dueDate}
-                  status={status}
-                />
-              );
+            pending.map(({ id, ...others }) => {
+              return <TaskItem key={id} id={id} {...others} />;
             })
           ) : (
             <div className='flex flex-col justify-center items-center gap-4'>
@@ -57,17 +48,8 @@ export default function TasksList() {
         </h2>
         <div>
           {completed.length > 0 ? (
-            completed.map(({ title, id, dueDate, status }) => {
-              return (
-                <TaskItem
-                  key={id}
-                  className=''
-                  title={title}
-                  id={id}
-                  due={dueDate}
-                  status={status}
-                />
-              );
+            completed.map(({ id, ...others }) => {
+              return <TaskItem key={id} id={id} {...others} />;
             })
           ) : (
             <p> no completed tasks</p>

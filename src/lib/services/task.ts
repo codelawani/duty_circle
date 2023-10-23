@@ -2,13 +2,13 @@ import prisma from "../db";
 import { TaskSchema, Task } from "../types/task.schema";
 import * as Boom from "@hapi/boom";
 import { tagService } from "./tags";
+import { userService } from "./user";
 class TaskService {
-  async getById(id?: string) {
-    if (id) {
-      return await prisma.task.findUnique({ where: { id } });
-    } else {
-      return await prisma.task.findMany();
-    }
+  async getById(id: string) {
+    const task = await prisma.task.findUnique({ where: { id } });
+    if (!task) throw Boom.notFound("Task not found");
+    return task;
+
   }
 
   async create(data: Task, id?: string) {
@@ -31,6 +31,11 @@ class TaskService {
     if (!task) throw Boom.notFound("Task not found");
     const { tags: tagNames, ...newData } = await TaskSchema.validate(data);
     const tags = await tagService.createorFindMulti(tagNames);
+
+    // if (newData.public && !newData.completed) {
+    //   throw Boom.forbidden("You cannot update an uncompleted public task");
+    // }
+
     const updatedTask = { ...task, ...newData };
 
     return await prisma.task.update({
@@ -48,13 +53,23 @@ class TaskService {
     const task = await this.getById(id);
     if (!task) throw Boom.notFound("Task not found");
 
+    const { completed, public: isPublic } = task;
+
+    if (isPublic && !completed) {
+      throw Boom.forbidden(
+        "You cannot delete a public task, that you are yet to complete"
+      );
+    }
     await prisma.task.delete({ where: { id } });
 
-    return { message: "Task deleted successfully" };
+    return {};
   }
 
-  async getAllTasks() {
-    return await prisma.task.findMany();
+  async getUserTasks() {
+    const { id: userId } = await userService.validate();
+    return await prisma.task.findMany({
+      where: { userId },
+    });
   }
   async getPublicFeed() {
     return await prisma.task.findMany({
@@ -71,6 +86,7 @@ class TaskService {
       },
     });
   }
+
   async getTasksByTags(tagNames: string[]) {
     return await prisma.task.findMany({
       where: {

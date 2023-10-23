@@ -12,9 +12,9 @@ import { butler } from "@/src/lib/services/butler";
 const createTask = async (req: Request) => {
   const { id: userId } = await userService.validate();
   const payload = await butler.parseJson(req);
-  await taskService.create({ ...payload, userId });
+  const task = await taskService.create({ ...payload, userId });
 
-  return res.json({ msg: "Task created successfully" }, { status: 201 });
+  return res.json(task, { status: 201 });
 };
 
 /**
@@ -23,7 +23,7 @@ const createTask = async (req: Request) => {
  * @returns {Promise<void>} - A Promise that resolves with the retrieved tasks.
  */
 const getAllTasks = async () => {
-  const tasks = await taskService.getById();
+  const tasks = await taskService.getUserTasks();
   return res.json(tasks);
 };
 
@@ -40,7 +40,7 @@ export const POST = apiHandler({
  *   post:
  *     summary: Create a task
  *     tags: [Task]
- *     description: Create a new task.
+ *     description: Create a new task for current user.
  *     requestBody:
  *       required: true
  *       content:
@@ -53,11 +53,7 @@ export const POST = apiHandler({
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 msg:
- *                   type: string
- *                   description: A message indicating that the task was created successfully.
+ *               $ref: '#/components/schemas/Task'
  *       401:
  *         $ref: '#/components/responses/Unauthorized'
  */
@@ -65,7 +61,7 @@ export const POST = apiHandler({
  * @swagger
  * /api/tasks:
  *   get:
- *     summary: Get tasks
+ *     summary: Get all tasks for current user
  *     tags: [Task]
  *     description: Retrieve a list of tasks.
  *     responses:

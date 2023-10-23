@@ -1,4 +1,9 @@
+import { Button } from '@/src/components/ui/button';
+import { getDueDate, dateString as getString } from '@/src/utils/task/helpers';
 import axios from 'axios';
+import { FlameIcon, MessageSquare } from 'lucide-react';
+// import { getServerSession } from 'next-auth';
+// import authOptions from '@/src/lib/auth';
 
 type Props = {
   params: {
@@ -11,9 +16,16 @@ export default async function page(props: Props) {
     params: { id },
   } = props;
   const taskData: Promise<Task> = await fetchTask(id);
-
-  const { title, description, status, dueDate } = await taskData;
-  const date = new Date(dueDate);
+  // const session = await getServerSession(authOptions);
+  const {
+    title,
+    description,
+    status,
+    dueDate,
+    createdAt,
+    username = 'john smith',
+  } = await taskData;
+  const date = new Date(createdAt);
   const dateString = date.toLocaleDateString('en-US', {
     weekday: 'long',
     year: 'numeric',
@@ -21,14 +33,35 @@ export default async function page(props: Props) {
     hour12: true,
     hour: 'numeric',
     minute: 'numeric',
-    second: 'numeric',
   });
+
+  const timeLeft = getDueDate(new Date(dueDate));
+  const dueDateDisplay = getString(timeLeft);
+
   return (
-    <main className='px-5 py-5 md:w-1/2 md:mx-auto  flex flex-col gap-5'>
-      <Card heading='name' content={title} />
-      <Card heading='description' content={description} />
-      <Card heading='due date' content={dateString} />
-      <Card heading='status' content={status.toLowerCase()} />
+    <main className=''>
+      {/* <Image/> */}
+      <h2>{username}</h2>
+      <h3 className='font-semibold'>{title}</h3>
+      <p>{description}</p>
+      <div className='flex gap-3 py-2'>
+        <h4>status: </h4>
+        <p className=''>
+          {status === 'COMPLETED' ? 'completed' : dueDateDisplay}
+        </p>
+      </div>
+
+      <p className='py-3'>{dateString}</p>
+      <div className='flex border-y my-5 '>
+        <Button variant={'ghost'}>
+          <FlameIcon />
+        </Button>
+        <Button variant={'ghost'}>
+          <MessageSquare />
+        </Button>
+      </div>
+
+      <p>list of comments</p>
     </main>
   );
 }

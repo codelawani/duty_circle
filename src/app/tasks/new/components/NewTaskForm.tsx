@@ -1,14 +1,16 @@
 'use client';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import Input from '@/src/components/common/input';
 import { Button } from '@/src/components/ui/button';
-import Select from '@/src/components/common/select';
 import toast from 'react-hot-toast';
-import axios from 'axios';
 import { useState } from 'react';
 import SimpleLoaader from '@/src/components/loaders/SimpleLoaader';
+import { useRouter } from 'next/navigation';
+import { useTask } from '@/src/components/context/TasksContext';
+import CreatableSelect from 'react-select/creatable';
+import ControlledInput from '@/src/components/common/controlled-input';
 
 const schema = yup
   .object({
@@ -17,15 +19,23 @@ const schema = yup
     dueDate: yup.string().required('please provide due date'),
     status: yup.string().required(),
     consequence: yup.string().optional(),
-    privacy: yup.string().required(''),
+    public: yup.boolean().required(),
+    tag: yup.array().of(
+      yup.object().shape({
+        label: yup.string().required(),
+        value: yup.string().required(),
+      })
+    ),
   })
   .required();
 
 export default function NewTaskForm() {
+  const { newTask } = useTask();
   const {
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
@@ -34,26 +44,31 @@ export default function NewTaskForm() {
       description: '',
       status: 'PENDING',
       consequence: '',
-      privacy: 'PRIVATE',
+      public: false,
       dueDate: '',
+      tag: [],
     },
   });
 
+  const router = useRouter();
   const [isSending, setIsSending] = useState(false);
 
   const onSubmit = handleSubmit(async (data) => {
+    const tags = data.tag ? data.tag.map(({ value }) => value) : [];
+    const updatedData = { ...data, tags };
+    delete updatedData.tag;
     setIsSending(true);
     try {
-      const response = await axios.post('/api/tasks', data);
-      if (response.status === 201) {
-        toast.success(response.data.msg, {
+      const { status, message } = await newTask(updatedData);
+      if (status === 'success') {
+        toast.success(message, {
           position: 'top-center',
           duration: 5000,
         });
         reset();
+        router.push('/tasks');
       } else {
-        const error = response.data.error;
-        toast.error(error.err, {
+        toast.error(message, {
           position: 'top-center',
           duration: 5000,
         });
@@ -72,7 +87,7 @@ export default function NewTaskForm() {
   return (
     <form
       onSubmit={onSubmit}
-      className={`flex flex-col gap-2 md:w-1/2 mx-auto relative px-5 border py-5 rounded-md lg:w-1/3 ${
+      className={`flex flex-col gap-7 w-full md:w-1/2 mx-auto relative px-1 md:px-6 md:border py-5 rounded-md lg:w-2/4 ${
         isSending ? 'opacity-50' : ''
       }`}
     >
@@ -94,27 +109,70 @@ export default function NewTaskForm() {
         error={errors?.dueDate?.message}
         required
       />
-
       <Input
         label='consequence'
         {...register('consequence')}
         error={errors?.consequence?.message}
       />
 
-      <Select
-        label='privacy'
-        {...register('privacy')}
-        error={errors?.privacy?.message}
-        required
-      >
-        <option value=''></option>
-        <option value='PUBLIC'>public</option>
-        <option value='PRIVATE'>private</option>
-      </Select>
+      <div className='flex gap-3'>
+        <label htmlFor='tag' className='capitalize'>
+          tags
+        </label>
+        <Controller
+          name='tag'
+          control={control}
+          render={({ field }) => {
+            return (
+              <CreatableSelect
+                {...field}
+                options={[
+                  {
+                    value: 'project',
+                    label: 'project',
+                  },
+                  {
+                    value: 'portfolio',
+                    label: 'potfolio',
+                  },
+                  {
+                    value: 'coding',
+                    label: 'coding',
+                  },
+                ]}
+                isMulti
+                classNames={{
+                  control: () => 'text-text-light dark:text-text-dark',
+                  option: (state) => 'bg-red-500',
+                  valueContainer: () =>
+                    'dark:bg-form-dark bg-form-light border-none',
+                  container: () =>
+                    'dark:bg-form-dark bg-form-light w-full text-text-light dark:text-text-dark ',
+                  multiValue: () => 'bg-blue-500',
+                  multiValueLabel: () => '',
+                  indicatorsContainer: () => 'dark:bg-form-dark bg-form-light',
+                  menuList: (state) =>
+                    'dark:bg-form-dark bg-form-light capitalize',
+                }}
+              />
+            );
+          }}
+        />
+      </div>
+
+      <div className='flex gap-3'>
+        <Input
+          type='checkbox'
+          label='public'
+          {...register('public')}
+          error={errors?.public?.message}
+        />
+      </div>
+
       <Button
         size={'sm'}
         type='submit'
-        className='capitalize text-lg dark:btn-gradient bg-yellow-500 mt-3 md:w-2/3 md:self-center'
+        className='capitalize text-lg dark:btn-gradient bg-yellow-500 mt-3 md:w-1/3 md:self-center'
       >
         create
       </Button>

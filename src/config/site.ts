@@ -1,3 +1,4 @@
+import { Home, ListTodo, UserCircle2, BookOpenIcon } from 'lucide-react';
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
@@ -12,19 +13,23 @@ export const siteConfig = {
     {
       title: 'Home',
       href: '/',
+      icon: Home,
     },
     {
       title: 'Doc',
       href: '/api-doc',
+      icon: BookOpenIcon,
     },
     {
       title: 'tasks',
       href: '/tasks',
+      icon: ListTodo,
     },
-    {
-      title: 'circles',
-      href: '/circles',
-    },
+    // {
+    //   title: 'circles',
+    //   href: '/circles',
+    //   icon: UserCircle2,
+    // },
   ],
   links: {
     twitter: 'https://twitter.com/codelawani',

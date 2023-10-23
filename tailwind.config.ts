@@ -51,9 +51,34 @@ const config: Config = {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
+        text: {
+          light: '#2b3d50',
+          dark: '#afc1d4',
+        },
         body: {
-          300: '#181818',
-          500: '#141414',
+          light: '#dfeef1',
+          dark: '#0e1d20',
+        },
+        main: {
+          light: '#00bfff',
+          dark: '#00bfff',
+        },
+        second: {
+          light: '#cde4e9',
+          dark: '#162d32',
+        },
+        cool: {
+          light: '#2ab7cf',
+          dark: '#30bcd5',
+        },
+        priority: {
+          low: '#78ACD5',
+          medium: '#FCF302',
+          high: '#FF2460',
+        },
+        form: {
+          light: '#cae2e8',
+          dark: '#173035',
         },
         'light-blue': '#78ACD5',
       },
@@ -61,6 +86,9 @@ const config: Config = {
         lg: `var(--radius)`,
         md: `calc(var(--radius) - 2px)`,
         sm: 'calc(var(--radius) - 4px)',
+      },
+      boxShadow: {
+        ml: ' 0px 34.00954px 108.83055px 0px rgba(42 ,183 ,207, 0.40)',
       },
       fontFamily: {
         sans: ['var(--font-sans)', ...fontFamily.sans],
@@ -74,10 +102,33 @@ const config: Config = {
           from: { height: 'var(--radix-accordion-content-height)' },
           to: { height: '0' },
         },
+        slideDownAndFade: {
+          from: { opacity: '0', transform: 'translateY(-2px)' },
+          to: { opacity: '1', transform: 'translateY(0)' },
+        },
+        slideLeftAndFade: {
+          from: { opacity: '0', transform: 'translateX(2px)' },
+          to: { opacity: '1', transform: 'translateX(0)' },
+        },
+        slideUpAndFade: {
+          from: { opacity: '0', transform: 'translateY(2px)' },
+          to: { opacity: '1', transform: 'translateY(0)' },
+        },
+        slideRightAndFade: {
+          from: { opacity: '0', transform: 'translateX(-2px)' },
+          to: { opacity: '1', transform: 'translateX(0)' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        slideDownAndFade:
+          'slideDownAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)',
+        slideLeftAndFade:
+          'slideLeftAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)',
+        slideUpAndFade: 'slideUpAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)',
+        slideRightAndFade:
+          'slideRightAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)',
       },
     },
   },

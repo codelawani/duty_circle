@@ -86,9 +86,20 @@
     border-radius: 0.625rem;
     background-image: radial-gradient(130.22% 128.02% at 103.28% -41.67%, #FDC2B0 0%, rgba(235, 81, 158, 0.25) 100%), radial-gradient(171.08% 148.03% at -1.23% -17.59%, #5AF8FE 0%, rgba(235, 81, 158, 0.25) 100%), radial-gradient(107.55% 112.27% at 77.87% 111.11%, rgba(137, 59, 254, 0.85) 0%, rgba(128, 187, 219, 0.21) 100%);
     background-blend-mode: normal, normal, normal;
+    color: #000;
   }
 
   .heading {
     @apply text-center capitalize font-semibold text-xl leading-8 py-2
+  }
+
+  .scroll-hidden {
+    -webkit-scrollbar: none;
+    -moz-scrollbar: none;
+    scrollbar-width: none;
+  }
+
+  .scroll-hidden::-webkit-scrollbar {
+    display: none;
   }
 }

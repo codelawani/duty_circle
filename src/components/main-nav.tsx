@@ -2,28 +2,19 @@ import * as React from 'react';
 import Link from 'next/link';
 
 import { siteConfig } from '../config/site';
-import { cn } from '../lib/utils';
+// import { cn } from '../lib/utils';
 import { Icons } from './icons';
+import SideBarToggle from './ui/sidebar-toggle';
 
-interface NavItem {
-  title: string;
-  href?: string;
-  disabled?: boolean;
-  external?: boolean;
-}
-
-interface MainNavProps {
-  items?: NavItem[];
-}
-
-export function MainNav({ items }: MainNavProps) {
+export function MainNav() {
   return (
-    <div className='flex gap-6 md:gap-10'>
+    <div className='flex gap-3 md:gap-10'>
+      <SideBarToggle />
       <Link href='/' className='flex items-center space-x-2'>
         <Icons.logo className='h-6 w-6' />
         <span className='inline-block font-bold'>{siteConfig.name}</span>
       </Link>
-      {items?.length ? (
+      {/* {items?.length ? (
         <nav className='flex gap-6'>
           {items?.map(
             (item, index) =>
@@ -41,7 +32,7 @@ export function MainNav({ items }: MainNavProps) {
               )
           )}
         </nav>
-      ) : null}
+      ) : null} */}
     </div>
   );
 }

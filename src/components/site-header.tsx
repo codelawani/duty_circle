@@ -19,9 +19,7 @@ export function SiteHeader() {
             <ThemeToggle />
             <DropdownMenu.Root>
               <DropdownMenu.Trigger className='md:hidden'>
-                <Button size={'sm'} variant={'secondary'}>
-                  <MoreVertical />
-                </Button>
+                <MoreVertical />
               </DropdownMenu.Trigger>
 
               <DropdownMenu.Portal>

@@ -15,7 +15,9 @@ type Task = {
     name: string;
   };
   circleId: string;
-  tags: string[];
+  tags: {
+    name: string;
+  }[];
 };
 
 type NewTask = {

@@ -23,7 +23,8 @@ export default async function page(props: Props) {
     completed,
     dueDate,
     createdAt,
-    user: { username },
+    tags,
+    // user: { username },
   } = await taskData;
   const date = new Date(createdAt);
   const dateString = date.toLocaleDateString('en-US', {
@@ -40,8 +41,19 @@ export default async function page(props: Props) {
 
   return (
     <main className=''>
-      {/* <Image/> */}
-      <h2>{username}</h2>
+      {/* <div className='flex items-center gap-1'>
+        <div className='w-10 h-10'>
+          <Image
+            src={image ? image : '/default_avatar.png'}
+            width={50}
+            height={50}
+            alt={`profile of ${username}`}
+            className='rounded-full border w-full h-full object-cover object-center'
+          />
+        </div>
+        <p className=''>@{username}</p>
+      
+      </div> */}
       <h3 className='font-semibold'>{title}</h3>
       <p>{description}</p>
       <div className='flex gap-3 py-2'>
@@ -50,6 +62,17 @@ export default async function page(props: Props) {
       </div>
 
       <p className='py-3'>{dateString}</p>
+
+      <ul className='flex gap-1 items-center'>
+        {tags?.map(({ name }) => (
+          <li
+            key={name}
+            className='bg-accent text-accent-foreground px-2 rounded-lg'
+          >
+            {name}
+          </li>
+        ))}
+      </ul>
       <div className='flex border-y my-5 '>
         <Button variant={'ghost'}>
           <FlameIcon />
@@ -67,7 +90,7 @@ export default async function page(props: Props) {
 const fetchTask = async (id: string) => {
   const res = await fetch(`${process.env.NEXTAUTH_URL}/api/tasks/${id}`);
   if (!res.ok) {
-    throw new Error('Error fetching feed!');
+    throw new Error('Error fetching task!');
   }
   return res.json();
 };

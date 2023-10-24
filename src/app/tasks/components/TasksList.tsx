@@ -5,6 +5,7 @@ import { useTask } from '@/src/components/context/TasksContext';
 import TasksSkeleton from '@/src/components/loaders/TasksSkeleton';
 import { Button } from '@/src/components/ui/button';
 import Link from 'next/link';
+import * as Tabs from '@radix-ui/react-tabs';
 
 export default function TasksList() {
   const { tasks, isLoading } = useTask();
@@ -22,40 +23,59 @@ export default function TasksList() {
           new
         </Link>
       </div>
-      <article>
-        <h2 className='uppercase text-center py-3 font-normal text-base'>
-          backlogs
-        </h2>
-        <div>
-          {' '}
-          {pending.length > 0 ? (
-            pending.map(({ id, ...others }) => {
-              return <TaskItem key={id} id={id} {...others} />;
-            })
-          ) : (
-            <div className='flex flex-col justify-center items-center gap-4'>
-              <p className='capitalize text-center'>empty backlog...</p>
-              <Button className='btn-gradient capitalize'>
-                <Link href={'/tasks/new'}>add task</Link>
-              </Button>
+
+      <Tabs.Root defaultValue='backlogs'>
+        <Tabs.List className='flex gap-20 mb-10'>
+          <Tabs.Trigger
+            className={
+              'data-[state=active]:text-cool-light data-[state=active]:shadow-[inset_0_-1px_0_0,0_1px_0_0]  outline-none cursor-pointer uppercase'
+            }
+            value='backlogs'
+          >
+            backlogs
+          </Tabs.Trigger>
+          <Tabs.Trigger
+            className={
+              'data-[state=active]:text-cool-light data-[state=active]:shadow-[inset_0_-1px_0_0,0_1px_0_0]  outline-none cursor-pointer uppercase'
+            }
+            value='completed'
+          >
+            completed
+          </Tabs.Trigger>
+        </Tabs.List>
+        <Tabs.Content value='backlogs'>
+          <article>
+            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2'>
+              {' '}
+              {pending.length > 0 ? (
+                pending.map(({ id, ...others }) => {
+                  return <TaskItem key={id} id={id} {...others} />;
+                })
+              ) : (
+                <div className='flex flex-col justify-center items-center gap-4'>
+                  <p className='capitalize text-center'>empty backlog...</p>
+                  <Button className='btn-gradient capitalize'>
+                    <Link href={'/tasks/new'}>add task</Link>
+                  </Button>
+                </div>
+              )}
             </div>
-          )}
-        </div>
-      </article>
-      <article>
-        <h2 className='uppercase text-center py-3 font-normal text-base'>
-          completed
-        </h2>
-        <div>
-          {completed.length > 0 ? (
-            completed.map(({ id, ...others }) => {
-              return <TaskItem key={id} id={id} {...others} />;
-            })
-          ) : (
-            <p> no completed tasks</p>
-          )}
-        </div>
-      </article>
+          </article>
+        </Tabs.Content>
+        <Tabs.Content value='completed'>
+          <article>
+            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2'>
+              {completed.length > 0 ? (
+                completed.map(({ id, ...others }) => {
+                  return <TaskItem key={id} id={id} {...others} />;
+                })
+              ) : (
+                <p> no completed tasks</p>
+              )}
+            </div>
+          </article>
+        </Tabs.Content>
+      </Tabs.Root>
     </section>
   );
 }

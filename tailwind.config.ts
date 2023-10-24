@@ -57,7 +57,7 @@ const config: Config = {
         },
         body: {
           light: '#dfeef1',
-          dark: '#0e1d20',
+          dark: '#141414',
         },
         main: {
           light: '#00bfff',
@@ -88,7 +88,7 @@ const config: Config = {
         sm: 'calc(var(--radius) - 4px)',
       },
       boxShadow: {
-        ml: ' 0px 34.00954px 108.83055px 0px rgba(42 ,183 ,207, 0.40)',
+        ml: ' 0px 10.00954px 40.83055px 0px rgba(42 ,183 ,207, 0.40)',
       },
       fontFamily: {
         sans: ['var(--font-sans)', ...fontFamily.sans],

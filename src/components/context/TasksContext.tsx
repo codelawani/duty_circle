@@ -45,7 +45,7 @@ const TaskContextProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       const res = await axios.put(
         `${process.env.NEXT_PUBLIC_URL}/api/tasks/${id}`,
-        { completed }
+        { ...task, completed }
       );
       if (res.status !== 201) {
         toast.error(res.data.error.err);
@@ -71,13 +71,12 @@ const TaskContextProvider = ({ children }: { children: React.ReactNode }) => {
       const res = await axios.delete(
         `${process.env.NEXT_PUBLIC_URL}/api/tasks/${id}`
       );
-      console.log(res);
       if (res.status !== 200) {
         toast.error('Task could not be deleted! please try again');
       } else {
         const updatedTasks = tasks.filter((task) => task.id !== id);
         setTasks(updatedTasks);
-        toast.success(res.data.message);
+        toast.success('Task deleted successfully!');
       }
     } catch (error) {
       toast.error('Task could not be deleted! please try again');
@@ -96,9 +95,10 @@ const TaskContextProvider = ({ children }: { children: React.ReactNode }) => {
       );
 
       if (res.status === 201) {
+        setTasks([res.data, ...tasks]);
         return {
           status: 'success',
-          message: res.data.msg,
+          message: 'task created successfully!',
         };
       } else {
         const error = res.data.error;

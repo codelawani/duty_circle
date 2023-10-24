@@ -56,7 +56,7 @@ export default function RootLayout({
                   <Toaster />
                   <div className='flex h-screen w-full gap-5'>
                     <Sidebar />
-                    <main className='overflow-y-scroll w-full scroll-hidden h-full pb-20 pt-3'>
+                    <main className='overflow-y-scroll w-full scroll-hidden h-full pb-20 pt-3 pr-5'>
                       {children}
                     </main>
                   </div>

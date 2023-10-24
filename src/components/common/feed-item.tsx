@@ -20,35 +20,41 @@ export default function FeedItem(props: Task) {
   const {
     title,
     id,
-    user: { username },
+    user: { username, image },
     dueDate,
     completed,
+    tags,
   } = props;
 
   const timeLeft = getDueDate(new Date(dueDate));
   const dueDateDisplay = dateString(timeLeft);
-  const currentStatus = completed ? dueDateDisplay : null;
+  const currentStatus = !completed ? dueDateDisplay : null;
   // const priority = calculatePriority(timeLeft);
   const maxLength = 100;
 
   const displayedTitle =
     title.length > maxLength ? `${title.substring(0, maxLength)}...` : title;
+
+  const maxTags = 3;
+  const requiredTags = tags?.slice(0, maxTags);
   return (
     <Link href={`/tasks/${id}`}>
       <article
         className={cn(
-          'py-2 px-7 relative border-b min-h-[12rem] border-r flex flex-col gap-3 hover:shadow-ml'
+          'py-2 px-7 relative border-b h-fit md:min-h-[15rem] border-r flex flex-col gap-3 hover:shadow-ml'
         )}
       >
         <div className='flex items-center gap-1'>
-          {/* <Image
-            src={''}
-            width={100}
-            height={100}
-            alt={`profile of ${username}`}
-            className='rounded-full border'
-          /> */}
-          <p className=''>{username}</p>
+          <div className='w-10 h-10'>
+            <Image
+              src={image ? image : '/default_avatar.png'}
+              width={50}
+              height={50}
+              alt={`profile of ${username}`}
+              className='rounded-full border w-full h-full object-cover object-center'
+            />
+          </div>
+          <p className=''>@{username}</p>
           {/* <Button
             variant={'ghost'}
             onClick={(e) => {
@@ -71,6 +77,16 @@ export default function FeedItem(props: Task) {
           )}
           <p className='capitalize'> {displayedTitle}</p>
         </div>
+        <ul className='flex gap-1 items-center'>
+          {requiredTags?.map(({ name }) => (
+            <li
+              key={name}
+              className='bg-accent text-accent-foreground px-2 rounded-lg'
+            >
+              {name}
+            </li>
+          ))}
+        </ul>
         <div className='flex justify-between items-center mt-auto'>
           <p>{currentStatus}</p>
           <div className='flex justify-end '>

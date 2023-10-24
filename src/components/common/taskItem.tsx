@@ -4,7 +4,7 @@ import { cva } from 'class-variance-authority';
 import Link from 'next/link';
 import * as Checkbox from '@radix-ui/react-checkbox';
 import { CheckCircle2, Trash } from 'lucide-react';
-import { Button } from '../ui/button';
+import { Button, buttonVariants } from '../ui/button';
 import { useState } from 'react';
 import { useTask } from '../context/TasksContext';
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
@@ -18,39 +18,42 @@ type Props = Task & {
   className?: string;
 };
 
-const taskVariants = cva('py-2 px-7 relative border-b hover:shadow-ml', {
-  variants: {
-    variant: {
-      backlog:
-        'before:content-[""] before:absolute before:w-4 before:top-1/2 before:bottom-2  before:border-l-2 before:left-3 before:border-light-blue before:-translate-y-1/2',
-      completed: 'text-center',
+const taskVariants = cva(
+  'py-4 md:py-7 rounded-md px-7 relative border hover:shadow-ml flex flex-col gap-5',
+  {
+    variants: {
+      variant: {
+        backlog:
+          'before:content-[""] before:absolute before:w-4 before:top-1/2 before:bottom-2  before:border-l-2 before:left-3 before:border-light-blue before:-translate-y-1/2 before:h-3/4',
+        completed: 'text-center',
+      },
+      background: {
+        gradient: 'btn-gradient',
+        normal: '',
+      },
+      priority: {
+        low: 'before:border-priority-low',
+        medium: 'before:border-priority-medium',
+        high: 'before:border-priority-high',
+        none: 'before:border-none',
+      },
     },
-    background: {
-      gradient: 'btn-gradient',
-      normal: '',
+    defaultVariants: {
+      variant: 'backlog',
+      background: 'normal',
+      priority: 'low',
     },
-    priority: {
-      low: 'before:border-priority-low',
-      medium: 'before:border-priority-medium',
-      high: 'before:border-priority-high',
-      none: 'before:border-none',
-    },
-  },
-  defaultVariants: {
-    variant: 'backlog',
-    background: 'normal',
-    priority: 'low',
-  },
-});
+  }
+);
 
 export default function TaskItem(props: Props) {
-  const { title, className, id, dueDate, completed } = props;
+  const { title, className, id, dueDate, completed, public: isPublic } = props;
   const [checked, setChecked] = useState(completed);
   const [deleteOpen, setDeleteOpen] = useState(false);
 
   const timeLeft = getDueDate(new Date(dueDate));
   const dueDateDisplay = dateString(timeLeft);
-  const currentStatus = completed ? dueDateDisplay : null;
+  const currentStatus = !completed ? dueDateDisplay : null;
   const priority = completed ? 'none' : calculatePriority(timeLeft);
   const { updateTaskStatus, deleteTask } = useTask();
 
@@ -63,32 +66,41 @@ export default function TaskItem(props: Props) {
     setDeleteOpen((prev) => !prev);
   };
 
+  // trim title if it's too long
+  const maxLength = 100;
+
+  const displayedTitle =
+    title.length > maxLength ? `${title.substring(0, maxLength)}...` : title;
+
   return (
     <Link href={`/tasks/${id}`}>
       <article className={cn(taskVariants({ priority }), className)}>
-        <div className='flex items-center gap-3'>
-          <Checkbox.Root
-            className={cn(
-              'shadow-blackA4 hover:bg-violet3 flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-[4px] bg-white shadow-[0_2px_10px] outline-none focus:shadow-[0_0_0_2px_black]',
-              checked && 'bg-transparent shadow-none'
-            )}
-            checked={checked}
-            onCheckedChange={handleChecked}
-            onClick={(e) => {
-              e.preventDefault();
-              handleChecked();
-            }}
-          >
-            <Checkbox.Indicator className='text-violet11'>
-              <CheckCircle2
-                color='#42dd05'
-                strokeWidth={1.5}
-                absoluteStrokeWidth
-              />
-            </Checkbox.Indicator>
-          </Checkbox.Root>
+        <div className='flex items-center gap-3 min-h-[6rem]'>
+          <div>
+            <Checkbox.Root
+              className={cn(
+                'shadow-blackA4 hover:bg-violet3 flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-[4px] bg-white shadow-[0_2px_10px] outline-none focus:shadow-[0_0_0_2px_black]',
+                checked && 'bg-transparent shadow-none'
+              )}
+              checked={checked}
+              onCheckedChange={handleChecked}
+              onClick={(e) => {
+                e.preventDefault();
+                handleChecked();
+              }}
+            >
+              <Checkbox.Indicator className='text-violet11' asChild>
+                <CheckCircle2
+                  color='#1cdf3d'
+                  strokeWidth={2}
+                  absoluteStrokeWidth
+                  size={40}
+                />
+              </Checkbox.Indicator>
+            </Checkbox.Root>
+          </div>
 
-          <p className='capitalize'> {title}</p>
+          <p className='capitalize'> {displayedTitle}</p>
         </div>
         <div className='flex justify-between items-center'>
           <p>{currentStatus}</p>
@@ -120,6 +132,8 @@ export default function TaskItem(props: Props) {
                     e.preventDefault();
                     toggleDeleteModal();
                   }}
+                  className={`disabled:cursor-not-allowed disabled:opacity-30`}
+                  disabled={!completed && isPublic ? true : false}
                 >
                   <Trash />
                 </Button>

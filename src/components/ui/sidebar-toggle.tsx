@@ -6,7 +6,12 @@ import { useSidebar } from '../context/SidebarContext';
 export default function SideBarToggle() {
   const { toggleSidebar } = useSidebar();
   return (
-    <Button size={'sm'} onClick={toggleSidebar}>
+    <Button
+      size={'sm'}
+      onClick={toggleSidebar}
+      variant={'outline'}
+      className='border-cool-light'
+    >
       <Menu />
     </Button>
   );

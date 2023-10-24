@@ -1,15 +1,16 @@
 'use client';
 import { signIn, signOut } from 'next-auth/react';
 import { useSession } from 'next-auth/react';
+import { Button } from './ui/button';
 
 export const LoginButton = () => {
   const { status } = useSession();
   return (
     <>
       {status !== 'authenticated' ? (
-        <button className=' text-sky-600' onClick={() => signIn()}>
+        <Button className=' text-sky-600' onClick={() => signIn()}>
           Sign In{' '}
-        </button>
+        </Button>
       ) : null}
     </>
   );
@@ -19,9 +20,9 @@ export const LogoutButton = () => {
   return (
     <>
       {status === 'authenticated' ? (
-        <button className=' text-red-500' onClick={() => signOut()}>
+        <Button className=' text-red-500' onClick={() => signOut()}>
           Sign Out
-        </button>
+        </Button>
       ) : null}
     </>
   );

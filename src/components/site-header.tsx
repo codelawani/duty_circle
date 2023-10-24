@@ -72,6 +72,10 @@ export function SiteHeader() {
               </DropdownMenu.Portal>
             </DropdownMenu.Root>
             <div className='hidden md:flex items-center'>
+              <Button size={'sm'} variant={'ghost'}>
+                <Icons.notification className='h-5 w-5' />
+                <span className='sr-only'>notifications</span>
+              </Button>
               <Link
                 href={siteConfig.links.github}
                 target='_blank'

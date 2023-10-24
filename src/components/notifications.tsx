@@ -11,10 +11,10 @@ export default function Notifications() {
   const unread = unreadNotifications?.length ?? 0;
   return (
     <DropdownMenu.Root>
-      <DropdownMenu.Trigger className='relative'>
+      <DropdownMenu.Trigger className='relative hover:bg-accent hover:text-accent-foreground  text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background h-9 px-3 rounded-md'>
         <Icons.notification className='h-5 w-5' />
         {unread > 0 && (
-          <span className='absolute -right-1 -top-2 border-none w-4 h-4 rounded-full bg-red-900  text-white font-bold text-xs font-mono'>
+          <span className='absolute right-1 top-0 border-none w-4 h-4 rounded-full bg-red-900  text-white font-bold text-xs font-mono'>
             {unread}
           </span>
         )}

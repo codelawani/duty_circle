@@ -48,7 +48,7 @@ export default function TasksList() {
         {isUpdating && <SmallLoader />}
         <Tabs.Content value='backlogs'>
           <article>
-            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2'>
+            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
               {' '}
               {pending.length > 0 ? (
                 pending.map(({ id, ...others }) => {

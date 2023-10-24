@@ -1,5 +1,5 @@
 'use client';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import Input from '@/src/components/common/input';
@@ -9,7 +9,8 @@ import { useState } from 'react';
 import SimpleLoaader from '@/src/components/loaders/SimpleLoaader';
 import { useRouter } from 'next/navigation';
 import { useTask } from '@/src/components/context/TasksContext';
-import CreatableSelect from 'react-select/creatable';
+import ControlledDatePicker from './date-picker';
+import MultipleSelect from './multiple-select';
 
 const schema = yup
   .object({
@@ -19,12 +20,15 @@ const schema = yup
     completed: yup.boolean().required(),
     consequence: yup.string().optional(),
     public: yup.boolean().required(),
-    tag: yup.array().of(
-      yup.object().shape({
-        label: yup.string().required(),
-        value: yup.string().required(),
-      })
-    ),
+    tag: yup
+      .array()
+      .of(
+        yup.object().shape({
+          label: yup.string().required(),
+          value: yup.string().required(),
+        })
+      )
+      .max(10, 'tags must be less than or equal to 10'),
   })
   .required();
 
@@ -35,6 +39,7 @@ export default function NewTaskForm() {
     handleSubmit,
     reset,
     control,
+    getValues,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
@@ -95,65 +100,53 @@ export default function NewTaskForm() {
         {...register('title')}
         error={errors?.title?.message}
         required
+        placeholder='Complete project proposal'
       />
       <Input
         label='description'
         {...register('description')}
         error={errors?.description?.message}
+        placeholder='write a proposal for the new project'
       />
-      <Input
+      {/* <Input
         label='due date'
         type='datetime-local'
         {...register('dueDate')}
         error={errors?.dueDate?.message}
         required
+      /> */}
+      <ControlledDatePicker
+        control={control}
+        name='dueDate'
+        error={errors?.dueDate?.message}
+        label={'due date'}
+        required
+        placeholder='choose due date of task'
       />
       <Input
         label='consequence'
         {...register('consequence')}
         error={errors?.consequence?.message}
+        placeholder='Donate $50 to open source project'
       />
 
-      <div className='flex gap-3'>
-        <label htmlFor='tag' className='capitalize'>
-          tags
-        </label>
-        <Controller
-          name='tag'
-          control={control}
-          render={({ field }) => {
-            return (
-              <CreatableSelect
-                {...field}
-                options={[
-                  {
-                    value: 'project',
-                    label: 'project',
-                  },
-                  {
-                    value: 'portfolio',
-                    label: 'potfolio',
-                  },
-                  {
-                    value: 'coding',
-                    label: 'coding',
-                  },
-                ]}
-                isMulti
-                classNames={{
-                  valueContainer: () =>
-                    'dark:bg-form-dark bg-form-light border-none',
-                  container: () => 'dark:bg-form-dark bg-form-light w-full ',
-                  multiValue: () => 'bg-blue-500',
-                  indicatorsContainer: () => 'dark:bg-form-dark bg-form-light',
-                  menuList: (state) =>
-                    'dark:bg-form-dark bg-form-light capitalize',
-                }}
-              />
-            );
-          }}
-        />
-      </div>
+      <MultipleSelect
+        name='tag'
+        label='tags'
+        placeholder='Add related tags'
+        options={[
+          {
+            value: 'project',
+            label: 'project',
+          },
+          {
+            value: 'coding',
+            label: 'coding',
+          },
+        ]}
+        control={control}
+        error={errors?.tag?.message}
+      />
 
       <div className='flex gap-3'>
         <Input

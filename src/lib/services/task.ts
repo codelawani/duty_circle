@@ -8,7 +8,26 @@ class TaskService {
     const task = await prisma.task.findUnique({ where: { id } });
     if (!task) throw Boom.notFound("Task not found");
     return task;
-
+  }
+  async getPublicTask(id: string) {
+    const { id: userId } = await userService.validate();
+    const task = await prisma.task.findUnique({
+      where: { id },
+      include: {
+        tags: { select: { name: true } },
+        user: {
+          select: {
+            username: true,
+            image: true,
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+    // const tagNames = task?.tags?.map((tag) => tag?.name);
+    // return { ...task, tags: tagNames };
+    return task;
   }
 
   async create(data: Task, id?: string) {

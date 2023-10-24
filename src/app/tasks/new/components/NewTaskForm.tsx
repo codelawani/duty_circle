@@ -141,14 +141,10 @@ export default function NewTaskForm() {
                 ]}
                 isMulti
                 classNames={{
-                  control: () => 'text-text-light dark:text-text-dark',
-                  option: (state) => 'bg-red-500',
                   valueContainer: () =>
                     'dark:bg-form-dark bg-form-light border-none',
-                  container: () =>
-                    'dark:bg-form-dark bg-form-light w-full text-text-light dark:text-text-dark ',
+                  container: () => 'dark:bg-form-dark bg-form-light w-full ',
                   multiValue: () => 'bg-blue-500',
-                  multiValueLabel: () => '',
                   indicatorsContainer: () => 'dark:bg-form-dark bg-form-light',
                   menuList: (state) =>
                     'dark:bg-form-dark bg-form-light capitalize',

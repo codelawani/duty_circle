@@ -36,7 +36,7 @@ type NewTask = {
   )[];
 };
 
-type Notification = {
+type UserNotification = {
   content: string;
   createdAt: string;
   id: string;

@@ -40,6 +40,7 @@ const TaskContextProvider = ({ children }: { children: React.ReactNode }) => {
 
   // update status of a task
   const updateTaskStatus = async (id: string) => {
+    setisUpdating(true);
     const task = tasks.find((task) => task.id === id);
     const completed = task?.completed ? false : true;
     try {
@@ -61,6 +62,8 @@ const TaskContextProvider = ({ children }: { children: React.ReactNode }) => {
       }
     } catch (error: any) {
       toast.error(error.response.data.error.message);
+    } finally {
+      setisUpdating(false);
     }
   };
 

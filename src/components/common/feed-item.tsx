@@ -41,7 +41,7 @@ export default function FeedItem(props: Task) {
     <Link href={`/tasks/${id}`}>
       <article
         className={cn(
-          'py-2 px-7 relative border-b h-fit md:min-h-[15rem] border-r flex flex-col gap-3 hover:shadow-ml'
+          'py-2 px-7 relative border-b h-fit md:min-h-[13rem]  border-r flex flex-col gap-3 hover:shadow-ml'
         )}
       >
         <div className='flex items-center gap-1'>

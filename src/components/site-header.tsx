@@ -9,11 +9,9 @@ import { MainNav } from './main-nav';
 import { ThemeToggle } from './theme-toggle';
 import { LoginButton, LogoutButton } from './buttons.component';
 import useNotification from './hooks/useNotification';
+import Notifications from './notifications';
 
 export function SiteHeader() {
-  const { notifications } = useNotification();
-
-  const numberOfNotifications = notifications?.length ?? 0;
   return (
     <header className='bg-main-light text-text-light bg-opacity-80 sticky top-0 z-40 w-full border-b'>
       <div className='px-5 py-4 flex items-center space-x-4 sm:justify-between sm:space-x-0'>
@@ -21,15 +19,7 @@ export function SiteHeader() {
         <div className='flex flex-1 items-center justify-end space-x-4'>
           <nav className='flex items-center space-x-1'>
             <ThemeToggle />
-            <Button size={'sm'} variant={'ghost'} className='relative'>
-              <Icons.notification className='h-5 w-5' />
-              {numberOfNotifications > 0 && (
-                <span className='absolute right-0 top-0 text-red-700 font-bold text-sm font-mono'>
-                  *{numberOfNotifications}
-                </span>
-              )}
-              <span className='sr-only'>notifications</span>
-            </Button>
+            <Notifications />
             <DropdownMenu.Root>
               <DropdownMenu.Trigger className='md:hidden'>
                 <MoreVertical />

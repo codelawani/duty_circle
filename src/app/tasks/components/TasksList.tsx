@@ -6,9 +6,10 @@ import TasksSkeleton from '@/src/components/loaders/TasksSkeleton';
 import { Button } from '@/src/components/ui/button';
 import Link from 'next/link';
 import * as Tabs from '@radix-ui/react-tabs';
+import SmallLoader from '@/src/components/loaders/SmallLoader';
 
 export default function TasksList() {
-  const { tasks, isLoading } = useTask();
+  const { tasks, isLoading, isUpdating } = useTask();
   const pending = tasks.filter((task) => !task.completed);
   const completed = tasks.filter((task) => task.completed);
   if (isLoading) return <TasksSkeleton />;
@@ -43,6 +44,8 @@ export default function TasksList() {
             completed
           </Tabs.Trigger>
         </Tabs.List>
+        {/* show loader when making changes to task */}
+        {isUpdating && <SmallLoader />}
         <Tabs.Content value='backlogs'>
           <article>
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2'>
@@ -62,6 +65,7 @@ export default function TasksList() {
             </div>
           </article>
         </Tabs.Content>
+
         <Tabs.Content value='completed'>
           <article>
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2'>

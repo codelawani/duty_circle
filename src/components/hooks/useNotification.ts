@@ -1,9 +1,10 @@
 'use client';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 
 export default function useNotification() {
-  const [notifications, setNotifications] = useState<Notification[] | []>([]);
+  const [notifications, setNotifications] = useState<UserNotification[] | []>(
+    []
+  );
 
   useEffect(() => {
     fetchNotifications();
@@ -11,10 +12,18 @@ export default function useNotification() {
 
   const fetchNotifications = async () => {
     try {
-      const res = await axios.get(
-        `${process.env.NEXT_PUBLIC_URL}/api/notifications`
-      );
-      setNotifications(res.data);
+      const res = await fetch(`/api/notifications`, {
+        next: {
+          revalidate: 300,
+        },
+      });
+      const body = await res.json();
+
+      if (res.ok) {
+        setNotifications(body);
+      } else {
+        console.log(body);
+      }
     } catch (error) {
       console.log(error);
     }

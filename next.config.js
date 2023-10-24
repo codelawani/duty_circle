@@ -10,7 +10,13 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'discordapp.net',
+        hostname: 'media.discordapp.net',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
         port: '',
         pathname: '/**',
       },

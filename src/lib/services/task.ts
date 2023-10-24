@@ -8,7 +8,26 @@ class TaskService {
     const task = await prisma.task.findUnique({ where: { id } });
     if (!task) throw Boom.notFound("Task not found");
     return task;
-
+  }
+  async getPublicTask(id: string) {
+    const { id: userId } = await userService.validate();
+    const task = await prisma.task.findUnique({
+      where: { id },
+      include: {
+        tags: { select: { name: true } },
+        user: {
+          select: {
+            username: true,
+            image: true,
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+    // const tagNames = task?.tags?.map((tag) => tag?.name);
+    // return { ...task, tags: tagNames };
+    return task;
   }
 
   async create(data: Task, id?: string) {
@@ -71,8 +90,13 @@ class TaskService {
       where: { userId },
     });
   }
-  async getPublicFeed() {
+  async getPublicFeed(page: string | null, pageSize: string | null) {
+    const parsedPage = parseInt(page || "0");
+    const take = parseInt(pageSize || "10");
+    const skip = (parsedPage - 1) * take;
     return await prisma.task.findMany({
+      skip,
+      take,
       include: {
         tags: { select: { name: true } },
         user: {

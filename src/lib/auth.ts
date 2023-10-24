@@ -1,10 +1,9 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { PrismaClient } from "@prisma/client";
+import prisma from "./db";
 import { NextAuthOptions } from "next-auth";
 import EmailProvider from "next-auth/providers/email";
 import GoogleProvider from "next-auth/providers/google";
 
-const prisma = new PrismaClient();
 const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
@@ -28,6 +27,13 @@ const authOptions: NextAuthOptions = {
     brandColor: "#00BFFF",
     colorScheme: "auto",
     buttonText: "#ffffff",
+  },
+  callbacks: {
+    async session({ session, token, user }) {
+      if (session?.user) session.user.id = user.id;
+
+      return session;
+    },
   },
 };
 

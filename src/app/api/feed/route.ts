@@ -1,31 +1,50 @@
 import { taskService } from "@/src/lib/services/task";
 import apiHandler from "@/src/utils/api/api.handler";
-import { NextResponse as res } from "next/server";
+import { NextRequest, NextResponse as res } from "next/server";
+
 /**
- * Retrieves all tasks from the public feed.
- * @returns {Promise<Task[]>} A promise that resolves to an array of Task objects.
+ * Retrieves a paginated list of public feed tasks.
+ * @param req - The Next.js request object.
+ * @returns A JSON response containing the paginated list of tasks.
  */
-const getPublicFeed = async (req: Request) => {
-  const tasks = await taskService.getPublicFeed();
+const getPublicFeed = async (req: NextRequest) => {
+  const searchParams = req.nextUrl.searchParams;
+  const page = searchParams.get("page");
+  const pageSize = searchParams.get("size");
+  const tasks = await taskService.getPublicFeed(page, pageSize);
   return res.json(tasks);
 };
 export const GET = apiHandler({ GET: getPublicFeed });
+
+// Swagger documentation
 /**
  * @swagger
- * /api/feed/:
+ * /api/feed:
  *   get:
- *     summary: Retrieves all tasks for the public feed.
  *     tags: [Feed]
+ *     summary: Retrieves a paginated list of public feed tasks.
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *         description: The page number to retrieve.
+ *       - in: query
+ *         name: size
+ *         schema:
+ *           type: integer
+ *         description: The number of tasks to retrieve per page.
  *     responses:
  *       200:
- *         description: Returns an array of Task objects.
+ *         description: A JSON response containing the paginated list of tasks.
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/TaskFeed'
+ *                 $ref: '#/components/schemas/Task'
  */
+
 /**
  * @swagger
  * components:

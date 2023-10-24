@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { Params } from "@/src/lib/types/server";
 
 type NextHandle = (
-  req: NextRequest | Request,
+  req: NextRequest,
   params: Params
 ) => void | Response | Promise<void | NextResponse>;
 
@@ -14,7 +14,7 @@ type ApiMethodHandles = {
 };
 
 export const apiHandler = (handler: ApiMethodHandles) => {
-  return async (req: NextRequest | Request, params: Params) => {
+  return async (req: NextRequest, params: Params) => {
     try {
       const method = req?.method?.toUpperCase() as keyof ApiMethodHandles;
       if (!method) {

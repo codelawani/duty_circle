@@ -9,7 +9,7 @@ const T_NOT_FOUND = "Task not found";
 const getTask = async (req: Request, { params }: Params) => {
   const taskId = params.id;
   if (taskId) {
-    const result = await taskService.getById(taskId);
+    const result = await taskService.getPublicTask(taskId);
     if (!result) throw Boom.notFound(T_NOT_FOUND);
     return res.json(result);
   } else {

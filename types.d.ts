@@ -35,3 +35,13 @@ type NewTask = {
     | undefined
   )[];
 };
+
+type Notification = {
+  content: string;
+  createdAt: string;
+  id: string;
+  seen: boolean;
+  type: string;
+  updatedAt: string;
+  userId: string;
+};

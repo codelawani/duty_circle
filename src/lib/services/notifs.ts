@@ -45,10 +45,19 @@ export class NotifService {
     return { user, sender };
   }
   async getAllForUser() {
-    const { userId } = this.notifInfo;
+    const { userId, senderId } = this.notifInfo;
     return await prisma.notification.findMany({
       orderBy: { updatedAt: "desc" },
       where: { userId },
+      include: {
+        sender: {
+          where: { id: senderId },
+          select: {
+            name: true,
+            image: true,
+          },
+        },
+      },
     });
   }
 }

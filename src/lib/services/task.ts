@@ -91,12 +91,15 @@ class TaskService {
     });
   }
   async getPublicFeed(page: string | null, pageSize: string | null) {
-    const parsedPage = parseInt(page || "0");
+    const parsedPage = Math.max(parseInt(page || "1"), 1);
     const take = parseInt(pageSize || "10");
     const skip = (parsedPage - 1) * take;
     return await prisma.task.findMany({
       skip,
       take,
+      orderBy: {
+        updatedAt: "desc",
+      },
       include: {
         tags: { select: { name: true } },
         user: {

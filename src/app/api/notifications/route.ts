@@ -18,7 +18,7 @@ export const GET = apiHandler({ GET: getNotifs });
 
 /**
  * @swagger
- * /notifications:
+ * /api/notifications:
  *   get:
  *     summary: Retrieves all notifications for the authenticated user.
  *     tags:

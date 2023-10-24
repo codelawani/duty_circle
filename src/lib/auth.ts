@@ -3,6 +3,7 @@ import prisma from "./db";
 import { NextAuthOptions } from "next-auth";
 import EmailProvider from "next-auth/providers/email";
 import GoogleProvider from "next-auth/providers/google";
+import { userService } from "./services/user";
 
 const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -33,6 +34,11 @@ const authOptions: NextAuthOptions = {
       if (session?.user) session.user.id = user.id;
 
       return session;
+    },
+  },
+  events: {
+    async createUser({ user }) {
+      user?.email ? userService.random_username(user.email) : "";
     },
   },
 };

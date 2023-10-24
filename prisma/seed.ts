@@ -56,7 +56,7 @@ async function main() {
   // await prisma.userCircle.create(jackCircleData);
 
   // Create a task for Jack to steal a jar of dirt
-  const jackTaskData = {
+  const stealDirtTaskData = {
     data: {
       title: "Steal a jar of dirt",
       public: false,
@@ -64,7 +64,7 @@ async function main() {
       // circleId: rum.id,
     },
   };
-  const jackTask = await prisma.task.create(jackTaskData);
+  const stealDirtTask = await prisma.task.create(stealDirtTaskData);
 
   // Create a task for Jack to find the Black Pearl
   const blackPearlTaskData = {
@@ -93,15 +93,6 @@ async function main() {
       },
     },
   });
-  // Create a nudge notification for Jack
-  const rumNotificationData = {
-    data: {
-      userId: jack.id,
-      content: "You can do it ✔️",
-      type: "NEW_NUDGE",
-    },
-  };
-  await prisma.notification.create(rumNotificationData);
 
   // Create a notification for Jack about the Steal a jar of dirt task
   const stealDirtNotificationData = {
@@ -109,6 +100,8 @@ async function main() {
       userId: jack.id,
       content: "Your Deadline is looming: Steal a jar of dirt",
       type: "TASK_DEADLINE",
+      sourceId: stealDirtTask.id,
+      sourceType: "TASK",
     },
   };
   await prisma.notification.create(stealDirtNotificationData);

@@ -33,9 +33,9 @@ export const GET = apiHandler({ GET: getNotifs });
  *           items:
  *             $ref: '#/components/schemas/Notification'
  *       401:
- *         $ref: '#/responses/Unauthorized'
+ *         $ref: '#/components/responses/Unauthorized'
  *       500:
- *         $ref: '#/responses/InternalServerError'
+ *         $ref: '#/components/responses/InternalServerError'
  */
 /**
  * @swagger

@@ -90,8 +90,13 @@ class TaskService {
       where: { userId },
     });
   }
-  async getPublicFeed() {
+  async getPublicFeed(page: string | null, pageSize: string | null) {
+    const parsedPage = parseInt(page || "0");
+    const take = parseInt(pageSize || "10");
+    const skip = (parsedPage - 1) * take;
     return await prisma.task.findMany({
+      skip,
+      take,
       include: {
         tags: { select: { name: true } },
         user: {

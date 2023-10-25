@@ -1,5 +1,5 @@
-import { Loader, LucideProps } from 'lucide-react';
 import { cn } from '@/src/lib/utils';
+import { Icons } from '../icons';
 
 type Props = {
   styles?: string;
@@ -8,5 +8,5 @@ type Props = {
 export default function SimpleLoaader(props: Props) {
   const { styles = '' } = props;
 
-  return <Loader className={cn('animate-spin ', styles)} size={'100'} />;
+  return <Icons.loader className={cn('animate-spin ', styles)} size={'100'} />;
 }

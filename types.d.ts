@@ -38,11 +38,19 @@ type NewTask = {
 };
 
 type UserNotification = {
-  content: string;
-  createdAt: string;
   id: string;
-  seen: boolean;
-  type: string;
+  createdAt: string;
   updatedAt: string;
   userId: string;
+  sourceId: string;
+  sourceType: string;
+  senderId: string;
+  content: string;
+  type: string;
+  seen: boolean;
+  sender: {
+    username: string;
+    name: string;
+    image: string;
+  };
 };

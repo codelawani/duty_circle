@@ -142,6 +142,9 @@ CREATE TABLE "Notification" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "userId" TEXT NOT NULL,
+    "sourceId" TEXT NOT NULL,
+    "sourceType" TEXT NOT NULL,
+    "senderId" TEXT,
     "content" TEXT NOT NULL,
     "type" "NotificationType" NOT NULL,
     "seen" BOOLEAN NOT NULL DEFAULT false,
@@ -181,6 +184,9 @@ CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Tag_name_key" ON "Tag"("name");
+
+-- CreateIndex
+CREATE INDEX "Notification_userId_idx" ON "Notification"("userId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_TaskToUserCircle_AB_unique" ON "_TaskToUserCircle"("A", "B");
@@ -229,6 +235,9 @@ ALTER TABLE "Nudge" ADD CONSTRAINT "Nudge_taskId_fkey" FOREIGN KEY ("taskId") RE
 
 -- AddForeignKey
 ALTER TABLE "Notification" ADD CONSTRAINT "Notification_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Notification" ADD CONSTRAINT "Notification_senderId_fkey" FOREIGN KEY ("senderId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_TaskToUserCircle" ADD CONSTRAINT "_TaskToUserCircle_A_fkey" FOREIGN KEY ("A") REFERENCES "Task"("id") ON DELETE CASCADE ON UPDATE CASCADE;

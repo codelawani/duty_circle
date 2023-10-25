@@ -75,11 +75,11 @@ export default function TaskItem(props: Props) {
   return (
     <Link href={`/tasks/${id}`}>
       <article className={cn(taskVariants({ priority }), className)}>
-        <div className='flex items-center gap-3 min-h-[6rem]'>
+        <div className='flex items-center gap-3 min-h-fit'>
           <div>
             <Checkbox.Root
               className={cn(
-                'shadow-blackA4 hover:bg-violet3 flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-[4px] bg-white shadow-[0_2px_10px] outline-none focus:shadow-[0_0_0_2px_black]',
+                'flex h-[25px] w-[25px] appearance-none items-center justify-center rounded-[4px] bg-white shadow-[0_2px_10px] outline-none focus:shadow-[0_0_0_2px_black]',
                 checked && 'bg-transparent shadow-none'
               )}
               checked={checked}

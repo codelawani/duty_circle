@@ -2,6 +2,7 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { Icons } from './icons';
 import useNotification from './hooks/useNotification';
+import Image from 'next/image';
 
 export default function Notifications() {
   const { notifications } = useNotification();
@@ -23,10 +24,14 @@ export default function Notifications() {
 
       <DropdownMenu.Portal>
         <DropdownMenu.Content
-          className='w-fit 
-                  bg-second-light dark:bg-second-dark px-5 py-3
-                  rounded-md p-[5px] shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] :animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade z-[100] flex flex-col gap-2 '
-          sideOffset={5}
+          className=' 
+                  bg-body-light dark:bg-body-dark px-5 py-3
+                  rounded-md p-[5px]  will-change-[opacity,transform] :animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade z-[100] flex flex-col gap-2 max-h-[65vh]  md:max-h-[70vh]
+                  w-[60%]
+                  mx-auto
+                  lg:w-fit
+                  overflow-y-scroll min-h-fit shadow-ml'
+          sideOffset={10}
         >
           <DropdownMenu.Arrow className='dark:fill-body-dark fill-body-light' />
 
@@ -44,15 +49,27 @@ export default function Notifications() {
 }
 
 const Card = (notification: UserNotification) => {
-  const { seen, content, type } = notification;
+  const { content, sender } = notification;
 
   return (
     <DropdownMenu.Item
-      className={`${
-        seen ? '' : 'bg-gray-300 dark:bg-opacity-20 rounded-md py-1 px-2'
-      } `}
+      className={`border-b border-gray-700 last:border-0 py-2 dark:hover:bg-opacity-20 hover:bg-opacity-50 cursor-default hover:bg-gray-300 px-2`}
     >
-      {type === 'NEW_NUDGE' && <h6>{`User sent you a nudge!`}</h6>}
+      {sender && (
+        <div className='flex items-start gap-1 flex-col'>
+          <div className='w-10 h-10'>
+            <Image
+              src={sender?.image ? sender.image : '/default_avatar.png'}
+              width={50}
+              height={50}
+              alt={`profile of ${sender?.username}`}
+              className='rounded-full border w-full h-full object-cover object-center'
+            />
+          </div>
+
+          {sender && <p className=''>@{sender?.username}</p>}
+        </div>
+      )}
       <p>{content}</p>
     </DropdownMenu.Item>
   );

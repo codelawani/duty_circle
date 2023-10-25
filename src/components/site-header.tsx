@@ -3,12 +3,11 @@ import Link from 'next/link';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { siteConfig } from '../config/site';
 import { MoreVertical } from 'lucide-react';
-import { Button, buttonVariants } from './ui/button';
+import { buttonVariants } from './ui/button';
 import { Icons } from './icons';
 import { MainNav } from './main-nav';
 import { ThemeToggle } from './theme-toggle';
 import { LoginButton, LogoutButton } from './buttons.component';
-import useNotification from './hooks/useNotification';
 import Notifications from './notifications';
 
 export function SiteHeader() {
@@ -29,8 +28,8 @@ export function SiteHeader() {
                 <DropdownMenu.Content
                   className='w-fit 
                   bg-second-light dark:bg-second-dark px-5 py-3
-                  rounded-md p-[5px] shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] :animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade'
-                  sideOffset={5}
+                  rounded-md p-[5px] shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] :animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade z-[100]'
+                  sideOffset={13}
                 >
                   <DropdownMenu.Item>
                     <Link
@@ -45,7 +44,7 @@ export function SiteHeader() {
                         })}
                       >
                         <Icons.gitHub className='h-5 w-5' />
-                        <span className='sr-only'>GitHub</span>
+                        <span className='pl-2'>GitHub</span>
                       </div>
                     </Link>
                   </DropdownMenu.Item>
@@ -62,7 +61,7 @@ export function SiteHeader() {
                         })}
                       >
                         <Icons.twitter className='h-5 w-5 fill-current' />
-                        <span className='sr-only'>Twitter</span>
+                        <span className='pl-2'>Twitter</span>
                       </div>
                     </Link>
                   </DropdownMenu.Item>

@@ -10,8 +10,7 @@ type SideBarContextType = {
 const SidebarContext = createContext<SideBarContextType | null>(null);
 const SidebarProvider = ({ children }: { children: React.ReactNode }) => {
   const isClient = useClient();
-  const initialState: boolean =
-    isClient && (JSON.parse(localStorage.getItem('sidebar')!) ?? true);
+  const initialState = true;
 
   const [showSidebar, setShowSidebar] = useState<boolean>(initialState);
 

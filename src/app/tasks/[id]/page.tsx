@@ -1,11 +1,10 @@
-import { Button } from '@/src/components/ui/button';
 import { getDueDate, dateString as getString } from '@/src/utils/task/helpers';
-import { FlameIcon, MessageSquare } from 'lucide-react';
 import { getServerSession } from 'next-auth';
 import authOptions from '@/src/lib/auth';
 import Image from 'next/image';
 import { Icons } from '@/src/components/icons';
 import NudgeButton from '@/src/components/common/nudge-button';
+import BackButton from '../components/back-button';
 
 type Props = {
   params: {
@@ -42,7 +41,10 @@ export default async function page(props: Props) {
   const timeLeft = getDueDate(new Date(dueDate));
   const dueDateDisplay = getString(timeLeft);
   return (
-    <main className='md:py-10 px-12'>
+    <main className='md:py-10 md:px-12'>
+      <div className='my-4 md:hidden'>
+        <BackButton />
+      </div>
       <div className='flex items-center gap-1 pb-3'>
         <div className='w-16 h-16'>
           <Image
@@ -90,14 +92,10 @@ export default async function page(props: Props) {
         ))}
       </ul>
       <div className='flex border-y my-5  md:max-w-[50%]'>
-        {/* <Button variant={'ghost'} className='flex items-center gap-1'>
-          <span>{nudgeCount}</span>
-          <FlameIcon />
-        </Button> */}
         <NudgeButton taskId={id} ownerId={ownerId} nudgeCount={nudgeCount} />
-        <Button variant={'ghost'}>
+        {/* <Button variant={'ghost'}>
           <MessageSquare />
-        </Button>
+        </Button> */}
       </div>
 
       {/* <p>list of comments</p> */}
@@ -122,35 +120,4 @@ const Card = ({ heading, content }: { heading: string; content: string }) => {
       <p>{content}</p>
     </div>
   );
-};
-
-// send encouragement to a user
-const sendNudge = async (id: string) => {
-  // if (session.status === 'unauthenticated') {
-  //   toast.error('signin to send encouragement!', {
-  //     duration: 3000,
-  //   });
-  //   return;
-  // }
-  // const nudgedata = {
-  //   senderId: userId,
-  //   taskId: id,
-  // };
-  // try {
-  //   const res = await axios.post('/api/nudges', nudgedata);
-  //   if (res.status === 200) {
-  //     toast.success('encouragement sent!', {
-  //       duration: 5000,
-  //       position: 'top-right',
-  //     });
-  //   } else {
-  //     toast.error('encouragement not sent! please try again', {
-  //       duration: 5000,
-  //       position: 'top-right',
-  //     });
-  //   }
-  // } catch (error) {
-  //   toast.error('failed!');
-  //   console.log(error);
-  // }
 };

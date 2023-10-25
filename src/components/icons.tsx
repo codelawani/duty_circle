@@ -8,6 +8,10 @@ import {
   CheckCircle2,
   Trash,
   FlameIcon,
+  Loader2,
+  Loader,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 
 export type Icon = LucideIcon;
@@ -36,4 +40,8 @@ export const Icons = {
   check: CheckCircle2,
   delete: Trash,
   nudge: FlameIcon,
+  smallLoader: Loader2,
+  loader: Loader,
+  leftArrow: ChevronLeft,
+  rightArrow: ChevronRight,
 };

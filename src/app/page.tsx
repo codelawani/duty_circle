@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import FeedList from '../components/homepage/feed-list';
-import { Button } from '../components/ui/button';
 
 async function getFeed(page: number) {
   const res = await fetch(

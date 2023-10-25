@@ -4,12 +4,13 @@ import * as Boom from "@hapi/boom";
 import { NotifService } from "./notifs";
 import { NotificationType } from "@prisma/client";
 import { taskService } from "./task";
+import { userService } from "./user";
 
 export class NudgeService {
   async create(payload: Nudge) {
     const { senderId, taskId } = await NudgeSchema.validate(payload);
     const { userId, ...task } = await taskService.getById(taskId);
-
+    const { sender } = await this.validateUsers(senderId, userId);
     const nudge = await prisma.nudge.create({
       data: {
         senderId,
@@ -20,6 +21,7 @@ export class NudgeService {
     if (nudge) {
       const notifInfo = {
         senderId,
+        sender,
         userId,
         type: NotificationType.NEW_NUDGE,
         sourceId: nudge.id,
@@ -49,6 +51,15 @@ export class NudgeService {
     return await prisma.nudge.findFirst({
       where: { senderId, taskId },
     });
+  }
+  async validateUsers(senderId: string, userId: string) {
+    const sender = await userService.getById(senderId);
+    if (!sender) throw Boom.notFound(`Sender with id[${senderId}] not found`);
+
+    const user = await userService.getById(userId);
+    if (!user) throw Boom.notFound(`Receiver with id[${userId}] not found`);
+
+    return { user, sender };
   }
 }
 export const nudgeService = new NudgeService();

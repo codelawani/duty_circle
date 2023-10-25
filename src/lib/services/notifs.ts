@@ -9,6 +9,7 @@ interface INotifInfo {
   type?: NotificationType;
   sourceType?: string;
   sourceId?: string;
+  sender?: User;
 }
 export class NotifService {
   constructor(
@@ -16,8 +17,7 @@ export class NotifService {
     private content: string = "You got a new message"
   ) {}
   async create() {
-    const { sender } = await this.validateUsers();
-    const notifData = this.setContent(sender);
+    const notifData = this.setContent();
     const data = await NotifSchema.validate(notifData);
 
     const notif = await prisma.notification.create({ data });
@@ -25,16 +25,16 @@ export class NotifService {
     console.log(notif);
     return notif;
   }
-  setContent(sender: User) {
-    const { type } = this.notifInfo;
-    if (type === NotificationType.NEW_NUDGE) {
+  setContent() {
+    const { type, sender } = this.notifInfo;
+    if (type === NotificationType.NEW_NUDGE && sender?.username) {
       this.content = `${sender.username} is sending you a nudge.\n You can DO IT 🦾`;
     }
     return { ...this.notifInfo, content: this.content };
   }
   async validateUsers() {
     const { senderId, userId } = this.notifInfo;
-
+    if (!senderId) throw Error("Pls provide a sender Id");
     const sender = await userService.getById(senderId);
     if (!sender) throw Boom.notFound(`Sender with id[${senderId}] not found`);
 

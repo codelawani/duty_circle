@@ -18,16 +18,19 @@ export function errorHandler(
         )
     );
   } else if (err instanceof ValidationError) {
-    return res.json({
-      error: {
-        message: "Action failed",
-        err: err.errors.join(", ").replaceAll('"', "'"),
+    return res.json(
+      {
+        error: {
+          message: "Action failed",
+          err: err.errors.join(", ").replaceAll('"', "'"),
+        },
       },
-    });
+      { status: 400 }
+    );
   } else {
-    return res.json({
-      error: { message: "Something went wrong", err },
-      status: Boom.isBoom(err) ? err.output.statusCode : 500,
-    });
+    return res.json(
+      { error: { message: "Something went wrong" } },
+      { status: Boom.isBoom(err) ? err.output.statusCode : 500 }
+    );
   }
 }

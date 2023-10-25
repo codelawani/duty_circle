@@ -8,12 +8,9 @@ import { NextResponse as res } from "next/server";
  * Marks a notification as seen.
  * @param {Request} req - The request object.
  * @param {Params} params - The route parameters.
- * @returns {Promise<NextResponse>} - The response object.
+ * @returns {Promise<res>} - The NEXT response object.
  */
-const updateNotif = async (
-  req: Request,
-  { params }: Params
-): Promise<NextResponse> => {
+const updateNotif = async (req: Request, { params }: Params) => {
   const notifId = params.id;
   const { id: userId } = await userService.validate();
   const notifService = new NotifService({ userId });

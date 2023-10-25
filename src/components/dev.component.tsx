@@ -1,11 +1,13 @@
 import { getServerSession } from "next-auth";
 import Image from "next/image";
 import authOptions from "../lib/auth";
+import Header from "./header.component";
 export default async function Dev() {
   const session = await getServerSession(authOptions);
   const user = session?.user?.name;
   return (
     <main className="flex flex-col items-center justify-center">
+      <Header />
       <h1 className="text-4xl mt-10 font-bold text-center">
         This project is under development
       </h1>

@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-// import { Inter } from "next/font/google";
-import Header from "../components/header.component";
 import { NextAuthProvider } from "./providers";
 import { Analytics } from "@vercel/analytics/react";
 import { siteConfig } from "../config/site";
@@ -8,11 +6,9 @@ import { fontSans } from "../lib/fonts";
 import { cn } from "../lib/utils";
 import { SiteHeader } from "../components/site-header";
 import { ThemeProvider } from "../components/theme-provider";
-import { TailwindIndicator } from "../components/tailwind-indicator";
 
 import "../styles/globals.css";
 
-// const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: {
     default: siteConfig.name,

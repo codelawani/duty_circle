@@ -11,8 +11,8 @@ const getPublicFeed = async (req: NextRequest) => {
   const searchParams = req.nextUrl.searchParams;
   const page = searchParams.get("page");
   const pageSize = searchParams.get("size");
-  const tasks = await taskService.getPublicFeed(page, pageSize);
-  return res.json(tasks);
+  const result = await taskService.getPublicFeed(page, pageSize);
+  return res.json(result);
 };
 export const GET = apiHandler({ GET: getPublicFeed });
 

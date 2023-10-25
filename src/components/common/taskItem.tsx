@@ -125,18 +125,15 @@ export default function TaskItem(props: Props) {
               open={deleteOpen}
               onOpenChange={toggleDeleteModal}
             >
-              <AlertDialog.Trigger>
-                <Button
-                  variant={'ghost'}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    toggleDeleteModal();
-                  }}
-                  className={`disabled:cursor-not-allowed disabled:opacity-30`}
-                  disabled={!completed && isPublic ? true : false}
-                >
-                  <Icons.delete />
-                </Button>
+              <AlertDialog.Trigger
+                onClick={(e) => {
+                  e.preventDefault();
+                  toggleDeleteModal();
+                }}
+                className={`disabled:cursor-not-allowed disabled:opacity-30  rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background hover:bg-main-light dark:hover:bg-main-dark hover:text-white px-2 py-2`}
+                disabled={!completed && isPublic ? true : false}
+              >
+                <Icons.delete />
               </AlertDialog.Trigger>
               <AlertDialog.Portal>
                 <AlertDialog.Overlay

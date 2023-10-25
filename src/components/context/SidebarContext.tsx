@@ -10,7 +10,7 @@ type SideBarContextType = {
 const SidebarContext = createContext<SideBarContextType | null>(null);
 const SidebarProvider = ({ children }: { children: React.ReactNode }) => {
   const isClient = useClient();
-  const initialState = true;
+  const initialState = false;
 
   const [showSidebar, setShowSidebar] = useState<boolean>(initialState);
 

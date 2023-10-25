@@ -1,5 +1,5 @@
 import Header from '../components/header.component';
-import { fontPoppins } from '../lib/fonts';
+import { fontPoppins, fontMontserrat } from '../lib/fonts';
 import { TailwindIndicator } from '../components/tailwind-indicator';
 import { Toaster } from 'react-hot-toast';
 import { SidebarProvider } from '../components/context/SidebarContext';
@@ -39,11 +39,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang='en'>
+    <html
+      lang='en'
+      className={`${fontMontserrat.variable} ${fontPoppins.variable}`}
+    >
       <body
         className={cn(
-          'bg-body-light dark:bg-body-dark text-text-light dark:text-text-dark font-sans antialiased',
-          fontPoppins.className
+          'bg-body-light dark:bg-body-dark text-text-light dark:text-text-dark font-montSerrat antialiased'
         )}
       >
         <NextAuthProvider>

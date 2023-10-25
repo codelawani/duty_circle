@@ -102,7 +102,7 @@ export default function FeedItem(props: Task) {
                 color='#1cdf3d'
                 strokeWidth={2}
                 absoluteStrokeWidth
-                size={40}
+                size={25}
               />
             </div>
           )}

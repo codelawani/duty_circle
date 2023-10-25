@@ -52,24 +52,24 @@ const config: Config = {
           foreground: 'hsl(var(--card-foreground))',
         },
         text: {
-          light: '#2b3d50',
-          dark: '#afc1d4',
+          light: '#1f1f1f',
+          dark: '#e0e0e0',
         },
         body: {
-          light: '#dfeef1',
-          dark: '#141414',
+          light: '#ffffff',
+          dark: '#000000',
         },
         main: {
-          light: '#00bfff',
-          dark: '#00bfff',
+          light: '#0077e6',
+          dark: '#1a90ff',
         },
         second: {
-          light: '#cde4e9',
-          dark: '#162d32',
+          light: '#f5f5f5',
+          dark: '#0a0a0a',
         },
         cool: {
-          light: '#2ab7cf',
-          dark: '#30bcd5',
+          light: '#ff00b7',
+          dark: '#ff00b7',
         },
         priority: {
           low: '#78ACD5',
@@ -77,8 +77,8 @@ const config: Config = {
           high: '#FF2460',
         },
         form: {
-          light: '#cae2e8',
-          dark: '#173035',
+          light: '#404040',
+          dark: '#333333',
         },
         'light-blue': '#78ACD5',
       },
@@ -88,13 +88,16 @@ const config: Config = {
         sm: 'calc(var(--radius) - 4px)',
       },
       boxShadow: {
-        ml: ' 0px 5.00954px 5.83055px 0px rgba(42 ,183 ,207, 0.40)',
+        ml: ' 0px 5.00954px 5.83055px 0px rgba(0, 105, 204, 0.40)',
+        sl: ' 0px 1.0004px 5.83055px 0px rgba(255 ,0 ,183, 0.40)',
       },
       backgroundImage: {
         btn: 'linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);',
       },
       fontFamily: {
         sans: ['var(--font-sans)', ...fontFamily.sans],
+        poppins: ['var(--font-poppins)'],
+        montSerrat: ['var(--font-mont-serrat)'],
       },
       keyframes: {
         'accordion-down': {

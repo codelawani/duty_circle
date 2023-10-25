@@ -38,7 +38,7 @@ class UserService {
         throw Boom.conflict(
           `Failed to generate unique username for email ${email}: ${e.message}`
         );
-      } else {
+      } else if (e instanceof Error) {
         throw Boom.conflict(
           `Failed to generate username for email ${email}: ${e.message}`
         );
@@ -48,7 +48,7 @@ class UserService {
 }
 
 async function genUniqueUsername(email: string, retries = 3): Promise<string> {
-  const username = email.split("@")[0] + "_" + nanoid(5);
+  const username = "user_" + nanoid(11);
   try {
     await prisma.user.update({
       where: { email },

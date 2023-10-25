@@ -7,5 +7,8 @@ export const NotifSchema = yup
     content: yup.string().required(),
     userId: yup.string().required(),
     type: yup.string().required().oneOf(Object.values(NotificationType)),
+    sourceId: yup.string().required(),
+    sourceType: yup.string().required(),
+    senderId: yup.string(),
   });
 export type Notif = yup.InferType<typeof NotifSchema>;

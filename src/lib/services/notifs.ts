@@ -7,6 +7,8 @@ interface INotifInfo {
   senderId?: string;
   userId: string;
   type?: NotificationType;
+  sourceType?: string;
+  sourceId?: string;
 }
 export class NotifService {
   constructor(
@@ -15,12 +17,9 @@ export class NotifService {
   ) {}
   async create() {
     const { sender } = await this.validateUsers();
-    const { userId, type } = this.setContent(sender);
-    const data = await NotifSchema.validate({
-      userId,
-      content: this.content,
-      type,
-    });
+    const notifData = this.setContent(sender);
+    const data = await NotifSchema.validate(notifData);
+
     const notif = await prisma.notification.create({ data });
     if (!notif) throw Boom.internal("Error creating notification");
     console.log(notif);
@@ -31,7 +30,7 @@ export class NotifService {
     if (type === NotificationType.NEW_NUDGE) {
       this.content = `${sender.username} is sending you a nudge.\n You can DO IT 🦾`;
     }
-    return this.notifInfo;
+    return { ...this.notifInfo, content: this.content };
   }
   async validateUsers() {
     const { senderId, userId } = this.notifInfo;
@@ -45,14 +44,20 @@ export class NotifService {
     return { user, sender };
   }
   async getAllForUser() {
-    const { userId, senderId } = this.notifInfo;
+    const { userId } = this.notifInfo;
     return await prisma.notification.findMany({
       orderBy: { updatedAt: "desc" },
       where: { userId },
-      include: {
+      select: {
+        id: true,
+        userId: true,
+        sourceId: true,
+        sourceType: true,
+        type: true,
+        seen: true,
         sender: {
-          where: { id: senderId },
           select: {
+            username: true,
             name: true,
             image: true,
           },

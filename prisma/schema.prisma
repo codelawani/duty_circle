@@ -67,9 +67,10 @@ model User {
   nudgesReceived        Nudge[]        @relation("NudgesReceived")
   circleInvitesReceived CircleInvite[] @relation("CircleInvitesReceived")
   circleInvitesSent     CircleInvite[] @relation("CircleInvitesSent")
-  notifications         Notification[]
+  notificationsSent     Notification[] @relation("sender")
   tasks                 Task[]
   circles               UserCircle[]
+  notificationsReceived Notification[]
 }
 
 enum Role {
@@ -170,6 +171,8 @@ model Notification {
   userId     String
   sourceId   String
   sourceType String
+  senderId   String?
+  sender     User?            @relation("sender", fields: [senderId], references: [id])
   content    String
   type       NotificationType
   seen       Boolean          @default(false)

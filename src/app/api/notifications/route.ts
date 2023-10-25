@@ -58,6 +58,12 @@ export const GET = apiHandler({ GET: getNotifs });
  *         userId:
  *           type: string
  *           description: The unique identifier for the user associated with the notification.
+ *         sourceId:
+ *           type: string
+ *           description: The unique identifier for the source of the notification
+ *         sourceType:
+ *           type: string
+ *           description: The type of the source of the notification
  *         content:
  *           type: string
  *           description: The content of the notification.
@@ -66,6 +72,19 @@ export const GET = apiHandler({ GET: getNotifs });
  *         seen:
  *           type: boolean
  *           description: Indicates whether the notification has been seen by the user.
+ *         sender:
+ *           type: object
+ *           properties:
+ *             username:
+ *               type: string
+ *               description: The username of the sender.
+ *             name:
+ *               type: string
+ *               description: The name of the sender.
+ *             image:
+ *               type: string
+ *               description: The image URL of the sender.
+
  *     NotificationType:
  *       type: string
  *       enum:

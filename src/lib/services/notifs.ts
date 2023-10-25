@@ -48,13 +48,7 @@ export class NotifService {
     return await prisma.notification.findMany({
       orderBy: { updatedAt: "desc" },
       where: { userId },
-      select: {
-        id: true,
-        userId: true,
-        sourceId: true,
-        sourceType: true,
-        type: true,
-        seen: true,
+      include: {
         sender: {
           select: {
             username: true,

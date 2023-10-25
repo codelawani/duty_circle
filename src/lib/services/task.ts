@@ -94,25 +94,30 @@ class TaskService {
     const parsedPage = Math.max(parseInt(page || "1"), 1);
     const take = parseInt(pageSize || "10");
     const skip = (parsedPage - 1) * take;
-    return await prisma.task.findMany({
-      skip,
-      take,
+    const [tasks, count] = await Promise.all([
+      prisma.task.findMany({
+        skip,
+        take,
 
-      orderBy: {
-        updatedAt: "desc",
-      },
-      include: {
-        tags: { select: { name: true } },
-        user: {
-          select: {
-            username: true,
-            image: true,
-            id: true,
-            name: true,
+        orderBy: {
+          updatedAt: "desc",
+        },
+        include: {
+          tags: { select: { name: true } },
+          user: {
+            select: {
+              username: true,
+              image: true,
+              id: true,
+              name: true,
+            },
           },
         },
-      },
-    });
+      }),
+      prisma.task.count(),
+    ]);
+    const totalPages = Math.ceil(count / take);
+    return { tasks, totalPages };
   }
 
   async getTasksByTags(tagNames: string[]) {

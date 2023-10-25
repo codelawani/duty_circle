@@ -8,7 +8,10 @@
     "start": "next start",
     "lint": "next lint",
     "test": "jest",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "genfakedata": "ts-node --transpile-only ./prisma/fakeData.ts",
+    "reset-prisma": "npx prisma migrate reset",
+    "md-prisma": "npx prisma migrate dev"
   },
   "dependencies": {
     "@hapi/boom": "^10.0.1",
@@ -45,6 +48,7 @@
     "yup": "^1.3.2"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.2.0",
     "@types/jest": "^29.5.5",
     "@types/node": "^20",
     "@types/react": "^18",

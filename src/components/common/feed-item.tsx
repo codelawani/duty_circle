@@ -19,6 +19,7 @@ export default function FeedItem(props: Task) {
     dueDate,
     completed,
     tags,
+    nudgeCount,
   } = props;
 
   const session = useSession();
@@ -120,7 +121,11 @@ export default function FeedItem(props: Task) {
         <div className='flex justify-between items-center mt-auto'>
           <p>{currentStatus}</p>
           <div className='flex justify-end '>
-            <NudgeButton taskId={id} ownerId={ownerId} />
+            <NudgeButton
+              taskId={id}
+              ownerId={ownerId}
+              nudgeCount={nudgeCount}
+            />
             {/* <Button
               variant={'ghost'}
               onClick={(e) => {

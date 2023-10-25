@@ -56,9 +56,10 @@ Table User {
   nudgesReceived Nudge [not null]
   circleInvitesReceived CircleInvite [not null]
   circleInvitesSent CircleInvite [not null]
-  notifications Notification [not null]
+  notificationsSent Notification [not null]
   tasks Task [not null]
   circles UserCircle [not null]
+  notificationsReceived Notification [not null]
 }
 
 Table Circle {
@@ -141,6 +142,10 @@ Table Notification {
   updatedAt DateTime [not null]
   user User [not null]
   userId String [not null]
+  sourceId String [not null]
+  sourceType String [not null]
+  senderId String
+  sender User
   content String [not null]
   type NotificationType [not null]
   seen Boolean [not null, default: false]
@@ -192,3 +197,5 @@ Ref: Nudge.receiverId > User.id [delete: Cascade]
 Ref: Nudge.taskId > Task.id [delete: Cascade]
 
 Ref: Notification.userId > User.id [delete: Cascade]
+
+Ref: Notification.senderId > User.id [delete: Cascade]

@@ -9,12 +9,7 @@ export class NudgeService {
   async create(payload: Nudge) {
     const { senderId, taskId } = await NudgeSchema.validate(payload);
     const { userId, ...task } = await taskService.getById(taskId);
-    const notifInfo = {
-      senderId,
-      userId,
-      type: NotificationType.NEW_NUDGE,
-    };
-    await new NotifService(notifInfo).create();
+
     const nudge = await prisma.nudge.create({
       data: {
         senderId,
@@ -23,6 +18,14 @@ export class NudgeService {
       },
     });
     if (nudge) {
+      const notifInfo = {
+        senderId,
+        userId,
+        type: NotificationType.NEW_NUDGE,
+        sourceId: nudge.id,
+        sourceType: "Nudge",
+      };
+      await new NotifService(notifInfo).create();
       await prisma.task.update({
         where: { id: taskId },
         data: { nudgeCount: ++task.nudgeCount },

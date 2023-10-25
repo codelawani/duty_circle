@@ -94,7 +94,7 @@ export default async function page(props: Props) {
           <span>{nudgeCount}</span>
           <FlameIcon />
         </Button> */}
-        <NudgeButton taskId={id} ownerId={ownerId} />
+        <NudgeButton taskId={id} ownerId={ownerId} nudgeCount={nudgeCount} />
         <Button variant={'ghost'}>
           <MessageSquare />
         </Button>

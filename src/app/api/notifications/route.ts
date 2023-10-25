@@ -27,11 +27,13 @@ export const GET = apiHandler({ GET: getNotifs });
  *       - application/json
  *     responses:
  *       200:
- *         description: Returns an array of notifications.
- *         schema:
- *           type: array
- *           items:
- *             $ref: '#/components/schemas/Notification'
+ *         description: A JSON response containing the paginated list of tasks.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Notification'
  *       401:
  *         $ref: '#/components/responses/Unauthorized'
  *       500:
@@ -84,6 +86,21 @@ export const GET = apiHandler({ GET: getNotifs });
  *             image:
  *               type: string
  *               description: The image URL of the sender.
+ *       example:
+ *         id: "197191d8-f872-4b06-b60a-2f3d90939db2"
+ *         createdAt: "2023-10-24T23:49:49.571Z"
+ *         updatedAt: "2023-10-24T23:49:49.571Z"
+ *         userId: "c952a877-a297-41e8-aa60-ec972d9ce896"
+ *         sourceId: "855e7653-6e6a-4e0a-8cc0-633c862639af"
+ *         sourceType: "Nudge"
+ *         senderId: "fc26fa5b-b2e7-4d5f-9284-b2799ac193d4"
+ *         content: "blackbeard is sending you a nudge.\n You can DO IT 🦾"
+ *         type: "NEW_NUDGE"
+ *         seen: false
+ *         sender:
+ *           username: "blackbeard"
+ *           name: "Captain Blackbeard"
+ *           image: "https://img.com"
 
  *     NotificationType:
  *       type: string

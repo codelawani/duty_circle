@@ -10,8 +10,8 @@
     "test": "jest",
     "postinstall": "prisma generate",
     "genfakedata": "ts-node --transpile-only ./prisma/fakeData.ts",
-    "reset-prisma": "npx run prisma migrate reset",
-    "md-prisma": "npx run prisma migrate dev"
+    "reset-prisma": "npx prisma migrate reset",
+    "md-prisma": "npx prisma migrate dev"
   },
   "dependencies": {
     "@hapi/boom": "^10.0.1",

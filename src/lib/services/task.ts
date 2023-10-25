@@ -94,7 +94,7 @@ class TaskService {
     const parsedPage = Math.max(parseInt(page || "1"), 1);
     const take = parseInt(pageSize || "10");
     const skip = (parsedPage - 1) * take;
-    if (!take || !skip) {
+    if (isNaN(take) || isNaN(skip)) {
       throw Boom.badRequest("Pls provide integer query values");
     }
     const [tasks, count] = await Promise.all([

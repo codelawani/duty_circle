@@ -3,8 +3,7 @@ import { cn } from '@/src/lib/utils';
 import { cva } from 'class-variance-authority';
 import Link from 'next/link';
 import * as Checkbox from '@radix-ui/react-checkbox';
-import { CheckCircle2, Trash } from 'lucide-react';
-import { Button, buttonVariants } from '../ui/button';
+import { Button } from '../ui/button';
 import { useState } from 'react';
 import { useTask } from '../context/TasksContext';
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
@@ -13,6 +12,7 @@ import {
   dateString,
   calculatePriority,
 } from '@/src/utils/task/helpers';
+import { Icons } from '../icons';
 
 type Props = Task & {
   className?: string;
@@ -90,7 +90,7 @@ export default function TaskItem(props: Props) {
               }}
             >
               <Checkbox.Indicator className='text-violet11' asChild>
-                <CheckCircle2
+                <Icons.check
                   color='#1cdf3d'
                   strokeWidth={2}
                   absoluteStrokeWidth
@@ -111,7 +111,7 @@ export default function TaskItem(props: Props) {
                 e.preventDefault();
               }}
             >
-              <FlameIcon />
+              <Icons.nudge />
             </Button>
             <Button
               variant={'ghost'}
@@ -135,7 +135,7 @@ export default function TaskItem(props: Props) {
                   className={`disabled:cursor-not-allowed disabled:opacity-30`}
                   disabled={!completed && isPublic ? true : false}
                 >
-                  <Trash />
+                  <Icons.delete />
                 </Button>
               </AlertDialog.Trigger>
               <AlertDialog.Portal>

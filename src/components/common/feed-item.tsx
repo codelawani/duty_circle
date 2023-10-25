@@ -1,30 +1,28 @@
 'use client';
 import { cn } from '@/src/lib/utils';
 import Link from 'next/link';
-import {
-  CheckCircle2,
-  FlameIcon,
-  MessageSquare,
-  UserPlus2,
-} from 'lucide-react';
 import { Button } from '../ui/button';
 
-import {
-  getDueDate,
-  dateString,
-  calculatePriority,
-} from '@/src/utils/task/helpers';
+import { getDueDate, dateString } from '@/src/utils/task/helpers';
 import Image from 'next/image';
+import { useSession } from 'next-auth/react';
+import toast from 'react-hot-toast';
+import axios from 'axios';
+import { Icons } from '../icons';
+import NudgeButton from './nudge-button';
 
 export default function FeedItem(props: Task) {
   const {
     title,
     id,
-    user: { username, image },
+    user: { username, image, id: ownerId },
     dueDate,
     completed,
     tags,
   } = props;
+
+  const session = useSession();
+  const userId = session?.data?.user?.id;
 
   const timeLeft = getDueDate(new Date(dueDate));
   const dueDateDisplay = dateString(timeLeft);
@@ -37,6 +35,38 @@ export default function FeedItem(props: Task) {
 
   const maxTags = 3;
   const requiredTags = tags?.slice(0, maxTags);
+
+  // send encouragement to a user
+  const sendNudge = async (id: string) => {
+    if (session.status === 'unauthenticated') {
+      toast.error('signin to send encouragement!', {
+        duration: 3000,
+      });
+      return;
+    }
+    const nudgedata = {
+      senderId: userId,
+      taskId: id,
+    };
+    try {
+      const res = await axios.post('/api/nudges', nudgedata);
+      if (res.status === 200) {
+        toast.success('encouragement sent!', {
+          duration: 5000,
+          position: 'top-right',
+        });
+      } else {
+        toast.error('encouragement not sent! please try again', {
+          duration: 5000,
+          position: 'top-right',
+        });
+      }
+    } catch (error) {
+      toast.error('failed!');
+      console.log(error);
+    }
+  };
+
   return (
     <Link href={`/tasks/${id}`}>
       <article
@@ -67,7 +97,7 @@ export default function FeedItem(props: Task) {
         <div className='flex items-center gap-3'>
           {completed && (
             <div className=''>
-              <CheckCircle2
+              <Icons.check
                 color='#1cdf3d'
                 strokeWidth={2}
                 absoluteStrokeWidth
@@ -90,22 +120,15 @@ export default function FeedItem(props: Task) {
         <div className='flex justify-between items-center mt-auto'>
           <p>{currentStatus}</p>
           <div className='flex justify-end '>
-            <Button
-              variant={'ghost'}
-              onClick={(e) => {
-                e.preventDefault();
-              }}
-            >
-              <FlameIcon />
-            </Button>
-            <Button
+            <NudgeButton taskId={id} ownerId={ownerId} />
+            {/* <Button
               variant={'ghost'}
               onClick={(e) => {
                 e.preventDefault();
               }}
             >
               <MessageSquare />
-            </Button>
+            </Button> */}
           </div>
         </div>
       </article>

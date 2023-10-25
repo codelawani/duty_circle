@@ -18,6 +18,7 @@ type Task = {
   tags: {
     name: string;
   }[];
+  nudgeCount: number;
 };
 
 type NewTask = {

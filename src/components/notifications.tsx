@@ -5,7 +5,7 @@ import useNotification from './hooks/useNotification';
 
 export default function Notifications() {
   const { notifications } = useNotification();
-  const unreadNotifications = notifications.filter(
+  const unreadNotifications = notifications?.filter(
     (notification) => !notification.seen
   );
   const unread = unreadNotifications?.length ?? 0;
@@ -25,12 +25,18 @@ export default function Notifications() {
         <DropdownMenu.Content
           className='w-fit 
                   bg-second-light dark:bg-second-dark px-5 py-3
-                  rounded-md p-[5px] shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] :animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade z-[100] flex flex-col gap-2'
+                  rounded-md p-[5px] shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] :animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade z-[100] flex flex-col gap-2 '
           sideOffset={5}
         >
-          {notifications.map((notification) => (
-            <Card key={notification.id} {...notification} />
-          ))}
+          <DropdownMenu.Arrow className='dark:fill-body-dark fill-body-light' />
+
+          {notifications.length > 0 ? (
+            notifications.map((notification) => (
+              <Card key={notification.id} {...notification} />
+            ))
+          ) : (
+            <DropdownMenu.Item>no new notifications...</DropdownMenu.Item>
+          )}
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
     </DropdownMenu.Root>

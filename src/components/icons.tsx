@@ -1,5 +1,14 @@
 import type { LucideIcon } from 'lucide-react';
-import { Bell, LucideProps, Moon, SunMedium, Twitter } from 'lucide-react';
+import {
+  Bell,
+  LucideProps,
+  Moon,
+  SunMedium,
+  Twitter,
+  CheckCircle2,
+  Trash,
+  FlameIcon,
+} from 'lucide-react';
 
 export type Icon = LucideIcon;
 
@@ -24,4 +33,7 @@ export const Icons = {
     </svg>
   ),
   notification: Bell,
+  check: CheckCircle2,
+  delete: Trash,
+  nudge: FlameIcon,
 };

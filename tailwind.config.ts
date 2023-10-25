@@ -90,6 +90,9 @@ const config: Config = {
       boxShadow: {
         ml: ' 0px 10.00954px 40.83055px 0px rgba(42 ,183 ,207, 0.40)',
       },
+      backgroundImage: {
+        btn: 'linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);',
+      },
       fontFamily: {
         sans: ['var(--font-sans)', ...fontFamily.sans],
       },

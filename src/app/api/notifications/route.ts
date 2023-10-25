@@ -17,6 +17,20 @@ const getNotifs = async (req: Request) => {
 export const GET = apiHandler({ GET: getNotifs });
 
 /**
+ * Marks all unseen notifications as seen.
+ * @param {Request} req - The request object.
+ * @param {Params} params - The route parameters.
+ * @returns {Promise<res>} - The NEXT response object.
+ */
+const updateNotif = async (req: Request) => {
+  const { id: userId } = await userService.validate();
+  const notifService = new NotifService({ userId });
+  const count = await notifService.update();
+  const notifCount = `${count} Notification${count > 1 ? "s" : ""}`;
+  return res.json({ msg: `${notifCount} updated successfully` });
+};
+export const PUT = apiHandler({ PUT: updateNotif });
+/**
  * @swagger
  * /api/notifications:
  *   get:
@@ -39,6 +53,26 @@ export const GET = apiHandler({ GET: getNotifs });
  *       500:
  *         $ref: '#/components/responses/InternalServerError'
  */
+
+/**
+ * @swagger
+ * /api/notifications:
+ *   put:
+ *     summary: Marks all unseen notifications as seen for current user.
+ *     tags: [Notifications]
+ *     responses:
+ *       200:
+ *         description: <num> notifications updated successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: A success message.
+ */
+
 /**
  * @swagger
  * components:

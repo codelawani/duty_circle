@@ -59,4 +59,15 @@ export class NotifService {
       },
     });
   }
+  async update(notifId: string) {
+    const notif = await prisma.notification.findUnique({
+      where: { id: notifId },
+    });
+    if (!notif) throw Boom.notFound("Notification not found");
+    const newNotif = await prisma.notification.update({
+      where: { id: notifId },
+      data: { seen: true },
+    });
+    if (!newNotif) throw Boom.internal("Something went wrong");
+  }
 }

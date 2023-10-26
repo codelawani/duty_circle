@@ -77,11 +77,11 @@ export default function FeedItem(props: Task) {
           )}
           <p className='capitalize'> {displayedTitle}</p>
         </div>
-        <ul className='flex gap-1 items-center'>
+        <ul className='flex gap-1 items-center '>
           {requiredTags?.map(({ name }) => (
             <li
               key={name}
-              className='bg-accent text-accent-foreground px-2 rounded-lg'
+              className='bg-second-light dark:bg-[#181818] border border-x-cool-light text-accent-foreground px-2 rounded-lg even:border-x-main-light '
             >
               {name}
             </li>

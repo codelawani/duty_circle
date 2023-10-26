@@ -77,8 +77,8 @@ const config: Config = {
           high: '#FF2460',
         },
         form: {
-          light: '#404040',
-          dark: '#333333',
+          light: '#ffffff',
+          dark: '#181818',
         },
         'light-blue': '#78ACD5',
       },

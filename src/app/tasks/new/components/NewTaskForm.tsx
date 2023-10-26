@@ -91,7 +91,7 @@ export default function NewTaskForm() {
   return (
     <form
       onSubmit={onSubmit}
-      className={`flex flex-col gap-7 w-full md:w-1/2 mx-auto relative px-1 md:px-6 md:border py-5 rounded-md lg:w-2/4 ${
+      className={`flex flex-col gap-7 w-full md:w-1/2 mx-auto relative px-1 md:px-6 md:border py-5 rounded-md lg:w-2/4 bg-[#4d4d4d] bg-opacity-30 dark:bg-inherit dark:bg-opacity-100 ${
         isSending ? 'opacity-50' : ''
       }`}
     >
@@ -100,21 +100,14 @@ export default function NewTaskForm() {
         {...register('title')}
         error={errors?.title?.message}
         required
-        placeholder='Complete project proposal'
+        placeholder='title of task'
       />
       <Input
         label='description'
         {...register('description')}
         error={errors?.description?.message}
-        placeholder='write a proposal for the new project'
+        placeholder='what is the task about'
       />
-      {/* <Input
-        label='due date'
-        type='datetime-local'
-        {...register('dueDate')}
-        error={errors?.dueDate?.message}
-        required
-      /> */}
       <ControlledDatePicker
         control={control}
         name='dueDate'
@@ -127,7 +120,7 @@ export default function NewTaskForm() {
         label='consequence'
         {...register('consequence')}
         error={errors?.consequence?.message}
-        placeholder='Donate $50 to open source project'
+        placeholder='what is the consequence of failure'
       />
 
       <MultipleSelect
@@ -160,7 +153,7 @@ export default function NewTaskForm() {
       <Button
         size={'sm'}
         type='submit'
-        className='capitalize text-lg dark:btn-gradient bg-yellow-500 mt-3 md:w-1/3 md:self-center'
+        className='capitalize text-lg  bg-gradient mt-3 md:w-1/3 md:self-center'
       >
         create
       </Button>

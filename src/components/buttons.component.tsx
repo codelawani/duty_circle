@@ -9,7 +9,7 @@ export const LoginButton = () => {
     <>
       {status !== 'authenticated' ? (
         <Button
-          className='hover:bg-accent hover:text-accent-foreground text-sky-600'
+          className='hover:bg-accent hover:text-accent-foreground  bg-gradient text-black border-x-main-dark border border-y-cool-dark'
           onClick={() => signIn()}
         >
           Sign In{' '}
@@ -24,7 +24,8 @@ export const LogoutButton = () => {
     <>
       {status === 'authenticated' ? (
         <Button
-          className='hover:bg-accent hover:text-accent-foreground text-red-500'
+          className='hover:bg-accent hover:text-accent-foreground
+          bg-gradient text-black border-x-cool-light border border-y-main-light'
           onClick={() => signOut()}
         >
           Sign Out

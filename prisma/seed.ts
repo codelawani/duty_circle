@@ -37,6 +37,13 @@ async function main() {
     },
   });
 
+  const jackSession = await prisma.session.create({
+    data: {
+      userId: jack.id,
+      sessionToken: "js",
+    },
+  });
+
   // Create the Rum circle
   // const rum = await prisma.circle.create({
   //   data: {
@@ -116,6 +123,12 @@ async function main() {
         name: "Captain Blackbeard",
         username: "blackbeard",
         image: blackbeardImage,
+      },
+    });
+    const bbSession = await prisma.session.create({
+      data: {
+        userId: blackbeard.id,
+        sessionToken: "bb",
       },
     });
 

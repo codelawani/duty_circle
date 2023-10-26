@@ -10,7 +10,7 @@ import { useMemo } from 'react';
 export default function FeedList() {
   const searchParams = useSearchParams();
   const page = Number(searchParams.get('page') ?? 1);
-  const tag = searchParams.get('tag') ?? '';
+  // const tag = searchParams.get('tag') ?? '';
   const { data } = useQuery({
     queryKey: ['feed', page],
     queryFn: () => getFeed(page),
@@ -59,7 +59,7 @@ export default function FeedList() {
               page: page + 1,
             },
           }}
-          className={`${publicFeed.length < 20 && 'invisible'} ${
+          className={` ${
             page === data?.totalPages ? 'invisible' : 'visible'
           } capitalize bg-primary px-5 py-1 rounded-md text-primary-foreground hover:bg-secondary hover:text-secondary-foreground transition-colors duration-100 flex items-center gap-2`}
         >

@@ -101,9 +101,11 @@ class TaskService {
       prisma.task.findMany({
         skip,
         take,
-
         orderBy: {
           updatedAt: "desc",
+        },
+        where: {
+          public: true,
         },
         include: {
           tags: { select: { name: true } },

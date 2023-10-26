@@ -19,7 +19,7 @@ export default function TasksList() {
       <div className='fixed md:relative bottom-5 right-5 z-20 md:bottom-0 md:flex md:justify-end'>
         <Link
           href={'/tasks/new'}
-          className='bg-cool-light text-body-dark rounded-md px-5 py-2 capitalize'
+          className='bg-gradient hover:bg-opacity-80 transition-all duration-300 active:scale-90 text-body-dark rounded-md px-5 py-2 capitalize'
         >
           new
         </Link>

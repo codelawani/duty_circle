@@ -37,42 +37,11 @@ export default function FeedItem(props: Task) {
   const maxTags = 3;
   const requiredTags = tags?.slice(0, maxTags);
 
-  // send encouragement to a user
-  const sendNudge = async (id: string) => {
-    if (session.status === 'unauthenticated') {
-      toast.error('signin to send encouragement!', {
-        duration: 3000,
-      });
-      return;
-    }
-    const nudgedata = {
-      senderId: userId,
-      taskId: id,
-    };
-    try {
-      const res = await axios.post('/api/nudges', nudgedata);
-      if (res.status === 200) {
-        toast.success('encouragement sent!', {
-          duration: 5000,
-          position: 'top-right',
-        });
-      } else {
-        toast.error('encouragement not sent! please try again', {
-          duration: 5000,
-          position: 'top-right',
-        });
-      }
-    } catch (error) {
-      toast.error('failed!');
-      console.log(error);
-    }
-  };
-
   return (
     <Link href={`/tasks/${id}`}>
       <article
         className={cn(
-          'py-2 px-7 relative border-b h-fit md:min-h-[13rem]  border-r flex flex-col gap-3 hover:shadow-ml'
+          'py-2 px-7 relative border-b h-fit md:min-h-[13rem]  md:border-r flex flex-col gap-3 hover:shadow-ml animate-slideIn transition-transform border-b-main-light/50 hover:bg-main-light/5'
         )}
       >
         <div className='flex items-center gap-1'>

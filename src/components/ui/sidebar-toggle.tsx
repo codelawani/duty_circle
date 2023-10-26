@@ -10,7 +10,7 @@ export default function SideBarToggle() {
       size={'sm'}
       onClick={toggleSidebar}
       variant={'outline'}
-      className='border-cool-light'
+      className='border-cool-light '
     >
       <Menu />
     </Button>

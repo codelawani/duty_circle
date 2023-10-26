@@ -53,15 +53,13 @@ export default function RootLayout({
             {/* <Header /> */}
             <SidebarProvider>
               <TaskContextProvider>
-                <div className='relative h-screen overflow-hidden'>
-                  <SiteHeader />
-                  <Toaster />
-                  <div className='flex h-screen w-full gap-5'>
-                    <Sidebar />
-                    <main className='overflow-y-scroll w-full scroll-hidden h-full pb-20 pt-3 pr-5'>
-                      {children}
-                    </main>
-                  </div>
+                <SiteHeader />
+                <Toaster />
+                <div className='flex  w-full gap-5 '>
+                  <Sidebar />
+                  <main className=' w-full h-full py-5 md:py-10 pt-3 pr-5 scroll-hidden overflow-y-scroll '>
+                    {children}
+                  </main>
                 </div>
               </TaskContextProvider>
             </SidebarProvider>

@@ -92,7 +92,8 @@ const config: Config = {
         sl: ' 0px 1.0004px 5.83055px 0px rgba(255 ,0 ,183, 0.40)',
       },
       backgroundImage: {
-        btn: 'linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);',
+        btn: 'linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000)',
+        gradient: 'linear-gradient(160deg,#0077e6,#ff00b7)',
       },
       fontFamily: {
         sans: ['var(--font-sans)', ...fontFamily.sans],
@@ -124,6 +125,16 @@ const config: Config = {
           from: { opacity: '0', transform: 'translateX(-2px)' },
           to: { opacity: '1', transform: 'translateX(0)' },
         },
+        slideIn: {
+          from: {
+            opacity: '0',
+            transform: 'translateY(100px)',
+          },
+          to: {
+            opacity: '1',
+            transform: 'translateY(0)',
+          },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
@@ -135,6 +146,7 @@ const config: Config = {
         slideUpAndFade: 'slideUpAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)',
         slideRightAndFade:
           'slideRightAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)',
+        slideIn: 'slideIn 400ms cubic-bezier(0.5, 1, 0.3, 1) 1',
       },
     },
   },

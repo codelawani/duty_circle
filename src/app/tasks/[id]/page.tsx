@@ -1,7 +1,7 @@
 import { getDueDate, dateString as getString } from '@/src/utils/task/helpers';
 import Image from 'next/image';
 import { Icons } from '@/src/components/icons';
-import NudgeButton from '@/src/components/common/nudge-button';
+import NudgeButton from '@/src/components/homepage/nudge-button';
 import BackButton from '../components/back-button';
 
 type Props = {

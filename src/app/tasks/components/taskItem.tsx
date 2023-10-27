@@ -61,6 +61,8 @@ export default function TaskItem(props: Props) {
   const priority = completed ? 'none' : calculatePriority(timeLeft);
   // const { deleteTask } = useTask();
   const { updateTask, deleteTask } = useMutate();
+
+  // update status of task
   const handleChecked = () => {
     setChecked((prev) => !prev);
     updateTask({
@@ -84,19 +86,17 @@ export default function TaskItem(props: Props) {
 
   const handleTaskDelete = async (id: string) => {
     try {
+      toggleDeleteModal();
       const res = await deleteTask(id);
-      if (res.status === 200) {
-        queryClient.setQueryData(['tasks'], (prev: Task[]) => {
-          return prev.filter((task) => task.id !== id);
-        });
-        toast.success('todo deleted!');
-      } else {
+      if (res.status !== 200) {
         toast.error('please try again!');
+        // queryClient.setQueryData(['tasks'], (prev: Task[]) => {
+        //   return prev.filter((task) => task.id !== id);
+        // });
+        // toast.success('todo deleted!');
       }
     } catch (error) {
       toast.error('An error occurred');
-    } finally {
-      toggleDeleteModal();
     }
   };
 

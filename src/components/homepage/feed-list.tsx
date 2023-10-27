@@ -1,6 +1,6 @@
 'use client';
 import { useQuery } from '@tanstack/react-query';
-import FeedItem from '../common/feed-item';
+import FeedItem from './feed-item';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Icons } from '../icons';

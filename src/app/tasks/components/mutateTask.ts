@@ -26,7 +26,31 @@ export default function useMutate() {
     }) => {
       return axios.put(`/api/tasks/${data.id}`, data.body);
     },
-    onSuccess: () => {
+    onMutate: async (updatedTask) => {
+      // cancel any outgoing refetch
+      await queryClient.cancelQueries({ queryKey: ['tasks'] });
+
+      // previous tasks list values
+      const prevTasks: Task[] = queryClient.getQueryData(['tasks']) as Task[];
+
+      const prevTaskState = prevTasks.find(
+        (task) => task.id === updatedTask.id
+      );
+
+      // optimistically update the tasks list
+      queryClient.setQueryData(['tasks'], (prevData: Task[]) => [
+        { ...prevTaskState, ...updatedTask.body },
+        ...prevData,
+      ]);
+      // return a context with the snapshot of the tasks before the optimistic update
+      return { prevTasks };
+    },
+    onError: (err, body, context) => {
+      queryClient.setQueryData(['tasks'], context?.prevTasks);
+    },
+
+    onSettled: () => {
+      // refetch after error or success
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
     },
   });
@@ -35,9 +59,28 @@ export default function useMutate() {
     mutationFn: (id: string) => {
       return axios.delete(`/api/tasks/${id}`);
     },
-    // onSuccess: (data) => {
-    //   //  queryClient.invalidateQueries({ queryKey: ['tasks'] });
-    // },
+    onMutate: async (id) => {
+      // cancel any outgoing refetch
+      await queryClient.cancelQueries({ queryKey: ['tasks'] });
+
+      // previous tasks list values
+      const prevTasks: Task[] = queryClient.getQueryData(['tasks']) as Task[];
+
+      // optimistically update the tasks list
+      queryClient.setQueryData(['tasks'], (prevData: Task[]) => {
+        return prevData.filter((task) => task.id !== id);
+      });
+      // return a context with the snapshot of the tasks before the optimistic update
+      return { prevTasks };
+    },
+    onError: (err, body, context) => {
+      queryClient.setQueryData(['tasks'], context?.prevTasks);
+    },
+
+    onSettled: () => {
+      // refetch after error or success
+      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+    },
   });
 
   return { newTask, updateTask, isSending, deleteTask };

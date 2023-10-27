@@ -5,7 +5,7 @@ import { Button } from '../ui/button';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 import { useState } from 'react';
-import ToolTip from './tool-tip';
+import ToolTip from '../common/tool-tip';
 import SmallLoader from '../loaders/SmallLoader';
 
 type Props = {
@@ -23,7 +23,6 @@ export default function NudgeButton({
   const userId = session?.data?.user?.id;
 
   const [nudge, setNudge] = useState(nudgeCount);
-  const [isSending, setIsSending] = useState(false);
 
   // send encouragement to a user
   const sendNudge = async (id: string) => {
@@ -37,26 +36,16 @@ export default function NudgeButton({
       senderId: userId,
       taskId: id,
     };
+    setNudge((prev) => prev + 1);
     try {
-      setIsSending(true);
       const res = await axios.post('/api/nudges', nudgedata);
-      if (res.status === 200) {
-        setNudge((prev) => prev + 1);
-        // toast.success('encouragement sent!', {
-        //   duration: 5000,
-        //   position: 'top-right',
-        // });
-      } else {
-        toast.error('encouragement not sent! please try again', {
-          duration: 5000,
-          position: 'top-right',
-        });
+      if (res.status !== 200) {
+        setNudge((prev) => prev - 1);
       }
     } catch (error) {
+      setNudge((prev) => prev - 1);
       toast.error('failed!');
       console.log(error);
-    } finally {
-      setIsSending(false);
     }
   };
 
@@ -69,11 +58,10 @@ export default function NudgeButton({
           sendNudge(taskId);
         }}
         disabled={userId === ownerId ? true : false}
-        className='disabled:cursor-not-allowed duration-300 transition-colors active:scale-90 group flex items-end gap-1 active:bg-priority-high  relative'
+        className='disabled:cursor-not-allowed duration-300 transition-colors active:scale-90 group flex items-end gap-1   relative'
       >
-        <span>{nudge}</span>
         <Icons.nudge className='group-active:text-red-900 transition-colors group-active:animate-in group-active:fill-red-900' />
-        {isSending && <SmallLoader size={20} />}
+        <span>{nudge}</span>
       </Button>
     </ToolTip>
   );

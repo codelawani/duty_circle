@@ -5,7 +5,6 @@ import TasksSkeleton from '@/src/components/loaders/TasksSkeleton';
 import { Button } from '@/src/components/ui/button';
 import Link from 'next/link';
 import * as Tabs from '@radix-ui/react-tabs';
-import SmallLoader from '@/src/components/loaders/SmallLoader';
 import { useQuery } from '@tanstack/react-query';
 import { getTasks } from '@/src/utils/task/fetch';
 

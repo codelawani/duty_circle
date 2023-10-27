@@ -38,7 +38,7 @@ export function SiteHeader() {
               >
                 <Icons.notification className='h-5 w-5' />
                 {unread > 0 && (
-                  <span className='absolute right-1 top-0 border-none w-4 h-4 rounded-full bg-red-900  text-white font-bold text-xs font-mono'>
+                  <span className='absolute right-1 top-0 border-none w-fit h-4 rounded-full bg-red-900  text-white font-bold text-xs font-mono px-1'>
                     {unread}
                   </span>
                 )}

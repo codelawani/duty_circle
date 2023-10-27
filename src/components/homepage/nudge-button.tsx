@@ -6,7 +6,6 @@ import toast from 'react-hot-toast';
 import axios from 'axios';
 import { useState } from 'react';
 import ToolTip from '../common/tool-tip';
-import SmallLoader from '../loaders/SmallLoader';
 
 type Props = {
   ownerId: string;
@@ -44,8 +43,7 @@ export default function NudgeButton({
       }
     } catch (error) {
       setNudge((prev) => prev - 1);
-      toast.error('failed!');
-      console.log(error);
+      // console.log(error);
     }
   };
 

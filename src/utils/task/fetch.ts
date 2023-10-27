@@ -1,8 +1,10 @@
-export async function getFeed(
-  page: number
-): Promise<{ tasks: Task[]; totalPages: number }> {
+export async function getFeed({
+  pageParam = 1,
+}: {
+  pageParam?: number;
+}): Promise<{ tasks: Task[]; totalPages: number }> {
   const basePath = process.env.NEXTAUTH_URL ?? '';
-  const res = await fetch(`${basePath}/api/feed?page=${page}&size=20`, {
+  const res = await fetch(`${basePath}/api/feed?page=${pageParam}&size=20`, {
     cache: 'no-cache',
   });
   if (!res.ok) {

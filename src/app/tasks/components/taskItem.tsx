@@ -5,7 +5,6 @@ import Link from 'next/link';
 import * as Checkbox from '@radix-ui/react-checkbox';
 import { Button } from '../../../components/ui/button';
 import { useState } from 'react';
-import { useTask } from '../../../components/context/TasksContext';
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
 import {
   getDueDate,

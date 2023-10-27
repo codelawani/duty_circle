@@ -1,9 +1,5 @@
 import TasksList from './components/TasksList';
-import {
-  dehydrate,
-  HydrationBoundary,
-  QueryClient,
-} from '@tanstack/react-query';
+import { QueryClient } from '@tanstack/react-query';
 import { getTasks } from '@/src/utils/task/fetch';
 
 export default async function page() {

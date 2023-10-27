@@ -15,9 +15,10 @@ export default async function Home({
 
   const queryClient = new QueryClient();
 
-  await queryClient.prefetchQuery({
-    queryKey: ['feed', page],
-    queryFn: () => getFeed(page),
+  await queryClient.prefetchInfiniteQuery({
+    queryKey: ['feed'],
+    queryFn: getFeed,
+    initialPageParam: 1,
   });
 
   return (

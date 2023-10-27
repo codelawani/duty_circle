@@ -1,73 +1,59 @@
 'use client';
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import FeedItem from './feed-item';
-import { useSearchParams } from 'next/navigation';
-import Link from 'next/link';
 import { Icons } from '../icons';
 import { getFeed } from '@/src/utils/task/fetch';
-import { useMemo } from 'react';
+import { Button } from '../ui/button';
 
 export default function FeedList() {
-  const searchParams = useSearchParams();
-  const page = Number(searchParams.get('page') ?? 1);
-  // const tag = searchParams.get('tag') ?? '';
-  const { data } = useQuery({
-    queryKey: ['feed', page],
-    queryFn: () => getFeed(page),
-    staleTime: 5 * 60 * 1000,
-    refetchInterval: 5 * 60 * 1000,
-  });
-  const publicFeed = useMemo(() => {
-    return data?.tasks.filter((task) => task.public);
-  }, [data?.tasks]);
+  const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useInfiniteQuery({
+      queryKey: ['feed'],
+      queryFn: getFeed,
+      initialPageParam: 1,
+      getNextPageParam: (lastPage, allPages, lastPageParam) => {
+        if (lastPage.tasks.length < 20) {
+          return undefined;
+        }
+        return lastPageParam + 1;
+      },
+      staleTime: 5 * 60 * 1000,
+      refetchInterval: 5 * 60 * 1000,
+    });
 
-  if (publicFeed === undefined) return <></>;
+  const pages = data?.pages;
 
   return (
     <div>
       <div className='first-of-type:border-t grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2'>
-        {publicFeed.length > 0 ? (
-          publicFeed.map((task) => <FeedItem key={task.id} {...task} />)
+        {pages && pages?.length > 0 ? (
+          pages.map((page) => {
+            return page.tasks?.map((task) => (
+              <FeedItem key={task.id} {...task} />
+            ));
+          })
         ) : (
           <p className='text-center py-6 capitalize md:col-span-2 lg:col-span-3'>
             nothing yet...
           </p>
         )}
       </div>
-      <div className='flex justify-between items-center py-8 '>
-        <Link
-          href={{
-            pathname: '/',
-            query: {
-              page: page - 1,
-            },
-          }}
-          className={`${
-            page === 1 ? 'invisible' : 'visible'
-          } capitalize bg-primary px-5 py-1 rounded-md text-primary-foreground hover:bg-secondary hover:text-secondary-foreground transition-colors duration-100 flex items-center gap-2`}
+      <div className='flex justify-center items-center py-8 mt-6'>
+        <Button
+          onClick={() => fetchNextPage()}
+          disabled={!hasNextPage || isFetchingNextPage}
+          className={
+            'bg-gradient capitalize disabled:bg-none disabled:text-foreground'
+          }
         >
-          <span>
-            <Icons.leftArrow />
-          </span>
-          prev
-        </Link>
-        {/* <p>{page}</p> */}
-        <Link
-          href={{
-            pathname: '/',
-            query: {
-              page: page + 1,
-            },
-          }}
-          className={` ${
-            page === data?.totalPages ? 'invisible' : 'visible'
-          } capitalize bg-primary px-5 py-1 rounded-md text-primary-foreground hover:bg-secondary hover:text-secondary-foreground transition-colors duration-100 flex items-center gap-2`}
-        >
-          next
-          <span>
-            <Icons.rightArrow />
-          </span>
-        </Link>
+          {isFetchingNextPage ? (
+            <Icons.smallLoader className='animate-spin' color='#0077e6' />
+          ) : !hasNextPage ? (
+            '.'
+          ) : (
+            'load more'
+          )}
+        </Button>
       </div>
     </div>
   );

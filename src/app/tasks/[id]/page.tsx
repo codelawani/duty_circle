@@ -57,7 +57,9 @@ export default async function page(props: Props) {
         </p>
       </div>
       <div className='flex items-center gap-3'>
-        <h3 className='font-semibold py-3 text-lg'>{title}</h3>
+        <h3 className='font-semibold py-3 text-lg leading-8 tracking-wider'>
+          {title}
+        </h3>
         {completed && (
           <div className=''>
             <Icons.check
@@ -69,9 +71,9 @@ export default async function page(props: Props) {
           </div>
         )}
       </div>
-      <p>{description}</p>
+      <p className='leading-7 tracking-wider'>{description}</p>
       {consequence && (
-        <div className='flex flex-col border-y border-body-dark/40 dark:border-text-light my-3 gap-1 py-1 md:w-fit'>
+        <div className='flex flex-col border-y border-body-dark/40 dark:border-text-light my-3 gap-1 py-1 md:w-fit leading-7 tracking-wider'>
           <span className='capitalize font-medium'>consequence</span>
           <p className='text-red-700 dark:text-red-400'>{consequence}</p>
         </div>

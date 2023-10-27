@@ -1,6 +1,4 @@
-import Header from '../components/header.component';
-import { fontPoppins, fontMontserrat } from '../lib/fonts';
-import { TailwindIndicator } from '../components/tailwind-indicator';
+import { fontPoppins, fontMontserrat } from './fonts';
 import { Toaster } from 'react-hot-toast';
 import { SidebarProvider } from '../components/context/SidebarContext';
 import Sidebar from '../components/common/sidebar';
@@ -8,7 +6,6 @@ import type { Metadata } from 'next';
 import { NextAuthProvider } from './providers';
 import { Analytics } from '@vercel/analytics/react';
 import { siteConfig } from '../config/site';
-import { fontSans } from '../lib/fonts';
 import { cn } from '../lib/utils';
 import { SiteHeader } from '../components/site-header';
 import { ThemeProvider } from '../components/theme-provider';

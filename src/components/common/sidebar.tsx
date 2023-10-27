@@ -28,7 +28,7 @@ export default function Sidebar() {
         {siteConfig.mainNav?.length ? (
           <nav
             className={cn(
-              'md:flex flex-col gap-6 group z-30  hidden h-full px-2 hover:min-w-[12rem]  rounded-e-2xl sticky top-0',
+              'md:flex flex-col gap-3 group z-30  hidden h-full px-2 hover:min-w-[12rem]  rounded-e-2xl sticky top-0',
               showSidebar ? 'min-w-[12rem]' : ''
             )}
           >
@@ -39,10 +39,9 @@ export default function Sidebar() {
                   key={index}
                   href={item.href}
                   className={cn(
-                    'text-muted-foreground flex items-center text-sm font-medium capitalize gap-4 px-2 py-1',
+                    'text-muted-foreground flex items-center text-sm font-medium capitalize gap-4 px-2 py-2 hover:bg-main-dark/50 rounded-lg hover:text-white transition-colors duration-300 ease-in-out',
                     item.disabled && 'cursor-not-allowed opacity-80',
-                    isActive &&
-                      'rounded-lg bg-main-light font-semibold text-white'
+                    isActive && ' bg-main-light font-semibold text-white'
                   )}
                 >
                   <span className={''}>
@@ -64,7 +63,7 @@ export default function Sidebar() {
         {siteConfig.mainNav?.length ? (
           <nav
             className={cn(
-              'absolute top-0 py-5 flex flex-col gap-6 group z-30 bg-inherit h-full px-2 md:hidden rounded-e-2xl w-fit'
+              'absolute top-0 py-5 flex flex-col gap-3 group z-30 bg-inherit h-full px-2 md:hidden rounded-e-2xl w-fit'
               // showSidebar ? 'min-w-[12rem] border-r border-cool-light' : 'w-fit'
             )}
           >
@@ -75,7 +74,7 @@ export default function Sidebar() {
                   key={index}
                   href={item.href}
                   className={cn(
-                    'text-muted-foreground flex items-center text-sm font-medium capitalize gap-4 px-2 py-1',
+                    'text-muted-foreground flex items-center text-sm font-medium capitalize gap-4 px-2 py-2',
                     item.disabled && 'cursor-not-allowed opacity-80',
                     isActive && 'rounded-lg bg-main-light'
                   )}

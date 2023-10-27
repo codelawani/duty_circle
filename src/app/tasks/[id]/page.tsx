@@ -1,6 +1,4 @@
 import { getDueDate, dateString as getString } from '@/src/utils/task/helpers';
-import { getServerSession } from 'next-auth';
-import authOptions from '@/src/lib/auth';
 import Image from 'next/image';
 import { Icons } from '@/src/components/icons';
 import NudgeButton from '@/src/components/common/nudge-button';
@@ -17,7 +15,6 @@ export default async function page(props: Props) {
     params: { id },
   } = props;
   const taskData: Promise<Task> = await fetchTask(id);
-  const session = await getServerSession(authOptions);
   const {
     title,
     description,
@@ -41,8 +38,8 @@ export default async function page(props: Props) {
   const timeLeft = getDueDate(new Date(dueDate));
   const dueDateDisplay = getString(timeLeft);
   return (
-    <main className='md:py-10 md:px-12'>
-      <div className='my-4 md:hidden'>
+    <main className='md:py-4 md:px-12'>
+      <div className='my-4 mb-7'>
         <BackButton />
       </div>
       <div className='flex items-center gap-1 pb-3'>
@@ -73,7 +70,12 @@ export default async function page(props: Props) {
         )}
       </div>
       <p>{description}</p>
-      <p className='text-red-300'>{consequence}</p>
+      {consequence && (
+        <div className='flex flex-col border-y border-body-dark/40 dark:border-text-light my-3 gap-1 py-1 md:w-fit'>
+          <span className='capitalize font-medium'>consequence</span>
+          <p className='text-red-700 dark:text-red-400'>{consequence}</p>
+        </div>
+      )}
       {/* <div className='flex gap-3 py-2'>
         <h4>status: </h4>
         <p className=''>{completed ? 'completed' : dueDateDisplay}</p>
@@ -85,13 +87,13 @@ export default async function page(props: Props) {
         {tags?.map(({ name }) => (
           <li
             key={name}
-            className='bg-accent text-accent-foreground px-2 rounded-lg'
+            className='bg-main-light even:bg-cool-light text-white dark:bg-[#181818] even:dark:bg-[#181818] dark:text-inherit border border-x-cool-light text-accent-foreground px-2 rounded-lg even:border-x-main-light '
           >
             {name}
           </li>
         ))}
       </ul>
-      <div className='flex border-y my-5  md:max-w-[50%]'>
+      <div className='flex border-y my-5  md:max-w-[50%] border-body-dark/40 dark:border-text-light'>
         <NudgeButton taskId={id} ownerId={ownerId} nudgeCount={nudgeCount} />
         {/* <Button variant={'ghost'}>
           <MessageSquare />
@@ -111,13 +113,4 @@ const fetchTask = async (id: string) => {
     throw new Error('Error fetching task!');
   }
   return res.json();
-};
-
-const Card = ({ heading, content }: { heading: string; content: string }) => {
-  return (
-    <div className='dark:bg-body-300 dark:text-white flex flex-col md:flex-row md:gap-10 w-fit px-5 py-2'>
-      <h3 className='font-medium text-base uppercase'>{heading}</h3>
-      <p>{content}</p>
-    </div>
-  );
 };

@@ -13,7 +13,9 @@ export function MainNav() {
       <Link href='/' className='flex items-center space-x-2'>
         <Icons.logo className='h-6 w-6' />
 
-        <span className='inline-block font-bold'>{siteConfig.name}</span>
+        <span className='inline-block font-bold text-sm md:text-lg'>
+          {siteConfig.name}
+        </span>
       </Link>
     </div>
   );

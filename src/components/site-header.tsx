@@ -23,7 +23,7 @@ export function SiteHeader() {
   );
   const unread = unreadNotifications?.length ?? 0;
   return (
-    <header className='bg-body-light dark:bg-body-dark text-main-light bg-opacity-80  z-40 w-full border-b border-cool-light/30 py-2 shadow-cool-light shadow-sl'>
+    <header className='bg-gradient dark:bg-body-dark text-body-light dark:text-main-light bg-opacity-80  z-40 w-full border-b dark:bg-none border-cool-light/30 py-2 shadow-cool-light shadow-sl'>
       <div className='px-5 py-4 flex items-center space-x-4 sm:justify-between sm:space-x-0'>
         <MainNav />
         <div className='flex flex-1 items-center justify-end space-x-4'>

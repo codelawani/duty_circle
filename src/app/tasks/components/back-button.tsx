@@ -12,7 +12,7 @@ export default function BackButton() {
   return (
     <Button
       variant={'ghost'}
-      className='flex items-center text-lg capitalize pl-0 ml-0'
+      className='flex items-center text-lg capitalize pl-0 ml-0 hover:bg-gradient active:scale-90 border border-y-cool-light border-x-main-dark'
       onClick={goBack}
     >
       <Icons.leftArrow size={30} />

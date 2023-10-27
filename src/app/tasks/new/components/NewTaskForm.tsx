@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation';
 import { useTask } from '@/src/components/context/TasksContext';
 import ControlledDatePicker from './date-picker';
 import MultipleSelect from './multiple-select';
+import useMutate from '../../components/mutateTask';
 
 const schema = yup
   .object({
@@ -33,13 +34,14 @@ const schema = yup
   .required();
 
 export default function NewTaskForm() {
-  const { newTask } = useTask();
+  // const { newTask } = useTask();
+
+  const { newTask, isSending } = useMutate();
   const {
     register,
     handleSubmit,
     reset,
     control,
-    getValues,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
@@ -55,36 +57,35 @@ export default function NewTaskForm() {
   });
 
   const router = useRouter();
-  const [isSending, setIsSending] = useState(false);
+  // const [isSending, setIsSending] = useState(false);
 
   const onSubmit = handleSubmit(async (data) => {
     const tags = data.tag ? data.tag.map(({ value }) => value) : [];
     const updatedData = { ...data, tags };
     delete updatedData.tag;
-    setIsSending(true);
+
     try {
-      const { status, message } = await newTask(updatedData);
-      if (status === 'success') {
-        toast.success(message, {
+      const res = await newTask(updatedData);
+
+      if (res.status === 201) {
+        toast.success('new Todo created!', {
           position: 'top-center',
           duration: 5000,
         });
         reset();
         router.push('/tasks');
-      } else {
-        toast.error(message, {
-          position: 'top-center',
-          duration: 5000,
-        });
       }
+      // else {
+      //   toast.error(message, {
+      //     position: 'top-center',
+      //     duration: 5000,
+      //   });
+      // }
     } catch (error: any) {
-      const message =
-        error?.response?.data?.error?.message ?? 'An error occurred';
+      const message = error?.response?.data?.error?.err ?? 'An error occurred';
       toast.error(message, {
         duration: 6000,
       });
-    } finally {
-      setIsSending(false);
     }
   });
 

@@ -81,7 +81,7 @@ export default function FeedItem(props: Task) {
           {requiredTags?.map(({ name }) => (
             <li
               key={name}
-              className='bg-second-light dark:bg-[#181818] border border-x-cool-light text-accent-foreground px-2 rounded-lg even:border-x-main-light '
+              className='bg-main-light even:bg-cool-light text-white dark:bg-[#181818] even:dark:bg-[#181818] dark:text-inherit border border-x-cool-light text-accent-foreground px-2 rounded-lg even:border-x-main-light '
             >
               {name}
             </li>

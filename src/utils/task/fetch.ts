@@ -21,3 +21,14 @@ export async function getNotifications(): Promise<UserNotification[]> {
   }
   return res.json();
 }
+
+export async function getTasks(): Promise<Task[]> {
+  const basePath = process.env.NEXTAUTH_URL ?? '';
+  const res = await fetch(`${basePath}/api/tasks`, {
+    cache: 'no-cache',
+  });
+  if (!res.ok) {
+    throw new Error('error loading tasks');
+  }
+  return res.json();
+}

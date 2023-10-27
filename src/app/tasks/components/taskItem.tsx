@@ -3,16 +3,19 @@ import { cn } from '@/src/lib/utils';
 import { cva } from 'class-variance-authority';
 import Link from 'next/link';
 import * as Checkbox from '@radix-ui/react-checkbox';
-import { Button } from '../ui/button';
+import { Button } from '../../../components/ui/button';
 import { useState } from 'react';
-import { useTask } from '../context/TasksContext';
+import { useTask } from '../../../components/context/TasksContext';
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
 import {
   getDueDate,
   dateString,
   calculatePriority,
 } from '@/src/utils/task/helpers';
-import { Icons } from '../icons';
+import { Icons } from '../../../components/icons';
+import useMutate from './mutateTask';
+import { useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 
 type Props = Task & {
   className?: string;
@@ -47,6 +50,7 @@ const taskVariants = cva(
 );
 
 export default function TaskItem(props: Props) {
+  const queryClient = useQueryClient();
   const { title, className, id, dueDate, completed, public: isPublic } = props;
   const [checked, setChecked] = useState(completed);
   const [deleteOpen, setDeleteOpen] = useState(false);
@@ -55,11 +59,17 @@ export default function TaskItem(props: Props) {
   const dueDateDisplay = dateString(timeLeft);
   const currentStatus = !completed ? dueDateDisplay : null;
   const priority = completed ? 'none' : calculatePriority(timeLeft);
-  const { updateTaskStatus, deleteTask } = useTask();
-
+  // const { deleteTask } = useTask();
+  const { updateTask, deleteTask } = useMutate();
   const handleChecked = () => {
     setChecked((prev) => !prev);
-    updateTaskStatus(id);
+    updateTask({
+      id,
+      body: {
+        completed: !checked,
+        title,
+      },
+    });
   };
 
   const toggleDeleteModal = () => {
@@ -71,6 +81,24 @@ export default function TaskItem(props: Props) {
 
   const displayedTitle =
     title.length > maxLength ? `${title.substring(0, maxLength)}...` : title;
+
+  const handleTaskDelete = async (id: string) => {
+    try {
+      const res = await deleteTask(id);
+      if (res.status === 200) {
+        queryClient.setQueryData(['tasks'], (prev: Task[]) => {
+          return prev.filter((task) => task.id !== id);
+        });
+        toast.success('todo deleted!');
+      } else {
+        toast.error('please try again!');
+      }
+    } catch (error) {
+      toast.error('An error occurred');
+    } finally {
+      toggleDeleteModal();
+    }
+  };
 
   return (
     <Link href={`/tasks/${id}`}>
@@ -175,8 +203,7 @@ export default function TaskItem(props: Props) {
                         className='text-red11 bg-destructive hover:bg-red-400 focus:shadow-red-200 inline-flex py-1 items-center justify-center rounded-[4px] px-[15px] font-medium leading-none outline-none focus:shadow-[0_0_0_2px]'
                         onClick={(e) => {
                           e.preventDefault();
-                          deleteTask(id);
-                          toggleDeleteModal();
+                          handleTaskDelete(id);
                         }}
                       >
                         Yes, delete task

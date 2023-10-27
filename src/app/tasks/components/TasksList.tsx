@@ -1,17 +1,24 @@
 'use client';
 
-import TaskItem from '@/src/components/common/taskItem';
-import { useTask } from '@/src/components/context/TasksContext';
+import TaskItem from './taskItem';
 import TasksSkeleton from '@/src/components/loaders/TasksSkeleton';
 import { Button } from '@/src/components/ui/button';
 import Link from 'next/link';
 import * as Tabs from '@radix-ui/react-tabs';
 import SmallLoader from '@/src/components/loaders/SmallLoader';
+import { useQuery } from '@tanstack/react-query';
+import { getTasks } from '@/src/utils/task/fetch';
 
 export default function TasksList() {
-  const { tasks, isLoading, isUpdating } = useTask();
-  const pending = tasks.filter((task) => !task.completed);
-  const completed = tasks.filter((task) => task.completed);
+  const { data, isLoading } = useQuery({
+    queryKey: ['tasks'],
+    queryFn: getTasks,
+    staleTime: 60 * 60 * 1000,
+  });
+  // const { tasks, isUpdating } = useTask();
+
+  const pending = data?.filter((task) => !task.completed);
+  const completed = data?.filter((task) => task.completed);
   if (isLoading) return <TasksSkeleton />;
 
   return (
@@ -45,12 +52,12 @@ export default function TasksList() {
           </Tabs.Trigger>
         </Tabs.List>
         {/* show loader when making changes to task */}
-        {isUpdating && <SmallLoader />}
+        {/* {isUpdating && <SmallLoader />} */}
         <Tabs.Content value='backlogs'>
           <article>
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
               {' '}
-              {pending.length > 0 ? (
+              {pending && pending.length > 0 ? (
                 pending.map(({ id, ...others }) => {
                   return <TaskItem key={id} id={id} {...others} />;
                 })
@@ -69,7 +76,7 @@ export default function TasksList() {
         <Tabs.Content value='completed'>
           <article>
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2'>
-              {completed.length > 0 ? (
+              {completed && completed.length > 0 ? (
                 completed.map(({ id, ...others }) => {
                   return <TaskItem key={id} id={id} {...others} />;
                 })

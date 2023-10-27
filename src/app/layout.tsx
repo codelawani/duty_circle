@@ -6,7 +6,6 @@ import type { Metadata } from 'next';
 import { NextAuthProvider } from './providers';
 import { Analytics } from '@vercel/analytics/react';
 import { siteConfig } from '../config/site';
-import { cn } from '../lib/utils';
 import { SiteHeader } from '../components/site-header';
 import { ThemeProvider } from '../components/theme-provider';
 
@@ -35,14 +34,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html
-      lang='en'
-      className={`${fontMontserrat.variable} ${fontPoppins.variable}`}
-    >
+    <html lang='en'>
       <body
-        className={cn(
-          'bg-body-light dark:bg-body-dark text-text-light dark:text-text-dark font-montSerrat antialiased'
-        )}
+        className={`
+          bg-body-light dark:bg-body-dark text-text-light dark:text-text-dark font-mont antialiased
+          ${fontMontserrat.variable} ${fontPoppins.variable}
+        )`}
       >
         <NextAuthProvider>
           <ThemeProvider attribute='class' defaultTheme='system' enableSystem>

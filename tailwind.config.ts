@@ -98,7 +98,7 @@ const config: Config = {
       fontFamily: {
         sans: ['var(--font-sans)', ...fontFamily.sans],
         poppins: ['var(--font-poppins)'],
-        montSerrat: ['var(--font-mont-serrat)'],
+        mont: ['var(--font-mont-serrat)'],
       },
       keyframes: {
         'accordion-down': {

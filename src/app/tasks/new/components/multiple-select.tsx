@@ -39,12 +39,14 @@ export default function MultipleSelect(props: Props) {
                 isMulti
                 classNames={{
                   valueContainer: () =>
-                    'dark:bg-form-dark bg-form-light border-none outline-none',
+                    'dark:bg-form-dark bg-form-light border-none outline-none ',
                   container: () =>
-                    'dark:bg-form-dark bg-form-light w-full  boder-none outline-none',
+                    'dark:bg-form-dark bg-form-light w-full  boder-none outline-none ',
                   input: () => 'dark:text-white text-black focus:border-none',
-                  indicatorsContainer: () => 'dark:bg-form-dark bg-form-light',
-                  menuList: () => 'dark:bg-form-dark bg-form-light capitalize',
+                  indicatorsContainer: () => 'dark:bg-form-dark bg-form-light ',
+                  menuList: () => `dark:bg-form-dark bg-form-light capitalize `,
+                  option: () =>
+                    'hover:bg-second-light hover:dark:bg-second-dark',
                 }}
                 placeholder={placeholder}
               />

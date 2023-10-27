@@ -5,10 +5,8 @@ import * as yup from 'yup';
 import Input from '@/src/components/common/input';
 import { Button } from '@/src/components/ui/button';
 import toast from 'react-hot-toast';
-import { useState } from 'react';
 import SimpleLoaader from '@/src/components/loaders/SimpleLoaader';
 import { useRouter } from 'next/navigation';
-import { useTask } from '@/src/components/context/TasksContext';
 import ControlledDatePicker from './date-picker';
 import MultipleSelect from './multiple-select';
 import useMutate from '../../components/mutateTask';
@@ -34,8 +32,6 @@ const schema = yup
   .required();
 
 export default function NewTaskForm() {
-  // const { newTask } = useTask();
-
   const { newTask, isSending } = useMutate();
   const {
     register,
@@ -75,12 +71,6 @@ export default function NewTaskForm() {
         reset();
         router.push('/tasks');
       }
-      // else {
-      //   toast.error(message, {
-      //     position: 'top-center',
-      //     duration: 5000,
-      //   });
-      // }
     } catch (error: any) {
       const message = error?.response?.data?.error?.err ?? 'An error occurred';
       toast.error(message, {
@@ -127,7 +117,7 @@ export default function NewTaskForm() {
       <MultipleSelect
         name='tag'
         label='tags'
-        placeholder='Add related tags'
+        placeholder='type tag and press Enter'
         options={[
           {
             value: 'project',

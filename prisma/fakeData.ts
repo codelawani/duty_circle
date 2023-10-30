@@ -91,10 +91,19 @@ async function genRandomTags() {
   ];
   const tags = [];
   for (const name of tagNames) {
-    const tag = await db.tag.create({
-      data: { name },
-    });
-    tags.push(tag);
+    try {
+      const tag = await db.tag.create({
+        data: { name },
+      });
+      tags.push(tag);
+    } catch (e: any) {
+      if (e.code === "P2002") {
+        const tag = await db.tag.findUnique({ where: { name } });
+        tags.push(tag);
+      } else {
+        console.log(e);
+      }
+    }
   }
   return tags;
 }

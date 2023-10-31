@@ -4,6 +4,7 @@ import authOptions from "../auth";
 import * as Boom from "@hapi/boom";
 import { nanoid } from "nanoid";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import { UserSchema } from "../types/user.schema.d";
 
 /**
  * Service class for user-related operations.
@@ -101,15 +102,36 @@ class UserService {
     if (!user) {
       throw Boom.notFound("User not found");
     }
+
+    if (data.username) {
+      const existingUser = await prisma.user.findUnique({
+        where: { username: data.username },
+      });
+
+      if (existingUser && existingUser.id !== id) {
+        throw Boom.conflict("Username already taken");
+      }
+    }
+
     const newData = await UserSchema.validate(data);
-    const updatedUser = { ...user, ...newData };
     return await prisma.user.update({
       where: { id },
-      data: updatedUser,
+      data: newData,
     });
   }
+  async checkUsername(username: string) {
+    console.log(username);
+    const user = await prisma.user.findUnique({
+      where: { username },
+    });
+    console.log(user);
+    if (user) {
+      throw Boom.conflict("Username is already taken");
+    } else {
+      return user;
+    }
+  }
 }
-
 /**
  * Generates a unique username for a given email.
  * @param email - The email to generate a username for.

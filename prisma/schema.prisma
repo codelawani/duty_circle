@@ -60,6 +60,7 @@ model User {
   username              String?        @unique
   name                  String?
   image                 String?
+  bio                   String?
   accounts              Account[]
   sessions              Session[]
   role                  Role           @default(USER)
@@ -71,6 +72,8 @@ model User {
   tasks                 Task[]
   circles               UserCircle[]
   notificationsReceived Notification[]
+
+  @@index([username])
 }
 
 enum Role {

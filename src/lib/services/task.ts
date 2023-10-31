@@ -88,20 +88,24 @@ class TaskService {
       where: { userId },
     });
   }
-  async getPublicFeed(page: string | null, pageSize: string | null) {
+  async getPublicFeed(page: string, pageSize: string) {
     return await this.paginateTasks(page, pageSize);
   }
-  async paginateTasks(
-    page: string | null,
-    pageSize: string | null,
-    userId: string | undefined = undefined
-  ) {
+  async getUserPublicTasks(id: string, page: string, pageSize: string) {
+    const user = await userService.getById(id);
+    if (!user) {
+      throw Boom.notFound("User not found");
+    }
+    return await this.paginateTasks(page, pageSize, id);
+  }
+  async paginateTasks(page: string, pageSize: string, userId: string = "") {
     const parsedPage = Math.max(parseInt(page || "1"), 1);
     const take = parseInt(pageSize || "10");
     const skip = (parsedPage - 1) * take;
     if (isNaN(take) || isNaN(skip)) {
       throw Boom.badRequest("Pls provide integer query values");
     }
+
     const [tasks, count] = await Promise.all([
       prisma.task.findMany({
         skip,
@@ -111,7 +115,7 @@ class TaskService {
         },
         where: {
           public: true,
-          userId,
+          userId: userId || undefined,
         },
         include: {
           tags: { select: { name: true } },
@@ -125,8 +129,9 @@ class TaskService {
           },
         },
       }),
-      prisma.task.count({ where: { userId } }),
+      prisma.task.count({ where: { userId, public: true } }),
     ]);
+
     const totalPages = Math.ceil(count / take);
     return { tasks, totalPages };
   }

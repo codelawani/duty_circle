@@ -9,8 +9,8 @@ import { NextRequest, NextResponse as res } from "next/server";
  */
 const getPublicFeed = async (req: NextRequest) => {
   const searchParams = req.nextUrl.searchParams;
-  const page = searchParams.get("page");
-  const pageSize = searchParams.get("size");
+  const page = searchParams.get("page") || "1";
+  const pageSize = searchParams.get("size") || "10";
   const result = await taskService.getPublicFeed(page, pageSize);
   return res.json(result);
 };

@@ -112,19 +112,18 @@ class UserService {
         throw Boom.conflict("Username already taken");
       }
     }
+    const updatedData = { ...user, ...data };
 
-    const newData = await UserSchema.validate(data);
+    const newData = await UserSchema.validate(updatedData);
     return await prisma.user.update({
       where: { id },
       data: newData,
     });
   }
   async checkUsername(username: string) {
-    console.log(username);
     const user = await prisma.user.findUnique({
       where: { username },
     });
-    console.log(user);
     if (user) {
       throw Boom.conflict("Username is already taken");
     } else {

@@ -23,6 +23,7 @@ export const ourFileRouter = {
       console.log("Upload complete for userId:", metadata.userId);
 
       console.log("file url", file.url);
+      await userService.update(metadata.userId, { image: file.url });
     }),
 } satisfies FileRouter;
 

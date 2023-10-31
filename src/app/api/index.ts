@@ -58,6 +58,38 @@
  *           description: The IDs of the members in the circle.
  *       required:
  *         - name
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: The ID of the user.
+ *         username:
+ *           type: string
+ *           description: The username of the user.
+ *         email:
+ *           type: string
+ *           format: email
+ *           description: The email address of the user.
+ *         name:
+ *           type: string
+ *           description: The name of the user.
+ *         image:
+ *           type: string
+ *           description: The image url of the user.
+ *       required:
+ *         - username
+ *         - email
+ *       example:
+ *         id: "1"
+ *         username: "jacksparrow"
+ *         email: "jacksparrow@gmail.com"
+ *         name: "Captain Jack Sparrow"
+ *         image: "https://i.imgur.com/1.jpg"
  */
 
 /**

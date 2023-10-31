@@ -29,6 +29,7 @@ async function main() {
   // Create Jack Sparrow user
   const jack = await prisma.user.create({
     data: {
+      id: "1",
       email: "jack@sparrow.com",
       name: "Captain Jack Sparrow",
       username: "jacksparrow",
@@ -79,6 +80,7 @@ async function main() {
       title: "Find the Black Pearl",
       public: true,
       userId: jack.id,
+      dueDate: "2023-12-15T12:00:00.000Z",
     },
   };
   const blackPearlTask = await prisma.task.create(blackPearlTaskData);
@@ -119,6 +121,7 @@ async function main() {
 
     const blackbeard = await prisma.user.create({
       data: {
+        id: "2",
         email: "blackbeard@queenannesrevenge.com",
         name: "Captain Blackbeard",
         username: "blackbeard",

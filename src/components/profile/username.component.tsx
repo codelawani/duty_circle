@@ -16,7 +16,7 @@ export default function UsernameInput() {
         console.log("Username is not available");
         setIsUsernameAvailable(false);
       }
-    }, 500);
+    }, 1000);
     debouncedCheck(username);
   }, []); // Empty dependency array
 
@@ -29,7 +29,7 @@ export default function UsernameInput() {
     <input
       value={username}
       onChange={handleInputChange}
-      className=" ml-5 mt-5"
+      className=" ml-5 mt-5 pl-2"
       placeholder="Username"
     />
   );

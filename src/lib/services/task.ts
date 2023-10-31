@@ -25,8 +25,6 @@ class TaskService {
         },
       },
     });
-    // const tagNames = task?.tags?.map((tag) => tag?.name);
-    // return { ...task, tags: tagNames };
     return task;
   }
 
@@ -91,6 +89,13 @@ class TaskService {
     });
   }
   async getPublicFeed(page: string | null, pageSize: string | null) {
+    return await this.paginateTasks(page, pageSize);
+  }
+  async paginateTasks(
+    page: string | null,
+    pageSize: string | null,
+    userId: string | undefined = undefined
+  ) {
     const parsedPage = Math.max(parseInt(page || "1"), 1);
     const take = parseInt(pageSize || "10");
     const skip = (parsedPage - 1) * take;
@@ -106,6 +111,7 @@ class TaskService {
         },
         where: {
           public: true,
+          userId,
         },
         include: {
           tags: { select: { name: true } },
@@ -119,12 +125,11 @@ class TaskService {
           },
         },
       }),
-      prisma.task.count(),
+      prisma.task.count({ where: { userId } }),
     ]);
     const totalPages = Math.ceil(count / take);
     return { tasks, totalPages };
   }
-
   async getTasksByTags(tagNames: string[]) {
     return await prisma.task.findMany({
       where: {

@@ -1,14 +1,14 @@
-'use client';
-import { useInfiniteQuery } from '@tanstack/react-query';
-import FeedItem from './feed-item';
-import { Icons } from '../icons';
-import { getFeed } from '@/src/utils/task/fetch';
-import { Button } from '../ui/button';
+"use client";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import FeedItem from "./feed-item";
+import { Icons } from "../icons";
+import { getFeed } from "@/src/utils/task/fetch";
+import { Button } from "../ui/button";
 
 export default function FeedList() {
   const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
-      queryKey: ['feed'],
+      queryKey: ["feed"],
       queryFn: getFeed,
       initialPageParam: 1,
       getNextPageParam: (lastPage, allPages, lastPageParam) => {
@@ -25,7 +25,7 @@ export default function FeedList() {
 
   return (
     <div>
-      <div className='first-of-type:border-t grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2'>
+      <div className="first-of-type:border-t grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
         {pages && pages?.length > 0 ? (
           pages.map((page) => {
             return page.tasks?.map((task) => (
@@ -33,25 +33,25 @@ export default function FeedList() {
             ));
           })
         ) : (
-          <p className='text-center py-6 capitalize md:col-span-2 lg:col-span-3'>
+          <p className="text-center py-6 capitalize md:col-span-2 lg:col-span-3">
             nothing yet...
           </p>
         )}
       </div>
-      <div className='flex justify-center items-center py-8 mt-6'>
+      <div className="flex justify-center items-center py-8 mt-6">
         <Button
           onClick={() => fetchNextPage()}
           disabled={!hasNextPage || isFetchingNextPage}
           className={
-            'bg-gradient capitalize disabled:bg-none disabled:text-foreground'
+            "bg-gradient capitalize disabled:bg-none disabled:text-foreground"
           }
         >
           {isFetchingNextPage ? (
-            <Icons.smallLoader className='animate-spin' color='#0077e6' />
+            <Icons.smallLoader className="animate-spin" color="#0077e6" />
           ) : !hasNextPage ? (
-            '.'
+            "."
           ) : (
-            'load more'
+            "load more"
           )}
         </Button>
       </div>
